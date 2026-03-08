@@ -6,7 +6,7 @@ A clean, fast one‑page resume that highlights who I am, what I've built, and m
 
 ![Astro](https://img.shields.io/badge/Astro-0a0a0f?style=for-the-badge&logo=astro&logoColor=ff5d01) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-0a0a0f?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4) ![TypeScript](https://img.shields.io/badge/TypeScript-0a0a0f?style=for-the-badge&logo=typescript&logoColor=3178c6)
 
-[Live site](https://bladzv.github.io/static-profile/)
+[Live site](https://bladzv.github.io/bladzv-profile/)
 
 </div>
 

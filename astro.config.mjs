@@ -5,7 +5,7 @@ import tailwind from '@astrojs/tailwind';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://bladzv.github.io',
-  base: '/static-profile',
+  base: '/bladzv-profile',
   integrations: [tailwind()],
   output: 'static',
   devToolbar: { enabled: false },

@@ -1,5 +1,14 @@
 [
   {
+    "title": "bladzv-profile",
+    "description": "A simple, fast one‑page web résumé that highlights who I am, what I’ve built, and my skills in IT & cybersecurity. It works on any device and keeps things clean and accessible—just me on the web.",
+    "language": "Astro",
+    "url": "https://github.com/bladzv/bladzv-profile",
+    "homepage": "",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
     "title": "budget2go",
     "description": "Secure, responsive personal finance manager for tracking income, savings, expenses, and loans with encrypted import/export.",
     "language": "JavaScript",

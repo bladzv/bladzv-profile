@@ -2,7 +2,7 @@
 
 # Static Profile — Bloodymer S. Velasco
 
-A clean, fast one‑page resume that highlights who I am, what I've built, and my skills in IT & cybersecurity. The site works on any device and keeps things simple and accessible — just me on the web. The favicon is a Lucide "person" icon on a dark background.
+A clean, fast one‑page resume that highlights who I am, what I've built, and my skills in IT & cybersecurity. The site works on any device and keeps things simple and accessible — just me on the web.
 
 ![Astro](https://img.shields.io/badge/Astro-0a0a0f?style=for-the-badge&logo=astro&logoColor=ff5d01) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-0a0a0f?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4) ![TypeScript](https://img.shields.io/badge/TypeScript-0a0a0f?style=for-the-badge&logo=typescript&logoColor=3178c6)
 
@@ -14,7 +14,7 @@ A clean, fast one‑page resume that highlights who I am, what I've built, and m
 
 ## About
 
-Static Profile is a fast, accessibility‑minded portfolio built with Astro and Tailwind CSS. It shows public GitHub repos (fetched at build time) and manually authored private projects. Private entries can be marked `blur: true` in frontmatter to display a blurred placeholder instead of details.
+Static Profile is a fast, accessibility‑minded portfolio built with Astro and Tailwind CSS. It shows public GitHub repos (fetched at build time) and manually authored private projects.
 
 Why this repo:
 - Minimal runtime JS — improved performance and reduced attack surface.
@@ -37,11 +37,3 @@ Why this repo:
 - `src/content/` — Markdown collections for projects, skills, certifications
 - `src/lib/github.ts` — build-time GitHub fetch + sanitization
 - `src/styles/global.css` — Tailwind utilities and site styles
-
-## Content Authoring
-
-To add a project, certification, or skill, create a Markdown file in the corresponding folder under `src/content/` using the `_template.md` files for frontmatter guidance. Private projects may include `blur: true` in the frontmatter to hide details behind a blurred placeholder. Changes appear after rebuilding.
-
-## CI / Deployment
-
-Pushes to `main` trigger the GitHub Actions workflow at `.github/workflows/deploy.yml`, which builds and publishes the `dist/` artifact to GitHub Pages. A scheduled workflow also refreshes public repo data weekly.

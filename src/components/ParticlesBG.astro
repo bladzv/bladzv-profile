@@ -1,0 +1,206 @@
+---
+/**
+ * Particle background animation using Canvas API.
+ * No external dependencies — pure JS particles with network-topology style connections.
+ * Respects prefers-reduced-motion.
+ */
+---
+
+<canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+<style>
+  #particles-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  const canvas = document.getElementById('particles-canvas') as HTMLCanvasElement;
+  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (canvas && !prefersReduced) {
+    const ctx = canvas.getContext('2d')!;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+    const isMobile = () => width < 768;
+
+    interface Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      opacity: number;
+    }
+
+    let PARTICLE_COUNT = 80;
+    let CONNECTION_DISTANCE = 150;
+    let SPEED = 0.3;
+    let particles: Particle[] = [];
+    let rafId: number | null = null;
+
+    function getConnection() {
+      // @ts-ignore - optional browser API
+      return navigator['connection'] || (navigator as any).connection || null;
+    }
+
+    function computeSettings() {
+      const conn = getConnection();
+      const saveData = conn?.saveData || false;
+      const effective = conn?.effectiveType || '';
+
+      const mobile = isMobile();
+
+      // Start from defaults and scale down for constrained environments
+      let count = mobile ? 35 : 80;
+      let distance = mobile ? 100 : 150;
+      let speed = 0.3;
+
+      if (saveData) {
+        count = Math.max(20, Math.floor(count * 0.4));
+        distance = Math.floor(distance * 0.6);
+        speed = 0.15;
+      } else if (effective.includes('2g') || effective.includes('slow-2g')) {
+        count = Math.max(15, Math.floor(count * 0.3));
+        distance = Math.floor(distance * 0.5);
+        speed = 0.12;
+      }
+
+      return { count, distance, speed };
+    }
+
+    function initParticles() {
+      const settings = computeSettings();
+      PARTICLE_COUNT = settings.count;
+      CONNECTION_DISTANCE = settings.distance;
+      SPEED = settings.speed;
+
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+
+      particles = [];
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * SPEED,
+          vy: (Math.random() - 0.5) * SPEED,
+          size: Math.random() * 2 + 0.5,
+          opacity: Math.random() * 0.5 + 0.2,
+        });
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 255, 136, ${p.opacity})`;
+        ctx.fill();
+
+        // Draw connections
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p.x - p2.x;
+          const dy = p.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < CONNECTION_DISTANCE) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(0, 212, 255, ${0.15 * (1 - dist / CONNECTION_DISTANCE)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      rafId = requestAnimationFrame(animate);
+    }
+
+    function start() {
+      if (rafId != null) return;
+      // Respect user preference stored in localStorage
+      try {
+        const disabled = localStorage.getItem('particles-disabled') === '1';
+        if (disabled) return;
+      } catch (e) {
+        // ignore
+      }
+      initParticles();
+      animate();
+    }
+
+    function stop() {
+      if (rafId != null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    }
+
+    // Pause when page is hidden to save resources
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+      else start();
+    });
+
+    // Re-init on resize with a small debounce
+    let resizeTimer: number | null = null;
+    window.addEventListener('resize', () => {
+      if (resizeTimer) window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        initParticles();
+      }, 250);
+    });
+
+    // Listen to connection changes (if supported) and adapt
+    const conn = getConnection();
+    if (conn && typeof conn.addEventListener === 'function') {
+      try {
+        conn.addEventListener('change', () => {
+          initParticles();
+        });
+      } catch (e) {
+        // Some browsers use onchange
+        // @ts-ignore
+        conn.onchange = () => initParticles();
+      }
+    }
+
+    // Start animation initially
+    start();
+
+    // Listen for manual toggle events from UI
+    window.addEventListener('particles:toggle', () => {
+      try {
+        const disabled = localStorage.getItem('particles-disabled') === '1';
+        if (disabled) {
+          // user disabled -> stop
+          stop();
+        } else {
+          // enabled -> start
+          start();
+        }
+      } catch (e) {
+        // ignore
+      }
+    });
+  }
+</script>

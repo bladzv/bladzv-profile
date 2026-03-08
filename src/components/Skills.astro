@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import { ShieldCheck, Code, Cloud } from '@lucide/astro';
+
+const allSkills = await getCollection('skills', ({ id }) => !id.startsWith('_'));
+const categories = allSkills.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+---
+
+<section id="skills" class="relative z-10 reveal">
+  <div class="section-container">
+    <div class="flex items-center gap-3 mb-8">
+      <Code class="w-6 h-6 text-cyber-green" />
+      <h2 class="section-heading mb-0">Skills</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {categories.map((cat) => (
+        <div class="glass-card p-6 group hover:border-cyber-green/30 transition-colors duration-300">
+          <div class="flex items-center gap-2 mb-4">
+            {cat.data.icon === 'shield' && <ShieldCheck class={`w-5 h-5 text-${cat.data.color}`} />}
+            {cat.data.icon === 'code' && <Code class={`w-5 h-5 text-${cat.data.color}`} />}
+            {cat.data.icon === 'cloud' && <Cloud class={`w-5 h-5 text-${cat.data.color}`} />}
+            <h3 class="text-sm font-mono font-semibold text-cyber-text uppercase tracking-wider">{cat.data.category}</h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {cat.data.skills.map((skill: string) => (
+              <span class={`px-3 py-1.5 rounded-lg text-sm bg-${cat.data.color}/10 text-${cat.data.color} border border-${cat.data.color}/20 font-mono`}>
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

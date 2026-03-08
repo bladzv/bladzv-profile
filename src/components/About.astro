@@ -1,0 +1,46 @@
+---
+import { User, Bot } from '@lucide/astro';
+---
+
+<section id="about" class="relative z-10 reveal">
+  <div class="section-container">
+    <div class="flex items-center gap-3 mb-8">
+      <User class="w-6 h-6 text-cyber-green" />
+      <h2 class="section-heading mb-0">About</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- Summary -->
+      <div class="md:col-span-2 glass-card p-6 md:p-8">
+        <p class="text-cyber-text/90 leading-relaxed text-base md:text-lg text-justify">
+          Detail-oriented and motivated IT and cybersecurity professional with a strong eagerness to learn and adapt.
+          A fast learner who quickly grasps new concepts, excels under pressure, and continuously seeks to improve.
+          Enthusiastic about contributing to a team, gaining practical experience, and growing in a professional IT
+          and cybersecurity environment.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <div class="flex items-center gap-2 text-sm text-cyber-muted">
+            <span class="w-2 h-2 rounded-full bg-cyber-green animate-glow-pulse"></span>
+            TryHackMe — Top 6%
+          </div>
+          <div class="flex items-center gap-2 text-sm text-cyber-muted">
+            <span class="w-2 h-2 rounded-full bg-cyber-blue"></span>
+            Homelab: Wazuh · Suricata · Grafana
+          </div>
+        </div>
+      </div>
+
+      <!-- AI-assisted coding callout -->
+      <div class="glass-card p-6 border-cyber-purple/30 bg-cyber-purple/5 flex flex-col justify-center">
+        <div class="flex items-center gap-2 mb-3">
+          <Bot class="w-5 h-5 text-cyber-purple" />
+          <h3 class="text-sm font-mono font-semibold text-cyber-purple uppercase tracking-wider">AI-Assisted Dev</h3>
+        </div>
+        <p class="text-sm text-cyber-text/80 leading-relaxed text-justify">
+          I actively leverage AI-assisted coding tools in my projects to accelerate development,
+          improve code quality, and explore creative solutions.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

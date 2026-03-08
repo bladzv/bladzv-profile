@@ -1,0 +1,83 @@
+---
+import { Shield, Terminal, ChevronDown } from '@lucide/astro';
+---
+
+<section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <div class="section-container text-center relative z-10">
+    <!-- Decorative icons -->
+    <div class="flex items-center justify-center gap-3 mb-6 animate-fade-in" style="animation-delay: 0.2s; opacity: 0;">
+      <Shield class="w-5 h-5 text-cyber-green" />
+      <Terminal class="w-5 h-5 text-cyber-blue" />
+    </div>
+
+    <!-- Name -->
+    <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold font-mono mb-4 animate-fade-in-up" style="animation-delay: 0.4s; opacity: 0;">
+      <span class="text-gradient">Bloodymer S. Velasco</span>
+    </h1>
+
+    <!-- Tagline with looping typewriter -->
+    <div class="overflow-hidden mb-8 animate-fade-in" style="animation-delay: 0.8s; opacity: 0;">
+      <p class="text-lg sm:text-xl md:text-2xl text-cyber-muted font-mono">
+        <span id="typewriter" class="inline-block border-r-2 border-cyber-green pr-1"></span>
+      </p>
+    </div>
+
+    <!-- Quick tags -->
+    <div class="flex flex-wrap items-center justify-center gap-3 mb-12 animate-fade-in" style="animation-delay: 1.2s; opacity: 0;">
+      <span class="badge border border-cyber-green/30 text-cyber-green bg-cyber-green/5 text-sm px-4 py-1.5">CompTIA Security+</span>
+      <span class="badge border border-cyber-blue/30 text-cyber-blue bg-cyber-blue/5 text-sm px-4 py-1.5">Homelab Builder</span>
+      <span class="badge border border-cyber-purple/30 text-cyber-purple bg-cyber-purple/5 text-sm px-4 py-1.5">AI-Assisted Developer</span>
+    </div>
+
+    <!-- Scroll indicator -->
+    <a href="#about" aria-label="Scroll to About section" class="inline-flex flex-col items-center gap-1 text-cyber-muted hover:text-cyber-green transition-colors animate-fade-in" style="animation-delay: 1.6s; opacity: 0;">
+      <span class="text-xs font-mono">Scroll</span>
+      <ChevronDown class="w-5 h-5 animate-float" />
+    </a>
+  </div>
+
+  <!-- Gradient overlay at bottom -->
+  <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-cyber-bg to-transparent z-10 pointer-events-none"></div>
+</section>
+
+<script>
+  const phrases = [
+    'Detail-Oriented Problem Solver',
+    'Fast Learner & Adaptable',
+    'Team Player & Leader',
+    'Thrives Under Pressure',
+    'Passionate About Security',
+  ];
+
+  const el = document.getElementById('typewriter');
+  if (el) {
+    let phraseIdx = 0;
+    let charIdx = 0;
+    let deleting = false;
+
+    function tick() {
+      const current = phrases[phraseIdx];
+      if (!deleting) {
+        el!.textContent = current.slice(0, ++charIdx);
+        if (charIdx === current.length) {
+          deleting = true;
+          setTimeout(tick, 1800);
+          return;
+        }
+        setTimeout(tick, 70);
+      } else {
+        el!.textContent = current.slice(0, --charIdx);
+        if (charIdx === 0) {
+          deleting = false;
+          phraseIdx = (phraseIdx + 1) % phrases.length;
+          setTimeout(tick, 400);
+          return;
+        }
+        setTimeout(tick, 40);
+      }
+    }
+
+    // Wait for the fade-in animation before starting
+    setTimeout(tick, 1200);
+  }
+</script>

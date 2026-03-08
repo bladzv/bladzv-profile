@@ -1,0 +1,65 @@
+[
+  {
+    "title": "budget2go",
+    "description": "Secure, responsive personal finance manager for tracking income, savings, expenses, and loans with encrypted import/export.",
+    "language": "JavaScript",
+    "url": "https://github.com/bladzv/budget2go",
+    "homepage": "",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
+    "title": "enjin-status-checker",
+    "description": "Static React app that audits validator reward cadence on the Enjin Relaychain using Subscan.",
+    "language": "JavaScript",
+    "url": "https://github.com/bladzv/enjin-status-checker",
+    "homepage": "https://enjin-status-checker.vercel.app/",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
+    "title": "structural-column-solver",
+    "description": "CLI C++17 tool to compute column behavior (Euler & Johnson) for straight, crooked, and eccentric columns.",
+    "language": "C++",
+    "url": "https://github.com/bladzv/structural-column-solver",
+    "homepage": "",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
+    "title": "enj-toolkit",
+    "description": "Utilities and example metadata for interacting with the Enjin Platform via GraphQL API.",
+    "language": "Python",
+    "url": "https://github.com/bladzv/enj-toolkit",
+    "homepage": "",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
+    "title": "nft-metadata-scanner",
+    "description": "Secure NFT Metadata Validator - Scan, validate, and preview NFT metadata with VirusTotal integration. Supports ERC-721, ERC-1155, and Enjin standards. OWASP compliant, client-side processing, IPFS nat",
+    "language": "JavaScript",
+    "url": "https://github.com/bladzv/nft-metadata-scanner",
+    "homepage": "",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
+    "title": "enjin-snap-wallet-exporter",
+    "description": "Securely export Enjin Snap (MetaMask) wallet keypairs offline. Generate hex private keys and encrypted JSON keystores for importing into Enjin Wallet or compatible blockchain wallets. No internet conn",
+    "language": "JavaScript",
+    "url": "https://github.com/bladzv/enjin-snap-wallet-exporter",
+    "homepage": "https://bladzv.github.io/enjin-snap-wallet-exporter/",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
+    "title": "scripting_lab",
+    "description": "Personal collection of scripts written in Python programming language.",
+    "language": "Python",
+    "url": "https://github.com/bladzv/scripting_lab",
+    "homepage": "",
+    "visibility": "public",
+    "status": "active"
+  }
+]

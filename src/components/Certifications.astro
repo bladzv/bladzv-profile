@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import { Award, ExternalLink } from '@lucide/astro';
+
+const allCerts = await getCollection('certifications', ({ id }) => !id.startsWith('_'));
+const certs = allCerts.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+---
+
+<section id="certifications" class="relative z-10 reveal">
+  <div class="section-container">
+    <div class="flex items-center gap-3 mb-8">
+      <Award class="w-6 h-6 text-cyber-green" />
+      <h2 class="section-heading mb-0">Certifications</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-6 max-w-3xl">
+      {certs.map((cert) => (
+        <div class="glass-card p-6 group hover:border-cyber-green/30 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,255,136,0.08)]">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-cyber-green/10 border border-cyber-green/20 flex items-center justify-center">
+              <Award class="w-5 h-5 text-cyber-green" />
+            </div>
+            <div>
+              <h3 class="text-base font-semibold text-cyber-text mb-1">{cert.data.name}</h3>
+              <p class="text-sm text-cyber-muted">
+                {cert.data.issuer} · {cert.data.date}
+              </p>
+              {cert.data.verify && (
+                <a
+                  href={cert.data.verify}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Verify ${cert.data.name} certification`}
+                  class="inline-flex items-center gap-1 mt-2 text-xs text-cyber-blue hover:text-cyber-green transition-colors font-mono"
+                >
+                  <ExternalLink class="w-3 h-3" />
+                  Verify
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

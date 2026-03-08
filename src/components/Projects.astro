@@ -1,0 +1,85 @@
+---
+import { FolderGit2 } from '@lucide/astro';
+import { getCollection } from 'astro:content';
+import { fetchGitHubRepos } from '../lib/github';
+import ProjectCard from './ProjectCard.astro';
+import type { ProjectData } from './ProjectCard.astro';
+
+// Fetch public repos from GitHub API at build time
+const githubRepos = await fetchGitHubRepos('bladzv');
+
+// Fetch manual project entries from content collection
+const manualEntries = await getCollection('projects', ({ slug }) => {
+  // Exclude template file
+  return !slug.startsWith('_');
+});
+
+// Convert manual entries to ProjectData
+const manualProjects: ProjectData[] = manualEntries.map((entry) => ({
+  title: entry.data.title,
+  description: entry.data.description,
+  language: entry.data.language,
+  stack: entry.data.stack,
+  url: entry.data.url,
+  homepage: entry.data.homepage,
+  visibility: entry.data.visibility,
+  blur: entry.data.blur ?? false,
+  status: entry.data.status,
+}));
+
+// Convert GitHub repos to ProjectData
+const publicProjects: ProjectData[] = githubRepos.map((repo) => ({
+  title: repo.title,
+  description: repo.description,
+  language: repo.language,
+  url: repo.url,
+  homepage: repo.homepage,
+  visibility: 'public',
+  status: 'active',
+}));
+
+// Merge: manual projects (sorted by order) first, then public repos
+// Deduplicate: if a manual entry has the same title as a GitHub repo, prefer the manual one
+const manualTitles = new Set(manualProjects.map((p) => p.title.toLowerCase()));
+const dedupedPublic = publicProjects.filter(
+  (p) => !manualTitles.has(p.title.toLowerCase())
+);
+
+const sortedManual = manualEntries
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))
+  .map((entry) => ({
+    title: entry.data.title,
+    description: entry.data.description,
+    language: entry.data.language,
+    stack: entry.data.stack,
+    url: entry.data.url,
+    homepage: entry.data.homepage,
+    visibility: entry.data.visibility,
+    blur: entry.data.blur ?? false,
+    status: entry.data.status,
+  } as ProjectData));
+
+const allProjects: ProjectData[] = [...sortedManual, ...dedupedPublic];
+---
+
+<section id="projects" class="relative z-10 reveal">
+  <div class="section-container">
+    <div class="flex items-center gap-3 mb-2">
+      <FolderGit2 class="w-6 h-6 text-cyber-green" />
+      <h2 class="section-heading mb-0">Projects</h2>
+    </div>
+    <p class="text-sm text-cyber-muted mb-8 ml-9">
+      Public repos auto-populated from GitHub · Private projects added manually
+    </p>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {allProjects.map((project) => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+
+    {allProjects.length === 0 && (
+      <p class="text-center text-cyber-muted py-12">No projects found.</p>
+    )}
+  </div>
+</section>

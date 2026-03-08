@@ -1,0 +1,32 @@
+name: Build & Audit
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - run: npm ci
+      - run: npm run build
+
+  lighthouse:
+    needs: build
+    runs-on: ubuntu-latest
+    if: env.LIGHTHOUSE_URL != ''
+    env:
+      LH_URL: ${{ env.LIGHTHOUSE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Lighthouse Action
+        uses: GoogleChrome/lighthouse-action@v3
+        with:
+          url: ${{ env.LH_URL }}
+          output: html
+          output-path: ./lh-report.html

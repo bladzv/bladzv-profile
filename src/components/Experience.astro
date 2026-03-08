@@ -1,0 +1,70 @@
+---
+import { Briefcase } from '@lucide/astro';
+
+const roles = [
+  {
+    role: 'Support & Marketing Specialist',
+    period: 'May 2024 – Present',
+    active: true,
+  },
+  {
+    role: 'Partners, Tech & Voice Support — Team Lead',
+    period: 'Jul 2023 – Apr 2024',
+    active: false,
+  },
+  {
+    role: 'Operations Associate',
+    period: 'Sep 2021 – Jun 2023',
+    active: false,
+  },
+  {
+    role: 'Alarm Monitoring Center — Team Lead',
+    period: 'Jun 2019 – Sep 2021',
+    active: false,
+  },
+  {
+    role: 'IT Admin, Data Encoding & Education',
+    period: '2014 – 2018',
+    active: false,
+  },
+];
+---
+
+<section id="experience" class="relative z-10 reveal">
+  <div class="section-container">
+    <div class="flex items-center gap-3 mb-8">
+      <Briefcase class="w-6 h-6 text-cyber-green" />
+      <h2 class="section-heading mb-0">Experience</h2>
+    </div>
+
+    <div class="relative">
+      <!-- Timeline line -->
+      <div class="absolute left-4 md:left-6 top-0 bottom-0 w-px bg-gradient-to-b from-cyber-green via-cyber-blue to-cyber-border"></div>
+
+      <div class="space-y-6">
+        {roles.map((entry, i) => (
+          <div
+            class="relative pl-12 md:pl-16 group"
+            style={`animation: fade-in-up 0.6s ease-out ${0.1 * i}s forwards; opacity: 0;`}
+          >
+            {/* Timeline dot */}
+            <div class={`absolute left-[11px] md:left-[19px] top-2 w-2.5 h-2.5 rounded-full border-2 ${
+              entry.active
+                ? 'border-cyber-green bg-cyber-green shadow-[0_0_8px_rgba(0,255,136,0.5)]'
+                : 'border-cyber-border bg-cyber-surface'
+            }`} />
+
+            <div class="glass-card p-4 md:p-5 hover:border-cyber-green/30 transition-colors duration-300">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                <h3 class="text-base font-semibold text-cyber-text">{entry.role}</h3>
+                <span class={`text-xs font-mono whitespace-nowrap ${entry.active ? 'text-cyber-green' : 'text-cyber-muted'}`}>
+                  {entry.period}
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

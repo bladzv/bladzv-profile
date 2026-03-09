@@ -200,6 +200,8 @@ Each `START` clears both files. History preserved in git/PRs.
 
 ---
 
+Note: The Lighthouse audit workflow (`.github/workflows/audit.yml`) has been removed from CI; audits are no longer run automatically.
+
 ### `START` Command
 
 **Actions:**

@@ -24,11 +24,16 @@ jobs:
     # Job-level `if` removed — evaluate presence at step level so env/vars/secrets are available.
     steps:
       - uses: actions/checkout@v4
+      - name: Set LIGHTHOUSE_URL environment variable
+        # Resolve repo variable, secret, or workflow env into the runner env safely.
+        run: |
+          echo "LIGHTHOUSE_URL=${{ vars.LIGHTHOUSE_URL || secrets.LIGHTHOUSE_URL || env.LIGHTHOUSE_URL }}" >> $GITHUB_ENV
+
       - name: Run Lighthouse Action
-        # Step-level conditional can reference vars/secrets/env; prefers repo variable, then secret, then workflow env.
-        if: ${{ vars.LIGHTHOUSE_URL || secrets.LIGHTHOUSE_URL || env.LIGHTHOUSE_URL }}
+        # Use runner env check to avoid referencing secrets/vars directly in the `if` expression.
+        if: ${{ env.LIGHTHOUSE_URL }}
         uses: GoogleChrome/lighthouse-action@v3
         with:
-          url: ${{ vars.LIGHTHOUSE_URL || secrets.LIGHTHOUSE_URL || env.LIGHTHOUSE_URL || 'https://example.com' }}
+          url: ${{ env.LIGHTHOUSE_URL || 'https://example.com' }}
           output: html
           output-path: ./lh-report.html

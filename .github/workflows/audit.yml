@@ -19,14 +19,14 @@ jobs:
   lighthouse:
     needs: build
     runs-on: ubuntu-latest
-    if: env.LIGHTHOUSE_URL != ''
-    env:
-      LH_URL: ${{ env.LIGHTHOUSE_URL }}
+    # `if` must use expression syntax, otherwise `env` isn't recognized
+    if: ${{ env.LIGHTHOUSE_URL != '' }}
     steps:
       - uses: actions/checkout@v4
       - name: Run Lighthouse Action
         uses: GoogleChrome/lighthouse-action@v3
         with:
-          url: ${{ env.LH_URL }}
+          # can refer to the environment variable directly here
+          url: ${{ env.LIGHTHOUSE_URL }}
           output: html
           output-path: ./lh-report.html

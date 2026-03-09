@@ -137,13 +137,6 @@
 
     function start() {
       if (rafId != null) return;
-      // Respect user preference stored in localStorage
-      try {
-        const disabled = localStorage.getItem('particles-disabled') === '1';
-        if (disabled) return;
-      } catch (e) {
-        // ignore
-      }
       initParticles();
       animate();
     }
@@ -187,20 +180,6 @@
     // Start animation initially
     start();
 
-    // Listen for manual toggle events from UI
-    window.addEventListener('particles:toggle', () => {
-      try {
-        const disabled = localStorage.getItem('particles-disabled') === '1';
-        if (disabled) {
-          // user disabled -> stop
-          stop();
-        } else {
-          // enabled -> start
-          start();
-        }
-      } catch (e) {
-        // ignore
-      }
-    });
+
   }
 </script>

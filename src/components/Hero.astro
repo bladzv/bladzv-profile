@@ -52,33 +52,39 @@ import { Shield, Terminal, ChevronDown } from '@lucide/astro';
 
   const el = document.getElementById('typewriter');
   if (el) {
-    let phraseIdx = 0;
-    let charIdx = 0;
-    let deleting = false;
+    // Respect user's reduced-motion preference — render static first phrase if set.
+    const prefersReduced = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      el.textContent = phrases[0];
+    } else {
+      let phraseIdx = 0;
+      let charIdx = 0;
+      let deleting = false;
 
-    function tick() {
-      const current = phrases[phraseIdx];
-      if (!deleting) {
-        el!.textContent = current.slice(0, ++charIdx);
-        if (charIdx === current.length) {
-          deleting = true;
-          setTimeout(tick, 1800);
-          return;
+      function tick() {
+        const current = phrases[phraseIdx];
+        if (!deleting) {
+          el!.textContent = current.slice(0, ++charIdx);
+          if (charIdx === current.length) {
+            deleting = true;
+            setTimeout(tick, 1800);
+            return;
+          }
+          setTimeout(tick, 70);
+        } else {
+          el!.textContent = current.slice(0, --charIdx);
+          if (charIdx === 0) {
+            deleting = false;
+            phraseIdx = (phraseIdx + 1) % phrases.length;
+            setTimeout(tick, 400);
+            return;
+          }
+          setTimeout(tick, 40);
         }
-        setTimeout(tick, 70);
-      } else {
-        el!.textContent = current.slice(0, --charIdx);
-        if (charIdx === 0) {
-          deleting = false;
-          phraseIdx = (phraseIdx + 1) % phrases.length;
-          setTimeout(tick, 400);
-          return;
-        }
-        setTimeout(tick, 40);
       }
-    }
 
-    // Wait for the fade-in animation before starting
-    setTimeout(tick, 1200);
+      // Wait for the fade-in animation before starting
+      setTimeout(tick, 1200);
+    }
   }
 </script>

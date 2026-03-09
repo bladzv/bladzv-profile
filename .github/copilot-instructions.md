@@ -54,4 +54,4 @@ npm run preview      # Preview production build locally
 
 - When adding new sections, follow the pattern in existing components: export no JS, use `section-container` wrapper, add Lucide icon + `section-heading`.
 - Project card frontmatter schema is validated by Zod in `src/content/config.ts` — update schema if adding fields.
-- The `base` path in `astro.config.mjs` is set for GitHub Pages (`/static-profile`). Adjust if repo name changes.
+- The `base` path in `astro.config.mjs` is set for GitHub Pages (`/bladzv-profile`). Adjust if repo name changes.

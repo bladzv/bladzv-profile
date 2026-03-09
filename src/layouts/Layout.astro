@@ -10,6 +10,8 @@ const {
 } = Astro.props;
 
 const base = import.meta.env.BASE_URL;
+const site = Astro.site ?? 'https://bladzv.github.io';
+const siteUrl = `${site}${base}`;
 ---
 
 <!doctype html>
@@ -44,6 +46,7 @@ const base = import.meta.env.BASE_URL;
     <meta name="twitter:creator" content="@bladzv" />
 
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="canonical" href={siteUrl} />
     <title>{title}</title>
   </head>
   <body class="min-h-screen relative">
@@ -54,7 +57,7 @@ const base = import.meta.env.BASE_URL;
         '@context': 'https://schema.org',
         '@type': 'Person',
         name: 'Bloodymer S. Velasco',
-        url: 'https://bladzv.github.io/static-profile',
+        url: siteUrl,
         sameAs: ['https://github.com/bladzv', 'https://www.linkedin.com/in/bloodyvelasco/'],
         jobTitle: 'IT & Cybersecurity Professional',
         description,

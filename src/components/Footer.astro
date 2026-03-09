@@ -33,39 +33,6 @@ import { Linkedin, Github, Heart } from '@lucide/astro';
       <p class="text-xs text-cyber-muted/60 font-mono flex items-center gap-1">
         &copy; {new Date().getFullYear()} Bloodymer S. Velasco
       </p>
-      <div class="ml-4">
-        <button
-          id="particles-toggle"
-          class="text-xs text-cyber-muted/60 font-mono hover:text-cyber-green transition-colors rounded px-2 py-1"
-          aria-pressed="false"
-          aria-label="Toggle particle background"
-        >
-          Toggle Particles
-        </button>
-      </div>
     </div>
   </div>
 </footer>
-
-<script>
-  (function () {
-    const btn = document.getElementById('particles-toggle');
-    if (!btn) return;
-    function updateLabel() {
-      try {
-        const disabled = localStorage.getItem('particles-disabled') === '1';
-        btn.setAttribute('aria-pressed', String(!disabled));
-        btn.textContent = disabled ? 'Enable Particles' : 'Disable Particles';
-      } catch (e) {}
-    }
-    btn.addEventListener('click', () => {
-      try {
-        const disabled = localStorage.getItem('particles-disabled') === '1';
-        localStorage.setItem('particles-disabled', disabled ? '0' : '1');
-        window.dispatchEvent(new Event('particles:toggle'));
-        updateLabel();
-      } catch (e) {}
-    });
-    updateLabel();
-  })();
-</script>

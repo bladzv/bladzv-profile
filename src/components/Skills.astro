@@ -4,6 +4,31 @@ import { ShieldCheck, Code, Cloud } from '@lucide/astro';
 
 const allSkills = await getCollection('skills', ({ id }) => !id.startsWith('_'));
 const categories = allSkills.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
+// Map content color keys to explicit Tailwind utility classes so classes are statically
+// present in source and not purged by Tailwind's JIT purge.
+const colorMap = {
+  'cyber-green': {
+    text: 'text-cyber-green',
+    bg: 'bg-cyber-green/10',
+    border: 'border-cyber-green/20',
+  },
+  'cyber-blue': {
+    text: 'text-cyber-blue',
+    bg: 'bg-cyber-blue/10',
+    border: 'border-cyber-blue/20',
+  },
+  'cyber-purple': {
+    text: 'text-cyber-purple',
+    bg: 'bg-cyber-purple/10',
+    border: 'border-cyber-purple/20',
+  },
+  'cyber-muted': {
+    text: 'text-cyber-muted',
+    bg: 'bg-cyber-muted/10',
+    border: 'border-cyber-muted/20',
+  },
+};
 ---
 
 <section id="skills" class="relative z-10 reveal">
@@ -17,17 +42,20 @@ const categories = allSkills.sort((a, b) => (a.data.order ?? 99) - (b.data.order
       {categories.map((cat) => (
         <div class="glass-card p-6 group hover:border-cyber-green/30 transition-colors duration-300">
           <div class="flex items-center gap-2 mb-4">
-            {cat.data.icon === 'shield' && <ShieldCheck class={`w-5 h-5 text-${cat.data.color}`} />}
-            {cat.data.icon === 'code' && <Code class={`w-5 h-5 text-${cat.data.color}`} />}
-            {cat.data.icon === 'cloud' && <Cloud class={`w-5 h-5 text-${cat.data.color}`} />}
+            {cat.data.icon === 'shield' && <ShieldCheck class={`w-5 h-5 ${colorMap[cat.data.color]?.text ?? 'text-cyber-muted'}`} />}
+            {cat.data.icon === 'code' && <Code class={`w-5 h-5 ${colorMap[cat.data.color]?.text ?? 'text-cyber-muted'}`} />}
+            {cat.data.icon === 'cloud' && <Cloud class={`w-5 h-5 ${colorMap[cat.data.color]?.text ?? 'text-cyber-muted'}`} />}
             <h3 class="text-sm font-mono font-semibold text-cyber-text uppercase tracking-wider">{cat.data.category}</h3>
           </div>
           <div class="flex flex-wrap gap-2">
-            {cat.data.skills.map((skill: string) => (
-              <span class={`px-3 py-1.5 rounded-lg text-sm bg-${cat.data.color}/10 text-${cat.data.color} border border-${cat.data.color}/20 font-mono`}>
-                {skill}
-              </span>
-            ))}
+            {cat.data.skills.map((skill: string) => {
+              const c = colorMap[cat.data.color] ?? colorMap['cyber-muted'];
+              return (
+                <span class={`px-3 py-1.5 rounded-lg text-sm ${c.bg} ${c.text} ${c.border} border font-mono`}>
+                  {skill}
+                </span>
+              );
+            })}
           </div>
         </div>
       ))}

@@ -30,7 +30,8 @@ function sanitizeUrl(input: unknown): string {
   if (typeof input !== 'string' || !input) return '';
   try {
     const url = new URL(input);
-    if (url.protocol === 'https:' || url.protocol === 'http:') {
+    // Enforce HTTPS only to match policy and reduce risk of insecure redirects.
+    if (url.protocol === 'https:') {
       return url.href;
     }
     return '';
@@ -52,7 +53,7 @@ export async function fetchGitHubRepos(username: string): Promise<GitHubRepo[]> 
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) return parsed;
       }
-    } catch (e) {
+    } catch {
       // ignore
     }
     return [];
@@ -63,7 +64,7 @@ export async function fetchGitHubRepos(username: string): Promise<GitHubRepo[]> 
       const dir = path.dirname(cachePath);
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(cachePath, JSON.stringify(repos, null, 2), 'utf-8');
-    } catch (e) {
+    } catch {
       // ignore
     }
   }

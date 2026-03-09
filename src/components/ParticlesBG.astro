@@ -170,7 +170,7 @@
         conn.addEventListener('change', () => {
           initParticles();
         });
-      } catch (e) {
+      } catch {
         // Some browsers use onchange
         // @ts-ignore
         conn.onchange = () => initParticles();

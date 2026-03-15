@@ -1,19 +1,28 @@
 [
   {
-    "title": "budget2go",
-    "description": "Secure, responsive personal finance manager for tracking income, savings, expenses, and loans with encrypted import/export.",
-    "language": "JavaScript",
-    "url": "https://github.com/bladzv/budget2go",
-    "homepage": "https://bladzv.github.io/budget2go/",
-    "visibility": "public",
-    "status": "active"
-  },
-  {
     "title": "enjin-status-checker",
     "description": "Static React app that audits validator reward cadence on the Enjin Relaychain using Subscan.",
     "language": "JavaScript",
     "url": "https://github.com/bladzv/enjin-status-checker",
     "homepage": "https://enjin-status-checker.vercel.app/",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
+    "title": "bladzv-profile",
+    "description": "A simple, fast one‑page web résumé that highlights who I am, what I’ve built, and my skills in IT & cybersecurity. It works on any device and keeps things clean and accessible—just me on the web.",
+    "language": "Astro",
+    "url": "https://github.com/bladzv/bladzv-profile",
+    "homepage": "https://bladzv.github.io/bladzv-profile/",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
+    "title": "budget2go",
+    "description": "Secure, responsive personal finance manager for tracking income, savings, expenses, and loans with encrypted import/export.",
+    "language": "JavaScript",
+    "url": "https://github.com/bladzv/budget2go",
+    "homepage": "https://bladzv.github.io/budget2go/",
     "visibility": "public",
     "status": "active"
   },

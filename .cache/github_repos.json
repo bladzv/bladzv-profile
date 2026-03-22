@@ -1,10 +1,10 @@
 [
   {
-    "title": "enjin-status-checker",
-    "description": "Static React app that audits validator reward cadence on the Enjin Relaychain using Subscan.",
+    "title": "enjinsight",
+    "description": "Lghtweight web utilities for monitoring Enjin Blockchain validators, nomination pools, and historical account balances. Read-only analytics; no wallet required.",
     "language": "JavaScript",
-    "url": "https://github.com/bladzv/enjin-status-checker",
-    "homepage": "https://enjin-status-checker.vercel.app/",
+    "url": "https://github.com/bladzv/enjinsight",
+    "homepage": "https://enjinsight.vercel.app/",
     "visibility": "public",
     "status": "active"
   },

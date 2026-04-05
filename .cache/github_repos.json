@@ -1,7 +1,7 @@
 [
   {
     "title": "enjinsight",
-    "description": "Lghtweight web utilities for monitoring Enjin Blockchain validators, nomination pools, and historical account balances. Read-only analytics; no wallet required.",
+    "description": "Read-only blockchain analytics suite for the Enjin ecosystem — real-time era metrics, staking reward cadence detection, historical balance queries, and per-era reward computation. No wallet required.",
     "language": "JavaScript",
     "url": "https://github.com/bladzv/enjinsight",
     "homepage": "https://enjinsight.vercel.app/",

@@ -9,10 +9,7 @@ import type { ProjectData } from './ProjectCard.astro';
 const githubRepos = await fetchGitHubRepos('bladzv');
 
 // Fetch manual project entries from content collection
-const manualEntries = await getCollection('projects', ({ slug }) => {
-  // Exclude template file
-  return !slug.startsWith('_');
-});
+const manualEntries = await getCollection('projects');
 
 // Convert manual entries to ProjectData
 const manualProjects: ProjectData[] = manualEntries.map((entry) => ({

@@ -23,6 +23,11 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# Session files used by AI agent during development
+# Claude AI agent configuration (internal dev tooling)
+.claude/
+
+# Internal AI development workflow files
+.github/ai-instructions-web.md
+.github/custom-prompts.md
 .github/actions.md
 .github/pr_description.md

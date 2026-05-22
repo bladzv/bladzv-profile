@@ -24,16 +24,42 @@ Why this repo:
 
 ## Tech Stack
 
-- Framework: Astro
-- Styling: Tailwind CSS
+- Framework: Astro 6
+- Styling: Tailwind CSS v3 via PostCSS (`postcss.config.cjs`)
 - Hosting: GitHub Pages (static)
-- Build-time data: GitHub REST API (sanitized)
+- Build-time data: GitHub REST API (sanitized), cached in `.cache/github_repos.json`
+- CI/CD: GitHub Actions — deploy on push to `main`, weekly cache refresh
 
 ## Project Structure
 
-- `src/pages/index.astro` — single entry that composes components
-- `src/layouts/Layout.astro` — HTML shell + CSP
-- `src/components/` — visual sections (Hero, About, Projects, etc.)
-- `src/content/` — Markdown collections for projects, skills, certifications
-- `src/lib/github.ts` — build-time GitHub fetch + sanitization
-- `src/styles/global.css` — Tailwind utilities and site styles
+```
+src/
+├── content.config.ts           ← Zod schemas for projects, skills, certifications
+├── pages/index.astro           ← Single entry point, composes all sections
+├── layouts/Layout.astro        ← HTML shell + CSP meta tag
+├── components/                 ← One .astro file per visual section
+├── content/
+│   ├── projects/               ← Manual project entries (.md) — public & private
+│   ├── skills/                 ← Skill badge groups by category (.md)
+│   └── certifications/         ← Cert credential cards (.md)
+├── lib/github.ts               ← Build-time GitHub API fetch + sanitization
+└── styles/global.css           ← Tailwind directives + custom utilities
+scripts/
+└── update-github-cache.js      ← Refreshes .cache/github_repos.json from GitHub API
+.github/
+├── workflows/deploy.yml        ← Build & deploy to GitHub Pages on push to main
+└── workflows/update-cache.yml  ← Weekly cron to refresh cached public repos
+```
+
+## Developer Workflows
+
+```bash
+npm run dev      # Start dev server (localhost:4321)
+npm run build    # Production build → dist/
+npm run preview  # Preview production build locally
+```
+
+- **Adding a project:** Create a `.md` file in `src/content/projects/` using `_template.md` as a guide.
+- **Public repos:** Auto-fetched from GitHub API (`bladzv`) at build time — no manual entry needed.
+- **Private projects:** Set `visibility: private` (and optionally `blur: true`) in the frontmatter.
+- **Deploying:** Push to `main` — GitHub Actions builds and deploys automatically.

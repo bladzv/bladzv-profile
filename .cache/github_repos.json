@@ -1,5 +1,14 @@
 [
   {
+    "title": "bladzv-profile",
+    "description": "A simple, fast one‑page web résumé that highlights who I am, what I’ve built, and my skills in IT & cybersecurity. It works on any device and keeps things clean and accessible—just me on the web.",
+    "language": "Astro",
+    "url": "https://github.com/bladzv/bladzv-profile",
+    "homepage": "https://bladzv.github.io/bladzv-profile/",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
     "title": "dive",
     "description": "Dependency Intelligence for Vulnerability Exposure. Self-hosted security feed aggregator and GitHub dependency scanner. Can run on a Raspberry Pi, uses local AI (Ollama) to categorise CVEs, and alerts",
     "language": "Python",
@@ -23,15 +32,6 @@
     "language": "JavaScript",
     "url": "https://github.com/bladzv/enjinsight",
     "homepage": "https://enjinsight.vercel.app/",
-    "visibility": "public",
-    "status": "active"
-  },
-  {
-    "title": "bladzv-profile",
-    "description": "A simple, fast one‑page web résumé that highlights who I am, what I’ve built, and my skills in IT & cybersecurity. It works on any device and keeps things clean and accessible—just me on the web.",
-    "language": "Astro",
-    "url": "https://github.com/bladzv/bladzv-profile",
-    "homepage": "https://bladzv.github.io/bladzv-profile/",
     "visibility": "public",
     "status": "active"
   },

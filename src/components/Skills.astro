@@ -12,35 +12,42 @@ const colorMap = {
     text: 'text-cyber-green',
     bg: 'bg-cyber-green/10',
     border: 'border-cyber-green/20',
+    topBorder: 'border-t-cyber-green/50',
   },
   'cyber-blue': {
     text: 'text-cyber-blue',
     bg: 'bg-cyber-blue/10',
     border: 'border-cyber-blue/20',
+    topBorder: 'border-t-cyber-blue/50',
   },
   'cyber-purple': {
     text: 'text-cyber-purple',
     bg: 'bg-cyber-purple/10',
     border: 'border-cyber-purple/20',
+    topBorder: 'border-t-cyber-purple/50',
   },
   'cyber-muted': {
     text: 'text-cyber-muted',
     bg: 'bg-cyber-muted/10',
     border: 'border-cyber-muted/20',
+    topBorder: 'border-t-cyber-muted/30',
   },
 };
 ---
 
 <section id="skills" class="relative z-10 reveal">
   <div class="section-container">
-    <div class="flex items-center gap-3 mb-8">
-      <Code class="w-6 h-6 text-cyber-green" />
-      <h2 class="section-heading mb-0">Skills</h2>
+    <div class="flex items-center gap-4 mb-8">
+      <div class="w-1 h-7 bg-cyber-purple rounded-full flex-shrink-0"></div>
+      <div class="flex items-center gap-2.5">
+        <Code class="w-5 h-5 text-cyber-purple" aria-hidden="true" />
+        <h2 class="section-heading">Skills</h2>
+      </div>
     </div>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {categories.map((cat) => (
-        <div class="glass-card p-6 group hover:border-cyber-green/30 transition-colors duration-300">
+        <div class={`glass-card p-6 border-t-2 ${colorMap[cat.data.color]?.topBorder ?? 'border-t-cyber-muted/30'} group hover:border-cyber-green/30 transition-colors duration-300`}>
           <div class="flex items-center gap-2 mb-4">
             {cat.data.icon === 'shield' && <ShieldCheck class={`w-5 h-5 ${colorMap[cat.data.color]?.text ?? 'text-cyber-muted'}`} />}
             {cat.data.icon === 'code' && <Code class={`w-5 h-5 ${colorMap[cat.data.color]?.text ?? 'text-cyber-muted'}`} />}

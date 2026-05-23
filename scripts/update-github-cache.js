@@ -5,7 +5,7 @@ import path from 'path';
 const username = process.env.GITHUB_REPOS_USER || 'bladzv';
 const cachePath = path.resolve(process.cwd(), '.cache', 'github_repos.json');
 
-function sanitize(input, maxLength = 200) {
+function sanitize(input, maxLength = 320) {
   if (typeof input !== 'string') return '';
   return input.replace(/<[^>]*>/g, '').trim().slice(0, maxLength);
 }
@@ -69,7 +69,7 @@ async function fetchRepos() {
       .filter((r) => !r.fork && !r.archived)
       .map((repo) => ({
         title: sanitize(repo.name, 100),
-        description: sanitize(repo.description, 200) || 'No description provided.',
+        description: sanitize(repo.description, 320) || 'No description provided.',
         language: sanitize(repo.language, 50) || 'Unknown',
         url: sanitizeUrl(repo.html_url),
         homepage: sanitizeUrl(repo.homepage),

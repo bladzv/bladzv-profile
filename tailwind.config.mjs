@@ -6,15 +6,15 @@ export default {
     extend: {
       colors: {
         cyber: {
-          bg: '#0a0a0f',
-          surface: '#12121a',
-          card: '#1a1a2e',
-          border: '#2a2a3e',
+          bg: '#0d1117',
+          surface: '#161b22',
+          card: '#1c2128',
+          border: '#21262d',
           green: '#00ff88',
           blue: '#00d4ff',
           purple: '#a855f7',
-          muted: '#8888aa',
-          text: '#e0e0f0',
+          muted: '#8b949e',
+          text: '#e6edf3',
         },
       },
       fontFamily: {

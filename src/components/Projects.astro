@@ -61,15 +61,18 @@ const allProjects: ProjectData[] = [...sortedManual, ...dedupedPublic];
 
 <section id="projects" class="relative z-10 reveal">
   <div class="section-container">
-    <div class="flex items-center gap-3 mb-2">
-      <FolderGit2 class="w-6 h-6 text-cyber-green" />
-      <h2 class="section-heading mb-0">Projects</h2>
+    <div class="flex items-center gap-4 mb-2">
+      <div class="w-1 h-7 bg-cyber-green rounded-full flex-shrink-0"></div>
+      <div class="flex items-center gap-2.5">
+        <FolderGit2 class="w-5 h-5 text-cyber-green" aria-hidden="true" />
+        <h2 class="section-heading">Projects</h2>
+      </div>
     </div>
-    <p class="text-sm text-cyber-muted mb-8 ml-9">
+    <p class="text-sm text-cyber-muted mb-8 ml-[50px]">
       Public repos auto-populated from GitHub · Private projects added manually
     </p>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="projects-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {allProjects.map((project) => (
         <ProjectCard project={project} />
       ))}
@@ -80,3 +83,22 @@ const allProjects: ProjectData[] = [...sortedManual, ...dedupedPublic];
     )}
   </div>
 </section>
+
+<style>
+  /* Center a lone last card in a 2-column grid */
+  @media (min-width: 640px) and (max-width: 1023px) {
+    :global(.projects-grid > :last-child:nth-child(odd)) {
+      grid-column: 1 / -1;
+      max-width: calc(50% - 0.75rem);
+      margin-inline: auto;
+    }
+  }
+  /* Center a lone last card in a 3-column grid */
+  @media (min-width: 1024px) {
+    :global(.projects-grid > :last-child:nth-child(3n+1)) {
+      grid-column: 1 / -1;
+      max-width: calc(33.333% - 1rem);
+      margin-inline: auto;
+    }
+  }
+</style>

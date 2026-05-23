@@ -57,7 +57,6 @@
 
       const mobile = isMobile();
 
-      // Start from defaults and scale down for constrained environments
       let count = mobile ? 35 : 80;
       let distance = mobile ? 100 : 150;
       let speed = 0.3;
@@ -108,13 +107,11 @@
         if (p.x < 0 || p.x > width) p.vx *= -1;
         if (p.y < 0 || p.y > height) p.vy *= -1;
 
-        // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(0, 255, 136, ${p.opacity})`;
         ctx.fill();
 
-        // Draw connections
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dx = p.x - p2.x;
@@ -148,13 +145,11 @@
       }
     }
 
-    // Pause when page is hidden to save resources
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) stop();
       else start();
     });
 
-    // Re-init on resize with a small debounce
     let resizeTimer: number | null = null;
     window.addEventListener('resize', () => {
       if (resizeTimer) window.clearTimeout(resizeTimer);
@@ -163,7 +158,6 @@
       }, 250);
     });
 
-    // Listen to connection changes (if supported) and adapt
     const conn = getConnection();
     if (conn && typeof conn.addEventListener === 'function') {
       try {
@@ -171,15 +165,12 @@
           initParticles();
         });
       } catch {
-        // Some browsers use onchange
         // @ts-ignore
         conn.onchange = () => initParticles();
       }
     }
 
-    // Start animation initially
     start();
-
-
   }
 </script>
+

@@ -72,7 +72,7 @@ npm run preview  # Preview production build locally
 ```
 
 - **Adding a project:** Create a `.md` file in `src/content/projects/` using `_template.md` as a guide.
-- **Public repos:** Auto-fetched from GitHub API (`bladzv`) at build time — no manual entry needed.
+- **Public repos:** Auto-fetched from GitHub API (`bladzv`) at build time (including repo descriptions) — no manual entry needed.
 - **Private projects:** Set `visibility: private` (and optionally `blur: true`) in the frontmatter.
 - **Deploying:** Push to `main` — GitHub Actions builds and deploys automatically.
 - **Refreshing cached repos locally:** Run `node scripts/update-github-cache.js` (requires `GITHUB_TOKEN` env var).

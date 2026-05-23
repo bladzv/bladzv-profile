@@ -10,7 +10,7 @@
   },
   {
     "title": "dive",
-    "description": "Dependency Intelligence for Vulnerability Exposure. Self-hosted security feed aggregator and GitHub dependency scanner. Can run on a Raspberry Pi, uses local AI (Ollama) to categorise CVEs, and alerts",
+    "description": "Dependency Intelligence for Vulnerability Exposure. Self-hosted security feed aggregator and GitHub dependency scanner. Can run on a Raspberry Pi, uses local AI (Ollama) to categorise CVEs, and alerts you on Slack, Discord, or email — no paid APIs required.",
     "language": "Python",
     "url": "https://github.com/bladzv/dive",
     "homepage": "",
@@ -19,7 +19,7 @@
   },
   {
     "title": "enjin-snap-wallet-exporter",
-    "description": "Securely export Enjin Snap (MetaMask) wallet keypairs offline. Generate hex private keys and encrypted JSON keystores for importing into Enjin Wallet or compatible blockchain wallets. No internet conn",
+    "description": "Securely export Enjin Snap (MetaMask) wallet keypairs offline. Generate hex private keys and encrypted JSON keystores for importing into Enjin Wallet or compatible blockchain wallets. No internet connection required after library loading.",
     "language": "JavaScript",
     "url": "https://github.com/bladzv/enjin-snap-wallet-exporter",
     "homepage": "https://bladzv.github.io/enjin-snap-wallet-exporter/",
@@ -64,7 +64,7 @@
   },
   {
     "title": "nft-metadata-scanner",
-    "description": "Secure NFT Metadata Validator - Scan, validate, and preview NFT metadata with VirusTotal integration. Supports ERC-721, ERC-1155, and Enjin standards. OWASP compliant, client-side processing, IPFS nat",
+    "description": "Secure NFT Metadata Validator - Scan, validate, and preview NFT metadata with VirusTotal integration. Supports ERC-721, ERC-1155, and Enjin standards. OWASP compliant, client-side processing, IPFS native.",
     "language": "JavaScript",
     "url": "https://github.com/bladzv/nft-metadata-scanner",
     "homepage": "",

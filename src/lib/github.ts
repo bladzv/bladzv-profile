@@ -17,7 +17,7 @@ export interface GitHubRepo {
 /** Strip HTML tags and limit string length for safety.
  *  Astro auto-escapes template expressions, so we only strip tags here.
  */
-function sanitize(input: unknown, maxLength = 200): string {
+function sanitize(input: unknown, maxLength = 320): string {
   if (typeof input !== 'string') return '';
   return input
     .replace(/<[^>]*>/g, '')
@@ -99,7 +99,7 @@ export async function fetchGitHubRepos(username: string): Promise<GitHubRepo[]> 
       .filter((repo: any) => !repo.fork && !repo.archived)
       .map((repo: any) => ({
         title: sanitize(repo.name, 100),
-        description: sanitize(repo.description, 200) || 'No description provided.',
+        description: sanitize(repo.description, 320) || 'No description provided.',
         language: sanitize(repo.language, 50) || 'Unknown',
         url: sanitizeUrl(repo.html_url),
         homepage: sanitizeUrl(repo.homepage),

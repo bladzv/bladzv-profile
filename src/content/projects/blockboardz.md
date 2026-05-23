@@ -1,6 +1,6 @@
 ---
 title: "BlockBoardz"
-description: ""
+description: "A Web3 bulletin board platform built on the Enjin Blockchain."
 language: "TypeScript"
 stack: "Enjin Blockchain, Web3"
 url: ""

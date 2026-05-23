@@ -2,7 +2,7 @@
 
 # Static Profile — Bloodymer S. Velasco
 
-A clean, fast one‑page resume that highlights who I am, what I've built, and my skills in IT & cybersecurity. The site works on any device and keeps things simple and accessible — just me on the web.
+A dark‑navy, terminal‑themed one‑page portfolio that highlights who I am, what I've built, and my skills in IT & cybersecurity. Features a split‑hero with a live terminal card, canvas particle background, and a responsive hamburger nav — works on any device.
 
 ![Astro](https://img.shields.io/badge/Astro-0a0a0f?style=for-the-badge&logo=astro&logoColor=ff5d01) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-0a0a0f?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4) ![TypeScript](https://img.shields.io/badge/TypeScript-0a0a0f?style=for-the-badge&logo=typescript&logoColor=3178c6)
 
@@ -17,15 +17,17 @@ A clean, fast one‑page resume that highlights who I am, what I've built, and m
 Static Profile is a fast, accessibility‑minded portfolio built with Astro and Tailwind CSS. It shows public GitHub repos (fetched at build time) and manually authored private projects.
 
 Why this repo:
-- Minimal runtime JS — improved performance and reduced attack surface.
-- Security‑first: CSP in `Layout.astro` and sanitization of GitHub data.
+- Security‑first: CSP meta tag in `Layout.astro` and sanitization of all GitHub API data.
 - Easy content workflow: add/edit Markdown in `src/content/`; use `blur: true` for private projects.
+- Accessible: respects `prefers-reduced-motion` (particles hidden, animations disabled); `aria-label` on all icon‑only links.
 
 
 ## Tech Stack
 
-- Framework: Astro 6
-- Styling: Tailwind CSS v3 via PostCSS (`postcss.config.cjs`)
+- Framework: Astro 6 (static output, `base: /bladzv-profile`)
+- Styling: Tailwind CSS v3 via PostCSS — dark navy `cyber-*` design tokens
+- Fonts: Inter (UI) + JetBrains Mono (terminal/code) via Google Fonts
+- Background: Canvas particle animation (vanilla JS, no dependencies)
 - Hosting: GitHub Pages (static)
 - Build-time data: GitHub REST API (sanitized), cached in `.cache/github_repos.json`
 - CI/CD: GitHub Actions — deploy on push to `main`, weekly cache refresh
@@ -36,8 +38,18 @@ Why this repo:
 src/
 ├── content.config.ts           ← Zod schemas for projects, skills, certifications
 ├── pages/index.astro           ← Single entry point, composes all sections
-├── layouts/Layout.astro        ← HTML shell + CSP meta tag
-├── components/                 ← One .astro file per visual section
+├── layouts/Layout.astro        ← HTML shell + CSP meta tag + OG/Twitter tags
+├── components/
+│   ├── Nav.astro               ← Sticky top nav; hamburger menu on mobile (<768px)
+│   ├── ParticlesBG.astro       ← Canvas particle animation (vanilla JS, no deps)
+│   ├── Hero.astro              ← Full-height split hero: name/CTAs + terminal card
+│   ├── About.astro             ← Summary paragraph
+│   ├── Experience.astro        ← Vertical timeline (role + company + dates)
+│   ├── Skills.astro            ← Skill badge grid grouped by category
+│   ├── Certifications.astro    ← Cert credential cards
+│   ├── Projects.astro          ← Card grid (merges GitHub API + manual entries)
+│   ├── ProjectCard.astro       ← Single project card with visibility/status badges
+│   └── Footer.astro            ← LinkedIn + GitHub links
 ├── content/
 │   ├── projects/               ← Manual project entries (.md) — public & private
 │   ├── skills/                 ← Skill badge groups by category (.md)
@@ -63,3 +75,4 @@ npm run preview  # Preview production build locally
 - **Public repos:** Auto-fetched from GitHub API (`bladzv`) at build time — no manual entry needed.
 - **Private projects:** Set `visibility: private` (and optionally `blur: true`) in the frontmatter.
 - **Deploying:** Push to `main` — GitHub Actions builds and deploys automatically.
+- **Refreshing cached repos locally:** Run `node scripts/update-github-cache.js` (requires `GITHUB_TOKEN` env var).

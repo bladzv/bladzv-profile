@@ -1,0 +1,125 @@
+---
+import { Shield, Menu, X } from '@lucide/astro';
+
+const navLinks = [
+  { href: '#about', label: 'About' },
+  { href: '#experience', label: 'Experience' },
+  { href: '#skills', label: 'Skills' },
+  { href: '#certifications', label: 'Certs' },
+  { href: '#projects', label: 'Projects' },
+];
+---
+
+<nav
+  id="site-nav"
+  class="fixed top-0 left-0 right-0 z-50 bg-cyber-bg/80 backdrop-blur-md border-b border-cyber-border/20 transition-opacity duration-300"
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-14">
+      <!-- Logo -->
+      <a
+        href="#hero"
+        class="flex items-center gap-2 text-cyber-green font-mono text-sm font-semibold hover:text-cyber-text transition-colors"
+        aria-label="Back to top"
+      >
+        <Shield class="w-4 h-4" aria-hidden="true" />
+        <span>bladzv</span>
+      </a>
+
+      <!-- Desktop links -->
+      <div class="hidden md:flex items-center gap-0.5">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="nav-link px-3 py-1.5 text-sm font-mono text-cyber-muted hover:text-white transition-colors rounded"
+            data-section={link.href.slice(1)}
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+
+      <!-- Mobile hamburger button -->
+      <button
+        id="mobile-menu-btn"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        class="md:hidden p-2 -mr-2 text-cyber-muted hover:text-white transition-colors rounded"
+      >
+        <Menu id="hamburger-icon" class="w-5 h-5" aria-hidden="true" />
+        <X id="close-icon" class="w-5 h-5 hidden" aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile dropdown -->
+  <div
+    id="mobile-menu"
+    class="hidden md:hidden border-t border-cyber-border/20 bg-cyber-bg/95 backdrop-blur-md"
+    aria-label="Mobile navigation"
+  >
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="mobile-nav-link block px-3 py-2.5 text-sm font-mono text-cyber-muted hover:text-white hover:bg-cyber-surface/40 rounded transition-colors"
+          data-section={link.href.slice(1)}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Hamburger toggle
+  const btn = document.getElementById('mobile-menu-btn') as HTMLButtonElement | null;
+  const menu = document.getElementById('mobile-menu');
+  const hamburgerIcon = document.getElementById('hamburger-icon');
+  const closeIcon = document.getElementById('close-icon');
+
+  function setMenuOpen(open: boolean) {
+    menu?.classList.toggle('hidden', !open);
+    hamburgerIcon?.classList.toggle('hidden', open);
+    closeIcon?.classList.toggle('hidden', !open);
+    btn?.setAttribute('aria-expanded', String(open));
+    btn?.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+
+  btn?.addEventListener('click', () => {
+    const isOpen = !menu?.classList.contains('hidden');
+    setMenuOpen(!isOpen);
+  });
+
+  // Close mobile menu on link click
+  document.querySelectorAll('#mobile-menu a').forEach((link) => {
+    link.addEventListener('click', () => setMenuOpen(false));
+  });
+
+  // Active section highlighting (both desktop + mobile links)
+  const desktopLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-link[data-section]');
+  const mobileLinks = document.querySelectorAll<HTMLAnchorElement>('.mobile-nav-link[data-section]');
+  const allLinks = [...desktopLinks, ...mobileLinks];
+  const sections = Array.from(desktopLinks)
+    .map((l) => document.getElementById(l.dataset.section!))
+    .filter(Boolean) as HTMLElement[];
+
+  if ('IntersectionObserver' in window && sections.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            allLinks.forEach((l) => l.classList.remove('!text-cyber-green'));
+            allLinks
+              .filter((l) => l.dataset.section === entry.target.id)
+              .forEach((l) => l.classList.add('!text-cyber-green'));
+          }
+        });
+      },
+      { rootMargin: '-35% 0px -60% 0px', threshold: 0 }
+    );
+    sections.forEach((s) => observer.observe(s));
+  }
+</script>

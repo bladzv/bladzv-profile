@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -38,11 +38,11 @@
 
 @layer components {
   .section-heading {
-    @apply text-2xl md:text-3xl font-bold font-mono text-cyber-green mb-8;
+    @apply text-2xl md:text-3xl font-bold font-sans text-white;
   }
 
   .section-container {
-    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24;
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20;
   }
 
   .glass-card {
@@ -74,6 +74,17 @@
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-cyber-green to-cyber-blue;
   }
+
+  button:focus-visible {
+    outline: 2px solid #00d4ff;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+/* Sticky nav scroll offset for anchor links */
+section[id] {
+  scroll-margin-top: 3.5rem;
 }
 
 /* Reduced motion */

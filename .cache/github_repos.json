@@ -1,5 +1,14 @@
 [
   {
+    "title": "enjinsight",
+    "description": "Read-only blockchain analytics suite for the Enjin ecosystem — real-time era metrics, staking reward cadence detection, historical balance queries, and per-era reward computation. No wallet required.",
+    "language": "JavaScript",
+    "url": "https://github.com/bladzv/enjinsight",
+    "homepage": "https://enjinsight.vercel.app/",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
     "title": "budget2go",
     "description": "Secure, responsive personal finance manager for tracking income, savings, expenses, and loans with encrypted import/export.",
     "language": "JavaScript",
@@ -32,15 +41,6 @@
     "language": "JavaScript",
     "url": "https://github.com/bladzv/enjin-snap-wallet-exporter",
     "homepage": "https://bladzv.github.io/enjin-snap-wallet-exporter/",
-    "visibility": "public",
-    "status": "active"
-  },
-  {
-    "title": "enjinsight",
-    "description": "Read-only blockchain analytics suite for the Enjin ecosystem — real-time era metrics, staking reward cadence detection, historical balance queries, and per-era reward computation. No wallet required.",
-    "language": "JavaScript",
-    "url": "https://github.com/bladzv/enjinsight",
-    "homepage": "https://enjinsight.vercel.app/",
     "visibility": "public",
     "status": "active"
   },

@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@lucide/astro": "^1.16.0",
-    "astro": "^6.1.10",
+    "astro": "^6.4.8",
     "tailwindcss": "^3.4.19"
   },
   "overrides": {

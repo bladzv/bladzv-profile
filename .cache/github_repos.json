@@ -1,5 +1,14 @@
 [
   {
+    "title": "dive",
+    "description": "Dependency Intelligence for Vulnerability Exposure. Self-hosted security feed aggregator and GitHub dependency scanner. Can run on a Raspberry Pi, uses local AI (Ollama) to categorise CVEs, and alerts you on Slack, Discord, or email — no paid APIs required.",
+    "language": "Python",
+    "url": "https://github.com/bladzv/dive",
+    "homepage": "",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
     "title": "enjinsight",
     "description": "Read-only blockchain analytics suite for the Enjin ecosystem — real-time era metrics, staking reward cadence detection, historical balance queries, and per-era reward computation. No wallet required.",
     "language": "JavaScript",
@@ -23,15 +32,6 @@
     "language": "JavaScript",
     "url": "https://github.com/bladzv/budget2go",
     "homepage": "https://bladzv.github.io/budget2go/",
-    "visibility": "public",
-    "status": "active"
-  },
-  {
-    "title": "dive",
-    "description": "Dependency Intelligence for Vulnerability Exposure. Self-hosted security feed aggregator and GitHub dependency scanner. Can run on a Raspberry Pi, uses local AI (Ollama) to categorise CVEs, and alerts you on Slack, Discord, or email — no paid APIs required.",
-    "language": "Python",
-    "url": "https://github.com/bladzv/dive",
-    "homepage": "",
     "visibility": "public",
     "status": "active"
   },

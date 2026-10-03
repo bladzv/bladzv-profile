@@ -1,0 +1,9 @@
+{
+  "name": "http-cache-semantics",
+  "version": "4.2.1-profile.0",
+  "private": true,
+  "description": "Local security patch of http-cache-semantics 4.2.0 for GHSA-ch52-4w7c-c8xp",
+  "main": "index.js",
+  "types": "index.js",
+  "license": "BSD-2-Clause"
+}

@@ -92,10 +92,14 @@ Pages site stays available. Do not add an audit bypass to publish an affected bu
 `npm test` is currently a placeholder, so verification requires lint, build,
 dependency audit, and browser checks.
 
-As of October 3, 2026, the remaining advisory is
-[GHSA-ch52-4w7c-c8xp](https://github.com/advisories/GHSA-ch52-4w7c-c8xp)
-in `http-cache-semantics` through Astro's remote-image build cache. No patched
-release is available. This portfolio has no remote image optimization callers,
-user sessions, or deployed Node server, so the advisory's cross-user shared-cache
-exploit path is not established here. The package still appears in the dependency
-audit, and publishing stays blocked until an upstream patch resolves it.
+As of October 3, 2026, upstream has no release fixing
+[GHSA-ch52-4w7c-c8xp](https://github.com/advisories/GHSA-ch52-4w7c-c8xp).
+Astro's remote-image build cache uses `http-cache-semantics`, so this repository
+ships a local BSD-2-Clause fork at `vendor/http-cache-semantics`. It rejects
+reuse of shared responses with non-public `Set-Cookie`, `proxy-revalidate`, or
+`no-cache`, including requests with `max-stale`. `npm test` covers the reported
+case and ordinary stale-cache behavior. The fork is marked `4.2.1-profile.0` to
+distinguish it from upstream. The npm advisory feed does not review local fork
+code, so keep its regression tests and review future upstream changes before
+updating it. Replace the fork with an upstream patched release when one is
+available, then rerun the full audit and build checks.

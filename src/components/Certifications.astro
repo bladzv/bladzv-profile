@@ -9,7 +9,7 @@ const certs = allCerts.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99
 <section id="certifications" class="relative z-10 reveal bg-cyber-surface/40">
   <div class="section-container">
     <div class="flex items-center gap-4 mb-8">
-      <div class="w-1 h-7 bg-amber-400 rounded-full flex-shrink-0"></div>
+      <div class="w-1 h-7 bg-amber-400 rounded-full shrink-0"></div>
       <div class="flex items-center gap-2.5">
         <Award class="w-5 h-5 text-amber-400" aria-hidden="true" />
         <h2 class="section-heading">Certifications</h2>
@@ -20,7 +20,7 @@ const certs = allCerts.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99
       {certs.map((cert) => (
         <div class="glass-card p-6 border-t-2 border-t-amber-400/50 group hover:border-amber-400/40 transition-all duration-300 hover:shadow-[0_0_20px_rgba(245,158,11,0.08)]">
           <div class="flex items-start gap-4">
-            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-amber-400/10 border border-amber-400/20 flex items-center justify-center">
+            <div class="shrink-0 w-10 h-10 rounded-lg bg-amber-400/10 border border-amber-400/20 flex items-center justify-center">
               <Award class="w-5 h-5 text-amber-400" />
             </div>
             <div>

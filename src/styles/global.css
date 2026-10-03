@@ -1,8 +1,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-cyber-bg: #0d1117;
+  --color-cyber-surface: #161b22;
+  --color-cyber-card: #1c2128;
+  --color-cyber-border: #21262d;
+  --color-cyber-green: #00ff88;
+  --color-cyber-blue: #00d4ff;
+  --color-cyber-purple: #a855f7;
+  --color-cyber-muted: #8b949e;
+  --color-cyber-text: #e6edf3;
+  /* Preserve the v3 accent colors used by badges and terminal indicators. */
+  --color-amber-400: #fbbf24;
+  --color-yellow-400: #facc15;
+  --color-yellow-500: #eab308;
+  --color-red-500: #ef4444;
+  --color-green-500: #22c55e;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --animate-glow-pulse: glow-pulse 2s ease-in-out infinite alternate;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-typing: typing 3s steps(40) 1s forwards, blink 0.75s step-end infinite;
+  --animate-fade-in-up: fade-in-up 0.6s ease-out forwards;
+  --animate-fade-in: fade-in 0.8s ease-out forwards;
+
+  @keyframes glow-pulse {
+    0% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.2); }
+    100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.4), 0 0 40px rgba(0, 255, 136, 0.1); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  @keyframes blink {
+    50% { border-color: transparent; }
+  }
+  @keyframes fade-in-up {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+}
 
 @layer base {
   html {
@@ -46,33 +95,36 @@
   }
 
   .glass-card {
-    @apply bg-cyber-card/60 backdrop-blur-sm border border-cyber-border rounded-xl;
+    @apply bg-cyber-card/60 backdrop-blur-xs border border-cyber-border rounded-xl;
   }
 
   .cyber-link {
     @apply text-cyber-blue hover:text-cyber-green transition-colors duration-200;
   }
 
-  .badge {
+  .badge,
+  .badge-public,
+  .badge-private,
+  .badge-ongoing {
     @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
   }
 
   .badge-public {
-    @apply badge border border-cyber-green/40 text-cyber-green bg-cyber-green/10;
+    @apply border border-cyber-green/40 text-cyber-green bg-cyber-green/10;
   }
 
   .badge-private {
-    @apply badge border border-cyber-muted/40 text-cyber-muted bg-cyber-muted/10;
+    @apply border border-cyber-muted/40 text-cyber-muted bg-cyber-muted/10;
   }
 
   .badge-ongoing {
-    @apply badge border border-yellow-500/40 text-yellow-400 bg-yellow-500/10;
+    @apply border border-yellow-500/40 text-yellow-400 bg-yellow-500/10;
   }
 }
 
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyber-green to-cyber-blue;
+    @apply bg-clip-text text-transparent bg-linear-to-r from-cyber-green to-cyber-blue;
   }
 
   button:focus-visible {

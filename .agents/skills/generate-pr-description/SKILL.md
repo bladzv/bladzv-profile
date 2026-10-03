@@ -1,29 +1,28 @@
 ---
-name: create-pr-description
-description: Generate a complete PR description from the session action log. Derives a semantic branch name, conventional commit message, links related GitHub Issues, and writes the full description to .github/pr_description.md.
-disable-model-invocation: true
+name: generate-pr-description
+description: Draft a PR description from the session action log and verified repository changes when asked to prepare a pull request description.
 ---
 
-Follow these steps exactly:
+Use the action log and repository state as evidence. Do not claim that a branch, commit, push, pull request, issue link, or test exists unless verified.
 
 ## Step 1 — Read session actions
 
-Read the **entire** contents of `.github/actions.md`.
+Read the **entire** contents of `.github/actions.md`. If it is missing or incomplete, inspect the current session and Git diff before drafting; identify any information that remains unknown.
 
 ## Step 2 — Generate a semantic branch name
 
-Analyze all logged actions and pick the appropriate prefix:
+Analyze the changes and pick an appropriate type:
 
 | Prefix | When to use |
 |---|---|
-| `feature/` | New functionality or capabilities |
-| `fix/` | Bug fixes or corrections |
-| `refactor/` | Code restructuring without feature changes |
-| `chore/` | Maintenance tasks (dependencies, configs) |
-| `docs/` | Documentation-only changes |
-| `security/` | Security improvements or patches |
+| `feature` | New functionality or capabilities |
+| `fix` | Bug fixes or corrections |
+| `refactor` | Code restructuring without feature changes |
+| `chore` | Maintenance tasks (dependencies, configs) |
+| `docs` | Documentation-only changes |
+| `security` | Security improvements or patches |
 
-Format: `[prefix]/[kebab-case-description]`  
+Format a suggested new branch as `codex/[type]-[kebab-case-description]`. If work already has a branch, report its actual name.
 Rules: keep under 50 characters, be specific but concise, use descriptive verbs (add, implement, fix, improve), avoid articles (the, a, an).
 
 ## Step 3 — Generate a conventional commit message
@@ -36,29 +35,24 @@ Rules: imperative mood ("Add" not "Added"), under 72 characters, no trailing per
 
 ## Step 4 — Check GitHub Issues
 
-Search the repository for existing GitHub Issues. Identify any issues addressed by the logged actions. Match action descriptions to issue titles and descriptions. Look for keywords: bug, feature request, enhancement, security.
+Check available repository issues for a verified match. If issue access is unavailable or there is no clear match, write `None verified` and do not invent issue numbers.
 
 ## Step 5 — Create and write the PR description
 
-Create the file if it does not exist:
-```bash
-touch .github/pr_description.md
-```
-
-**Always append** to the end of the file — never modify existing entries. Use the `printf` command. Do **not** use heredoc or `echo`.
+Create `.github/pr_description.md` if needed. Append the new description without altering earlier entries. Avoid appending the same draft twice.
 
 Fetch the current UTC timestamp:
 ```bash
 date -u +"%Y-%m-%d %H:%M:%S UTC"
 ```
 
-Use this exact template:
+Use this template, omitting empty optional subsections when that makes the draft clearer. Report only tests actually run and outcomes actually observed.
 
 ```
 # PR: [Descriptive title — short imperative summary of what this PR does]
 Timestamp: [YYYY-MM-DD HH:MM:SS UTC]
-Git Branch: [semantic-branch-name]
-Git Commit Message: [conventional commit message]
+Branch: [actual branch or explicitly labeled suggestion]
+Suggested Commit Message: [conventional commit message]
 
 ---
 
@@ -68,7 +62,7 @@ Git Commit Message: [conventional commit message]
 ---
 
 ## Related Issues
-[List GitHub Issues this PR addresses. If none, write "None"]
+[List verified GitHub Issues this PR addresses. If none, write "None verified"]
 - Closes #N
 - Fixes #N
 - Related to #N
@@ -105,7 +99,7 @@ Git Commit Message: [conventional commit message]
 ---
 
 ## Testing Notes
-[Testing approach and verification steps]
+[Tests actually run, observed outcomes, and any checks still needed]
 
 **How to Test:**
 1. [Step-by-step instruction]
@@ -118,7 +112,7 @@ Git Commit Message: [conventional commit message]
 ---
 
 ## Security Considerations
-[Security-related changes, OWASP categories addressed]
+[Security-related changes, if any]
 
 **Security Measures:**
 - **[OWASP category or concern]**: [What was done.]
@@ -128,7 +122,7 @@ If no security changes: "No security changes in this PR"
 ---
 
 ## Performance Impact
-[Improvements, trade-offs, bundle size, render, or runtime implications]
+[Observed impact or expected effect, clearly labeled]
 
 If no impact: "No significant performance impact"
 
@@ -152,24 +146,6 @@ If no impact: "No significant performance impact"
 ---
 ```
 
-## Step 6 — Confirm and print next steps
+## Step 6 — Report the result
 
-After writing, output exactly:
-
-```
-✓ PR Description Generated
-
-Branch: [semantic-branch-name]
-Commit: [commit-message]
-Issues: [count] related issue(s) found
-
-PR description saved to .github/pr_description.md
-
-Next Steps:
-  1. Review the PR description
-  2. Create branch: git checkout -b [branch-name]
-  3. Stage changes: git add .
-  4. Commit: git commit -m "[commit-message]"
-  5. Push: git push origin [branch-name]
-  6. Create PR using description from .github/pr_description.md
-```
+Provide the draft file path, the actual or suggested branch name, the suggested conventional commit message, and any unverified issues or checks. Leave branch creation, commits, pushes, and PR creation to a separate request.

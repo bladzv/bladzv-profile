@@ -111,10 +111,10 @@ const navLinks = [
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            allLinks.forEach((l) => l.classList.remove('!text-cyber-green'));
+            allLinks.forEach((l) => l.classList.remove('text-cyber-green!'));
             allLinks
               .filter((l) => l.dataset.section === entry.target.id)
-              .forEach((l) => l.classList.add('!text-cyber-green'));
+              .forEach((l) => l.classList.add('text-cyber-green!'));
           }
         });
       },

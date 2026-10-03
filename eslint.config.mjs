@@ -1,16 +1,18 @@
-const path = require('path');
+import tsParser from '@typescript-eslint/parser';
+import * as astroParser from 'astro-eslint-parser';
+import astroPlugin from 'eslint-plugin-astro';
 
-module.exports = [
+export default [
   {
     ignores: ['node_modules/**', 'dist/**', '.cache/**', '.astro/**'],
   },
   {
     files: ['**/*.js', '**/*.ts', '**/*.astro'],
     languageOptions: {
-      parser: require('@typescript-eslint/parser'),
+      parser: tsParser,
       parserOptions: { ecmaVersion: 2021, sourceType: 'module' },
     },
-    plugins: { astro: require('eslint-plugin-astro') },
+    plugins: { astro: astroPlugin },
     rules: {
       'no-unused-vars': 'warn',
       'no-console': 'off',
@@ -19,9 +21,9 @@ module.exports = [
   {
     files: ['**/*.astro'],
     languageOptions: {
-      parser: require('astro-eslint-parser'),
+      parser: astroParser,
       parserOptions: {
-        parser: require('@typescript-eslint/parser'),
+        parser: tsParser,
         extraFileExtensions: ['.astro'],
       },
     },

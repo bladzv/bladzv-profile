@@ -9,9 +9,9 @@ const {
   description = 'Portfolio of Bloodymer S. Velasco — IT & Cybersecurity Professional. CompTIA Security+ certified, homelab builder, and AI-assisted developer.',
 } = Astro.props;
 
-const base = import.meta.env.BASE_URL;
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 const site = Astro.site ?? 'https://bladzv.github.io';
-const siteUrl = `${site}${base}`;
+const siteUrl = new URL(base, site).href;
 ---
 
 <!doctype html>

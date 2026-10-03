@@ -24,8 +24,8 @@ Why this repo:
 
 ## Tech Stack
 
-- Framework: Astro 6 (static output, `base: /bladzv-profile`)
-- Styling: Tailwind CSS v3 via PostCSS — dark navy `cyber-*` design tokens
+- Framework: Astro 7 (static output, `base: /bladzv-profile`)
+- Styling: Tailwind CSS v4 via the Vite plugin — dark navy `cyber-*` CSS theme tokens
 - Fonts: Inter (UI) + JetBrains Mono (terminal/code) via Google Fonts
 - Background: Canvas particle animation (vanilla JS, no dependencies)
 - Hosting: GitHub Pages (static)
@@ -65,10 +65,17 @@ scripts/
 
 ## Developer Workflows
 
+Use Node.js 22.22.3+ on the 22.x line, 24.16.0+ on the 24.x line, or 26.3.0+.
+CI uses Node.js 22.22.3 and installs the committed npm lockfile with `npm ci`.
+Tailwind 4 targets Safari 16.4+, Chrome 111+, and Firefox 128+.
+Theme colors, fonts, animations, and shared component styles live in `src/styles/global.css`.
+
 ```bash
 npm run dev      # Start dev server (localhost:4321)
 npm run build    # Production build → dist/
 npm run preview  # Preview production build locally
+npm run lint     # ESLint (failures are not suppressed)
+npm run audit    # Check all dependencies; high/critical findings fail
 ```
 
 - **Adding a project:** Create a `.md` file in `src/content/projects/` using `_template.md` as a guide.
@@ -76,3 +83,19 @@ npm run preview  # Preview production build locally
 - **Private projects:** Set `visibility: private` (and optionally `blur: true`) in the frontmatter.
 - **Deploying:** Push to `main` — GitHub Actions builds and deploys automatically.
 - **Refreshing cached repos locally:** Run `node scripts/update-github-cache.js` (requires `GITHUB_TOKEN` env var).
+
+### Dependency security and deployment
+
+The deployment job runs `npm run audit` before linting and building. High or critical
+findings, and audit service failures, stop the new deployment; the existing GitHub
+Pages site stays available. Do not add an audit bypass to publish an affected build.
+`npm test` is currently a placeholder, so verification requires lint, build,
+dependency audit, and browser checks.
+
+As of October 3, 2026, the remaining advisory is
+[GHSA-ch52-4w7c-c8xp](https://github.com/advisories/GHSA-ch52-4w7c-c8xp)
+in `http-cache-semantics` through Astro's remote-image build cache. No patched
+release is available. This portfolio has no remote image optimization callers,
+user sessions, or deployed Node server, so the advisory's cross-user shared-cache
+exploit path is not established here. The package still appears in the dependency
+audit, and publishing stays blocked until an upstream patch resolves it.

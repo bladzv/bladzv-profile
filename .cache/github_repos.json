@@ -1,10 +1,19 @@
 [
   {
-    "title": "budget2go",
-    "description": "Secure, responsive personal finance manager for tracking income, savings, expenses, and loans with encrypted import/export.",
+    "title": "sniffmunk",
+    "description": "Terminal monitor for macOS that shows processes, live network connections, per-host data transfer, startup items and listening ports. It checks remote IPs against local threat blocklists and ASN/country data, and points out suspicious programs. Works without sudo.",
+    "language": "Python",
+    "url": "https://github.com/bladzv/sniffmunk",
+    "homepage": "",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
+    "title": "enjinsight",
+    "description": "Read-only blockchain analytics suite for the Enjin ecosystem — real-time era metrics, staking reward cadence detection, historical balance queries, and per-era reward computation. No wallet required.",
     "language": "JavaScript",
-    "url": "https://github.com/bladzv/budget2go",
-    "homepage": "https://bladzv.github.io/budget2go/",
+    "url": "https://github.com/bladzv/enjinsight",
+    "homepage": "https://enjinsight.vercel.app/",
     "visibility": "public",
     "status": "active"
   },
@@ -18,11 +27,11 @@
     "status": "active"
   },
   {
-    "title": "enjinsight",
-    "description": "Read-only blockchain analytics suite for the Enjin ecosystem — real-time era metrics, staking reward cadence detection, historical balance queries, and per-era reward computation. No wallet required.",
+    "title": "budget2go",
+    "description": "Secure, responsive personal finance manager for tracking income, savings, expenses, and loans with encrypted import/export.",
     "language": "JavaScript",
-    "url": "https://github.com/bladzv/enjinsight",
-    "homepage": "https://enjinsight.vercel.app/",
+    "url": "https://github.com/bladzv/budget2go",
+    "homepage": "https://bladzv.github.io/budget2go/",
     "visibility": "public",
     "status": "active"
   },

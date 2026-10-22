@@ -1,0 +1,42 @@
+---
+import { getProjectGroups, projectSeal } from '../../lib/projects';
+
+const groups = await getProjectGroups();
+const sealColor = { live: 'text-cyber-green', private: 'text-dossier-muted', wip: 'text-cyber-amber' };
+---
+
+<div class="grid gap-x-6 gap-y-10 [grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))]">
+  {groups.map((g) => (
+    <section class="flex flex-col gap-3.5" aria-labelledby={`exh-${g.id}`}>
+      <div class="flex items-baseline justify-between border-b-2 border-dossier-text pb-2.5">
+        <h3 id={`exh-${g.id}`} class="dossier-display text-2xl tracking-[-.01em]">{g.label}</h3>
+        <span class="font-mono text-[11px] text-dossier-muted">{g.items.length} projects</span>
+      </div>
+      <p class="-mt-1 text-sm leading-normal text-dossier-muted">{g.blurb}</p>
+      {g.items.map((p, i) => {
+        const seal = projectSeal(p);
+        return (
+          <article class="flex flex-col gap-2.5 border border-dossier-line bg-dossier-card p-[18px] transition-colors hover:border-dossier-accent">
+            <div class="flex justify-between font-mono text-[10px] tracking-[.1em]">
+              <span class="text-dossier-accent">PROJECT {g.prefix}{i + 1}</span>
+              <span class={sealColor[seal.tone]}>{seal.label}</span>
+            </div>
+            <h4 class="font-mono text-[15px] font-bold break-all text-dossier-text">{p.title}</h4>
+            {p.blur ? (
+              <p class="text-sm leading-relaxed"><span class="redact" tabindex="0">{p.summary}</span></p>
+            ) : (
+              <p class="text-sm leading-relaxed text-dossier-body">{p.summary}</p>
+            )}
+            <div class="mt-auto flex flex-wrap items-center justify-between gap-x-2.5 gap-y-1.5 border-t border-dashed border-dossier-dash pt-2 font-mono text-[11px] text-dossier-muted">
+              <span>{p.language ? `built with ${p.language}` : ''}</span>
+              <span class="flex gap-2.5">
+                {p.url && <a href={p.url} target="_blank" rel="noopener noreferrer" class="text-dossier-text hover:text-dossier-accent">see code ↗<span class="sr-only"> ({p.title})</span></a>}
+                {p.homepage && <a href={p.homepage} target="_blank" rel="noopener noreferrer" class="text-dossier-accent hover:text-dossier-text">try it ↗<span class="sr-only"> ({p.title})</span></a>}
+              </span>
+            </div>
+          </article>
+        );
+      })}
+    </section>
+  ))}
+</div>

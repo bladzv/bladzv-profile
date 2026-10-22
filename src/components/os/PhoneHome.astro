@@ -1,0 +1,42 @@
+---
+import { url } from '../../lib/paths';
+import { person, sections } from '../../data/profile';
+
+const apps = [...sections.map((s) => ({ id: s.id, label: s.label, glyph: s.glyph, color: s.color })), { id: 'terminal', label: 'Terminal', glyph: '>_', color: '#00ff88' }];
+---
+
+<div id="phone-home" class="phone-only relative flex min-h-0 flex-1 flex-col px-[22px] pt-3">
+  <canvas data-particles="#00d4ff" class="pointer-events-none absolute inset-0 h-full w-full opacity-30" aria-hidden="true"></canvas>
+  <div class="relative z-[2] flex min-h-0 flex-1 flex-col gap-[26px] overflow-auto pb-3">
+    <div class="flex flex-col gap-2.5 rounded-[22px] border border-[rgba(48,54,61,.8)] bg-[rgba(22,27,34,.75)] p-[18px] backdrop-blur-md">
+      <div class="flex items-center gap-3">
+        <span class="flex h-11 w-11 items-center justify-center rounded-[13px] bg-linear-135 from-cyber-green to-cyber-blue font-extrabold text-cyber-bg">{person.initials}</span>
+        <div class="flex flex-col">
+          <h1 class="font-bold text-white">{person.name}</h1>
+          <span class="text-[13px] text-cyber-muted">{person.role}</span>
+        </div>
+      </div>
+      <p class="min-h-[1.6em] font-mono text-xs text-cyber-muted">&gt; <span data-typewriter class="border-r-2 border-cyber-green pr-0.5 text-cyber-text"></span></p>
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="text-xs text-cyber-green">● {person.status} · Security+ certified</span>
+        <a href={url('simple/')} data-mode-link="simple" class="pill-toggle min-h-[28px] border-cyber-border-strong text-cyber-soft">
+          Simple mode<span class="knob-track bg-cyber-border-strong" aria-hidden="true"><span class="knob left-[2px] bg-cyber-muted"></span></span>
+        </a>
+      </div>
+    </div>
+    <nav aria-label="Apps" class="grid grid-cols-4 gap-x-2.5 gap-y-[22px]">
+      {apps.map((a) => (
+        <button type="button" data-open={a.id} class="flex flex-col items-center gap-[7px]">
+          <span class="flex aspect-square w-[62px] max-w-full items-center justify-center rounded-[17px] border border-white/5 bg-linear-160 from-[#1c2430] to-[#10151d] font-mono text-lg font-bold shadow-[0_6px_16px_rgba(0,0,0,.35)]" style={`color:${a.color}`} aria-hidden="true">{a.glyph}</span>
+          <span class="text-xs text-cyber-text [text-shadow:0_1px_3px_#000]">{a.label}</span>
+        </button>
+      ))}
+    </nav>
+  </div>
+  <nav aria-label="Dock" class="relative z-[2] -mx-2 mb-2 grid grid-cols-4 gap-2.5 rounded-[28px] border border-[rgba(48,54,61,.7)] bg-[rgba(22,27,34,.7)] p-3 backdrop-blur-md">
+    <a href={`mailto:${person.email}`} aria-label="Email" class="flex justify-center"><span class="flex h-[58px] w-[58px] items-center justify-center rounded-2xl bg-cyber-green font-mono text-[15px] font-bold text-cyber-bg">@</span></a>
+    <a href={person.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="flex justify-center"><span class="flex h-[58px] w-[58px] items-center justify-center rounded-2xl bg-[#0a66c2] font-mono text-[15px] font-bold text-white">in</span></a>
+    <a href={person.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="flex justify-center"><span class="flex h-[58px] w-[58px] items-center justify-center rounded-2xl bg-cyber-text font-mono text-[15px] font-bold text-cyber-bg">gh</span></a>
+    <button type="button" data-open="terminal" aria-label="Terminal" class="flex justify-center"><span class="flex h-[58px] w-[58px] items-center justify-center rounded-2xl bg-cyber-term font-mono text-[15px] font-bold text-cyber-green">&gt;_</span></button>
+  </nav>
+</div>

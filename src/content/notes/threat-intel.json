@@ -1,0 +1,52 @@
+{
+  "folder": "recon",
+  "slug": "threat-intel",
+  "title": "Threat intel & OSINT sources",
+  "tags": [
+    "threat-intel",
+    "phishing",
+    "osint"
+  ],
+  "src": "TryHackMe",
+  "intro": "Free platforms for checking URLs, malware, phishing emails and usernames during an investigation.",
+  "order": 6,
+  "blocks": [
+    {
+      "sub": "Threat intel",
+      "h": "urlscan.io",
+      "link": "https://urlscan.io/",
+      "p": "Free service developed to assist in scanning and analysing websites. It is used to automate the process of browsing and crawling through websites to record activities and interactions.\n\nWhen a URL is submitted, the information recorded includes the domains and IP addresses contacted, resources requested from the domains, a snapshot of the web page, technologies utilised and other metadata about the website."
+    },
+    {
+      "sub": "Threat intel",
+      "h": "abuse.ch",
+      "link": "https://abuse.ch/",
+      "p": "a research project hosted by the Institue for Cybersecurity and Engineering at the Bern University of Applied Sciences in Switzerland. It was developed to identify and track malware and botnets through several operational platforms developed under the project. These platforms are:\n\nMalware Bazaar:  A resource for sharing malware samples.\nFeodo Tracker:  A resource used to track botnet command and control (C2) infrastructure linked with Emotet, Dridex and TrickBot.\nSSL Blacklist:  A resource for collecting and providing a blocklist for malicious SSL certificates and JA3/JA3s fingerprints.\nURL Haus:  A resource for sharing malware distribution sites.\nThreat Fox:  A resource for sharing indicators of compromise (IOCs)."
+    },
+    {
+      "sub": "Threat intel",
+      "h": "phishtool.com",
+      "link": "https://www.phishtool.com/",
+      "p": "Seeks to elevate the perception of phishing as a severe form of attack and provide a responsive means of email security. Through email analysis, security analysts can uncover email IOCs, prevent breaches and provide forensic reports that could be used in phishing containment and training engagements.\n\nThe core features include:\n\nPerform email analysis: PhishTool retrieves metadata from phishing emails and provides analysts with the relevant explanations and capabilities to follow the email’s actions, attachments, and URLs to triage the situation.\nHeuristic intelligence: OSINT is baked into the tool to provide analysts with the intelligence needed to stay ahead of persistent attacks and understand what TTPs were used to evade security controls and allow the adversary to social engineer a target.\nClassification and reporting: Phishing email classifications are conducted to allow analysts to take action quickly. Additionally, reports can be generated to provide a forensic record that can be shared.",
+      "out": "Once uploaded, we are presented with the details of our email for a more in-depth look. Here, we have the following tabs:\n\nHeaders: Provides the routing information of the email, such as source and destination email addresses, Originating IP and DNS addresses and Timestamp.\nReceived Lines: Details on the email traversal process across various SMTP servers for tracing purposes.\nX-headers: These are extension headers added by the recipient mailbox to provide additional information about the email.\nSecurity: Details on email security frameworks and policies such as Sender Policy Framework (SPF), DomainKeys Identified Mail (DKIM) and Domain-based Message Authentication, Reporting and Conformance (DMARC).\nAttachments: Lists any file attachments found in the email.\nMessage URLs: Associated external URLs found in the email will be found here."
+    },
+    {
+      "sub": "Threat intel",
+      "h": "talosintelligence.com",
+      "link": "https://talosintelligence.com/",
+      "p": "Cisco assembled a large team of security practitioners called Cisco Talos to provide actionable intelligence, visibility on indicators, and protection against emerging threats through data collected from their products.\n\nCisco Talos encompasses six key teams:\n\nThreat Intelligence & Interdiction: Quick correlation and tracking of threats provide a means to turn simple IOCs into context-rich intel.\nDetection Research: Vulnerability and malware analysis is performed to create rules and content for threat detection.\nEngineering & Development: Provides the maintenance support for the inspection engines and keeps them up-to-date to identify and triage emerging threats.\nVulnerability Research & Discovery: Working with service and software vendors to develop repeatable means of identifying and reporting security vulnerabilities.\nCommunities: Maintains the image of the team and the open-source solutions.\nGlobal Outreach: Disseminates intelligence to customers and the security community through publications.\n\nMore information about Cisco Talos can be found on their White Paper"
+    },
+    {
+      "sub": "Username OSINT",
+      "h": "whatsmyname.app",
+      "link": "https://whatsmyname.app/",
+      "p": ""
+    },
+    {
+      "sub": "Username OSINT",
+      "h": "namecheckup.com",
+      "link": "https://namecheckup.com/",
+      "p": ""
+    }
+  ]
+}

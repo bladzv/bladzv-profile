@@ -1,48 +1,21 @@
 ---
-import '../styles/global.css';
 import Layout from '../layouts/Layout.astro';
-import ParticlesBG from '../components/ParticlesBG.astro';
-import Hero from '../components/Hero.astro';
-import About from '../components/About.astro';
-import Experience from '../components/Experience.astro';
-import Skills from '../components/Skills.astro';
-import Certifications from '../components/Certifications.astro';
-import Projects from '../components/Projects.astro';
-import Footer from '../components/Footer.astro';
-import Nav from '../components/Nav.astro';
+import OsShell from '../components/os/OsShell.astro';
+import { url } from '../lib/paths';
+
+const simpleUrl = url('simple/');
 ---
 
-<Layout>
-  <Nav />
-  <ParticlesBG />
-  <main id="main">
-    <Hero />
-    <About />
-    <Experience />
-    <Skills />
-    <Certifications />
-    <Projects />
-  </main>
-  <Footer />
+<Layout bodyClass="overflow-hidden">
+  <script slot="head" is:inline define:vars={{ simpleUrl }}>
+    try {
+      if (localStorage.getItem('bladzv-mode') === 'simple') location.replace(simpleUrl);
+    } catch (e) {}
+  </script>
+  <noscript>
+    <p class="relative z-[2000] bg-cyber-bar p-4 text-center text-sm text-cyber-soft">
+      The desktop view needs JavaScript. <a class="text-cyber-green underline" href={simpleUrl}>Read the simple version instead.</a>
+    </p>
+  </noscript>
+  <OsShell />
 </Layout>
-
-<script>
-  const reveals = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add('revealed');
-            observer.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.12 }
-    );
-    reveals.forEach((el) => observer.observe(el));
-  } else {
-    // Fallback for browsers without IntersectionObserver: reveal immediately
-    reveals.forEach((el) => el.classList.add('revealed'));
-  }
-</script>

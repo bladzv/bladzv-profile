@@ -1,0 +1,126 @@
+{
+  "folder": "windows",
+  "slug": "registry-forensics",
+  "title": "Windows Registry for forensics",
+  "tags": [
+    "dfir",
+    "windows",
+    "registry"
+  ],
+  "intro": "Where each hive lives on disk, how it shows up in Registry Editor, and the keys worth checking first in an investigation.",
+  "order": 7,
+  "blocks": [
+    {
+      "sub": "Hives",
+      "h": "What each hive holds",
+      "rows": [
+        {
+          "k": "SYSTEM",
+          "v": "Services · Mounted Devices · Boot Configuration · Drivers · Hardware",
+          "w": "C:\\Windows\\System32\\config\\SYSTEM"
+        },
+        {
+          "k": "SECURITY",
+          "v": "Local Security Policies · Audit Policy Settings",
+          "w": "C:\\Windows\\System32\\config\\SECURITY"
+        },
+        {
+          "k": "SOFTWARE",
+          "v": "Installed Programs · OS Version and other info · Autostarts · Program Settings",
+          "w": "C:\\Windows\\System32\\config\\SOFTWARE"
+        },
+        {
+          "k": "SAM",
+          "v": "Usernames and their Metadata · Password Hashes · Group Memberships · Account Statuses",
+          "w": "C:\\Windows\\System32\\config\\SAM"
+        },
+        {
+          "k": "NTUSER.DAT",
+          "v": "Recent Files · User Preferences · User-specific Autostarts",
+          "w": "C:\\Users\\username\\NTUSER.DAT"
+        },
+        {
+          "k": "USRCLASS.DAT",
+          "v": "Shellbags · Jump Lists",
+          "w": "C:\\Users\\username\\AppData\\Local\\Microsoft\\Windows\\USRCLASS.DAT"
+        }
+      ]
+    },
+    {
+      "sub": "Mapping",
+      "h": "Hive on disk → Registry Editor",
+      "rows": [
+        {
+          "k": "SYSTEM",
+          "w": "HKEY_LOCAL_MACHINE\\SYSTEM"
+        },
+        {
+          "k": "SECURITY",
+          "w": "HKEY_LOCAL_MACHINE\\SECURITY"
+        },
+        {
+          "k": "SOFTWARE",
+          "w": "HKEY_LOCAL_MACHINE\\SOFTWARE"
+        },
+        {
+          "k": "SAM",
+          "w": "HKEY_LOCAL_MACHINE\\SAM"
+        },
+        {
+          "k": "NTUSER.DAT",
+          "w": "HKEY_USERS\\<SID> and HKEY_CURRENT_USER"
+        },
+        {
+          "k": "USRCLASS.DAT",
+          "w": "HKEY_USERS\\<SID>\\Software\\Classes"
+        }
+      ]
+    },
+    {
+      "sub": "Keys",
+      "h": "Keys worth checking",
+      "rows": [
+        {
+          "k": "UserAssist",
+          "w": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist",
+          "v": "It stores information on recently accessed applications launched via the GUI."
+        },
+        {
+          "k": "TypedPaths",
+          "w": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\TypedPaths",
+          "v": "It stores all the paths and locations typed by the user inside the Explorer address bar."
+        },
+        {
+          "k": "App Paths",
+          "w": "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\App Paths",
+          "v": "It stores the path of the applications."
+        },
+        {
+          "k": "WordWheelQuery",
+          "w": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\WordWheelQuery",
+          "v": "It stores all the search terms typed by the user in the Explorer search bar."
+        },
+        {
+          "k": "Run",
+          "w": "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+          "v": "It stores information on the programs that are set to automatically start (startup programs) when the users logs in."
+        },
+        {
+          "k": "RecentDocs",
+          "w": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RecentDocs",
+          "v": "It stores information on the files that the user has recently accessed."
+        },
+        {
+          "k": "ComputerName",
+          "w": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\ComputerName\\ComputerName",
+          "v": "It stores the computer's name (hostname)."
+        },
+        {
+          "k": "Uninstall",
+          "w": "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+          "v": "It stores information on the installed programs."
+        }
+      ]
+    }
+  ]
+}

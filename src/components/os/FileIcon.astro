@@ -1,0 +1,46 @@
+---
+/**
+ * CSS-drawn folder, document and terminal icons for the bladzOS desktop.
+ */
+export interface Props {
+  kind: 'dir' | 'file' | 'term';
+  glyph?: string;
+  /** File extension badge, e.g. "txt". */
+  ext?: string;
+  size?: 'sm' | 'md';
+}
+
+const { kind, glyph = '', ext = '', size = 'sm' } = Astro.props;
+const EXT_COLORS: Record<string, string> = { txt: '#5b6b7f', log: '#c2410c', vcf: '#15803d' };
+const extColor = EXT_COLORS[ext] ?? '#5b6b7f';
+const dims = size === 'md' ? 'w-16 h-[58px]' : 'w-[50px] h-[46px]';
+const glyphSize = size === 'md' ? 'text-[17px]' : 'text-sm';
+const badgeSize = size === 'md' ? 'text-[10px]' : 'text-[8px]';
+---
+
+<span class={`relative block shrink-0 ${dims} drop-shadow-[0_3px_6px_rgba(0,0,0,.45)]`} aria-hidden="true">
+  {kind === 'dir' && (
+    <>
+      <span class="absolute left-0 top-0 h-[24%] w-[42%] rounded-[4px_6px_0_0] bg-[#1d5bc4]"></span>
+      <span class="absolute inset-x-0 top-[12%] bottom-0 rounded-[3px_5px_4px_4px] bg-[#1d5bc4]"></span>
+      <span class="absolute inset-x-0 top-[9%] mx-[6%] h-[30%] rounded-sm bg-[#e8eef7]"></span>
+      <span class={`absolute inset-x-0 bottom-0 flex h-[74%] items-center justify-center rounded-[3px_3px_4px_4px] bg-linear-to-b from-[#5aa2ff] to-[#2f7cf0] font-mono font-bold text-[rgba(13,30,60,.55)] shadow-[inset_0_1px_0_rgba(255,255,255,.35)] ${glyphSize}`}>{glyph}</span>
+    </>
+  )}
+  {kind === 'file' && (
+    <>
+      <span class="absolute inset-y-0 left-[14%] right-[14%] rounded-[2px_0_2px_2px] bg-[#f5f7fa] [clip-path:polygon(0_0,70%_0,100%_22%,100%_100%,0_100%)]"></span>
+      <span class="absolute right-[14%] top-0 h-[22%] w-[21%] rounded-[0_0_0_2px] bg-[#c9d1db] [clip-path:polygon(0_0,100%_100%,0_100%)]"></span>
+      <span class="absolute left-[26%] right-[26%] top-[34%] flex flex-col gap-[3px]">
+        <span class="h-0.5 bg-[#aab4c0]"></span>
+        <span class="h-0.5 w-4/5 bg-[#aab4c0]"></span>
+        <span class="h-0.5 bg-[#aab4c0]"></span>
+        <span class="h-0.5 w-3/5 bg-[#aab4c0]"></span>
+      </span>
+      <span class={`absolute bottom-[9%] left-[10%] rounded-sm px-1 font-mono font-bold uppercase leading-[1.3] tracking-[.04em] text-white ${badgeSize}`} style={`background:${extColor}`}>{ext}</span>
+    </>
+  )}
+  {kind === 'term' && (
+    <span class={`absolute inset-x-0 inset-y-[8%] flex items-start rounded-[5px] border-[1.5px] border-[#3d4b5c] bg-cyber-term px-[12%] py-[10%] font-mono font-bold text-cyber-green ${glyphSize}`}>&gt;_</span>
+  )}
+</span>

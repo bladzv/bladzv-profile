@@ -1,0 +1,94 @@
+{
+  "folder": "recon",
+  "slug": "passive-vs-active",
+  "title": "Reconnaissance: passive vs active",
+  "tags": [
+    "osint",
+    "dns",
+    "recon"
+  ],
+  "src": "TryHackMe",
+  "intro": "Passive reconnaissance relies exclusively on publicly available information. No packets are sent to the target and no direct interaction occurs. It is analogous to observing the target territory from a safe distance using binoculars, without ever stepping onto their land.",
+  "order": 5,
+  "blocks": [
+    {
+      "sub": "Defender view",
+      "h": "Watch your own footprint",
+      "p": "",
+      "tip": "Defender tip: Organisations now monitor their own passive footprint using alerts from Shodan/Censys, CT log watchers, and automated OSINT tools to reduce what attackers can find without ever touching the network.\n\nMore tips:\n- Use DoH/DoT resolvers (e.g., 1.1.1.1) to keep your own queries private.\n- As a defender, monitor your footprint: set Shodan/Censys alerts, watch CT logs for new certificates, and track DNS changes for takeover risks.\n- Even though passive recon does not touch the target directly, always ensure your overall engagement is authorised and within scope.\n- Results change over time. IPs rotate (Cloudflare anycast), subdomains appear and disappear, and privacy redactions increase.",
+      "tipLabel": "Tips"
+    },
+    {
+      "sub": "Passive",
+      "h": "WHOIS",
+      "link": "",
+      "p": "Provide registration details for domain names. Gives the authoritative name servers for the domain. WHOIS servers listen on TCP port 43.\n\nMost personal details are now redacted for privacy.",
+      "code": "whois tryhackme.com",
+      "out": "Registrar: The company (e.g., Namecheap, GoDaddy) that registered the domain.\nRegistrant contact information: Name, organisation, address, phone, and email. However, privacy services (standard since GDPR 2018) usually replace this with \"Withheld for Privacy\" or similar.\nDates: Creation (registration), Updated (last change), and Expiration (renewal deadline).\nName servers: The DNS servers authoritative for the domain.\nStatus codes: For example, clientTransferProhibited indicates the domain is locked against unauthorised transfers.\nAbuse contacts: The registrar's email and phone for reporting issues."
+    },
+    {
+      "sub": "Passive",
+      "h": "RDAP",
+      "link": "",
+      "p": "Registration Data Access Protocol (RDAP). RDAP is the modern successor of WHOIS: it uses HTTPS (secure), returns structured JSON (machine-readable and consistent), supports internationalisation, provides better privacy controls (differentiated access), and aligns with current data protection rules.",
+      "how": "Use curl to query a public RDAP endpoint (e.g., Verisign for .com domains). The jq utility formats the JSON output for readability.",
+      "code": "curl -s https://rdap.verisign.com/com/v1/domain/tryhackme.com | jq ."
+    },
+    {
+      "sub": "Passive",
+      "h": "NSLOOKUP",
+      "link": "",
+      "p": "Translate domain names to IP addresses, find mail servers, reveal TXT records (SPF, DMARC, verification strings), and more.\n\nStandard DNS lookups (dig/nslookup) only resolve names you already know. They will not reveal unadvertised subdomains like blog.tryhackme.com, app.tryhackme.com, or dev.internal.company.com.\n\nOnline alternatives (if the whois command behaves unexpectedly):\n\nhttps://whois.icann.org/ (legacy WHOIS)\nhttps://lookup.icann.org/ (modern RDAP-focused lookup)\nhttps://www.whoxy.com/ (historical WHOIS snapshots, free limited use)",
+      "how": "nslookup DOMAIN_NAME performs a simple lookup using your default resolver.\n\nnslookup -type=TYPE DOMAIN_NAME [SERVER] specifies a record type and an optional DNS server.",
+      "code": "nslookup -type=A tryhackme.com 1.1.1.1\nnslookup -type=MX tryhackme.com",
+      "out": "This tool translate domain names to IP addresses, find mail servers, reveal TXT records (SPF, DMARC, verification strings), and more."
+    },
+    {
+      "sub": "Passive",
+      "h": "DIG",
+      "link": "",
+      "p": "Historically a backronym for \"Domain Information Groper\", is the modern, preferred option compared to NSLOOKUP.",
+      "how": "dig [@SERVER] DOMAIN_NAME [TYPE]",
+      "code": "dig @1.1.1.1 tryhackme.com MX",
+      "out": "This tool translate domain names to IP addresses, find mail servers, reveal TXT records (SPF, DMARC, verification strings), and more.",
+      "tip": "Privacy tip: Use public resolvers like 1.1.1.1 (which supports DNS over HTTPS and DNS over TLS) to avoid your ISP logging your queries.\n\nDefender note: Monitor for unexpected DNS changes (new MX records, rogue TXT entries). These can be signs of subdomain takeover or configuration errors.",
+      "tipLabel": "Note"
+    },
+    {
+      "sub": "Passive",
+      "h": "dnsdumpster.com",
+      "link": "https://dnsdumpster.com/",
+      "p": "Subdomain enumeration for DNS aggregation and graphing\n\nStandard DNS lookups (dig/nslookup) only resolve names you already know. They will not reveal unadvertised subdomains like blog.tryhackme.com, app.tryhackme.com, or dev.internal.company.com.\n\nIt aggregates public DNS data from sources such as search engine caches, zone transfer databases, and certificate records. It does not perform brute-force enumeration, which means it remains fully passive.",
+      "out": "The results include subdomains and hosts, resolved IPs with geolocation, MX, TXT, and CNAME records, and visual maps showing the relationships between these."
+    },
+    {
+      "sub": "Passive",
+      "h": "crt.sh",
+      "link": "https://crt.sh/",
+      "p": "Certificate Transparency log searches. The most effective passive subdomain discovery method today is Certificate Transparency logs, accessible through crt.sh.\n\nFully passive, operates in real time, and has no rate limits for basic use.\n\nOther passive subdomain discovery options include SecurityTrails (free limited searches) and command-line tools like Subfinder, which aggregate multiple passive sources.",
+      "how": "Search for %.tryhackme.com. The % wildcard matches any subdomain. The results will list every certificate issued for subdomains of tryhackme.com, often revealing 10 to 100 times more subdomains than DNSDumpster alone.",
+      "out": "Certificate Transparency is a public logging framework (mandatory since approximately 2015) that records every SSL/TLS certificate issued by participating Certificate Authorities. Each certificate contains a Subject Alternative Name (SAN) field listing the domains and subdomains it covers. By searching these logs, you can discover subdomains without sending any traffic to the target.",
+      "tip": "Defender perspective: Organisations monitor CT logs and subdomain lists to catch dangling DNS records (which carry subdomain takeover risk) or unauthorised subdomains.",
+      "tipLabel": "Note"
+    },
+    {
+      "sub": "Passive",
+      "h": "shodan.io",
+      "link": "https://www.shodan.io/",
+      "p": "Exposed services. Search engine for internet-connected devices. It continuously scans the public internet, collects banners and responses from open ports and services, and indexes them for search. Unlike Google, which indexes web pages, Shodan focuses on devices: servers, IoT equipment, cameras, routers, industrial control systems, and more.",
+      "how": "Shodan supports a range of search filters for narrowing results:\n\nhostname:tryhackme.com matches a specific hostname.\norg:\"TryHackMe\" filters by organisation name.\nport:443 country:US filters by port and country.\nhttp.component:\"wordpress\" identifies technology stack (if exposed).\n\nFor the full reference, see: https://help.shodan.io/the-basics/search-query-fundamentals",
+      "out": "The results page displays a list of matching hosts. Selecting a host opens a detailed view containing the following information:\n\nIP address and ASN (Autonomous System Number): identifies the network block.\nHosting provider/organisation (e.g., Cloudflare, AWS): reveals the infrastructure behind the domain.\nGeographic location (country, city): approximate physical location of the server.\nOpen ports and services: with version strings and banners (e.g., HTTP server type and version).\nTags: such as cdn or vuln if a known vulnerability matches the detected service version."
+    },
+    {
+      "sub": "Passive",
+      "h": "search.censys.io",
+      "link": "https://search.censys.io/",
+      "p": "Same with Shodan, it provides similar host and certificate data. It can serve as a useful complement when cross-referencing results."
+    },
+    {
+      "sub": "Active",
+      "h": "Active reconnaissance",
+      "p": "Active reconnaissance requires direct engagement with the target. Your probes can be logged, detected, or blocked. It is analogous to walking up to the doors and windows to test locks, cameras, and alarms."
+    }
+  ]
+}

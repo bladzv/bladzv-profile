@@ -1,5 +1,6 @@
 ---
-category: "Programming & Scripting"
+category: "Programming languages"
+shortCategory: "Programming & scripting"
 icon: code
 color: cyber-blue
 skills:

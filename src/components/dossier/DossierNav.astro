@@ -1,0 +1,43 @@
+---
+import { url } from '../../lib/paths';
+import { person } from '../../data/profile';
+
+export interface Props {
+  active: 'simple' | 'writeups' | 'notes';
+}
+
+const { active } = Astro.props;
+const links =
+  active === 'simple'
+    ? [
+        { href: '#about', label: 'About' },
+        { href: '#experience', label: 'Experience' },
+        { href: '#projects', label: 'Projects' },
+        { href: url('writeups/'), label: 'Write-ups' },
+        { href: url('notes/'), label: 'Notes' },
+      ]
+    : [
+        { href: url(''), label: '← Profile' },
+        { href: url('writeups/'), label: 'Write-ups', current: active === 'writeups' },
+        { href: url('notes/'), label: 'Notes', current: active === 'notes' },
+      ];
+const contactHref = active === 'simple' ? '#contact' : `mailto:${person.email}`;
+---
+
+<nav class="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-x-7 gap-y-3.5 border-b border-dossier-line bg-dossier-bg/92 px-[clamp(20px,4vw,48px)] py-[18px] font-mono text-[13px] backdrop-blur-md" aria-label="Site">
+  <a href={url('')} class="flex items-center gap-2.5 text-dossier-text hover:text-dossier-accent">
+    <span class="h-[9px] w-[9px] bg-dossier-accent" aria-hidden="true"></span>BLOODYMER VELASCO
+  </a>
+  <div class="flex flex-wrap items-center gap-x-6 gap-y-2.5">
+    {links.map((l) => (
+      <a href={l.href} aria-current={l.current ? 'page' : undefined} class:list={['hover:text-dossier-text', l.current || (active === 'simple' && l.href === '#about') ? 'text-dossier-text' : 'text-dossier-muted']}>{l.label}</a>
+    ))}
+    <a href={contactHref} class="text-dossier-accent hover:text-dossier-text">Contact →</a>
+    {active === 'simple' && (
+      <a href={url('')} data-mode-link="os" title="Back to the desktop version" class="flex items-center gap-2.5 rounded-full border-[1.5px] border-dossier-accent py-[5px] pl-3 pr-[5px] text-[11px] font-bold tracking-[.1em] text-dossier-accent hover:bg-dossier-accent/12">
+        SIMPLE MODE<span class="relative block h-3.5 w-7 rounded-full bg-dossier-accent" aria-hidden="true"><span class="absolute left-4 top-0.5 h-2.5 w-2.5 rounded-full bg-dossier-bg"></span></span>
+        <span class="sr-only">(on). Switch to the desktop version</span>
+      </a>
+    )}
+  </div>
+</nav>

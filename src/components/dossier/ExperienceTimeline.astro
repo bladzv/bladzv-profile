@@ -1,0 +1,43 @@
+---
+import { roles } from '../../data/profile';
+
+// The axis runs from 2017 to just past the current year.
+const START = 2017;
+const SPAN = Math.max(...roles.map((r) => r.end)) - START + 0.1;
+const pct = (y: number) => `${(((y - START) / SPAN) * 100).toFixed(2)}%`;
+const years = Array.from({ length: Math.floor(SPAN) + 1 }, (_, i) => START + i);
+const timeline = roles
+  .map((r, i) => ({ ...r, n: String(roles.length - i).padStart(2, '0'), left: pct(r.start), width: `calc(${(((r.end - r.start) / SPAN) * 100).toFixed(2)}% - 3px)` }))
+  .reverse();
+---
+
+<div class="flex flex-col gap-9">
+  <div class="relative hidden h-24 sm:block" aria-hidden="true">
+    <div class="absolute inset-x-0 top-11 h-px bg-dossier-line-strong"></div>
+    {years.map((y) => (
+      <div class="absolute top-14 flex -translate-x-1/2 flex-col items-center gap-1.5" style={`left:${pct(y)}`}>
+        <span class="h-2 w-px bg-dossier-line-strong"></span>
+        <span class="font-mono text-[11px] text-dossier-dim">'{String(y).slice(2)}</span>
+      </div>
+    ))}
+    {timeline.map((t) => (
+      <div
+        class:list={[
+          'absolute top-5 flex h-12 items-center overflow-hidden border px-2 font-mono text-[13px] font-bold',
+          t.active ? 'border-dossier-accent bg-dossier-accent text-dossier-bg' : 'border-dossier-edge bg-dossier-bar text-dossier-text',
+        ]}
+        style={`left:${t.left};width:${t.width}`}
+      >{t.n}</div>
+    ))}
+  </div>
+  <ol class="grid gap-x-5 gap-y-7 [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]">
+    {timeline.map((t) => (
+      <li class:list={['flex flex-col gap-2 border-t-2 pt-3.5', t.active ? 'border-dossier-accent' : 'border-dossier-edge']}>
+        <span class:list={['font-mono text-xs', t.active ? 'text-dossier-accent' : 'text-dossier-muted']}>{t.n} · {t.period}</span>
+        <h3 class="text-[17px] font-bold leading-snug">{t.role}</h3>
+        <span class="text-[13px] text-dossier-muted">{t.company}</span>
+        <p class="text-[13px] leading-relaxed text-dossier-body">{t.impact}</p>
+      </li>
+    ))}
+  </ol>
+</div>

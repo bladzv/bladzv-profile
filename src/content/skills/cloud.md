@@ -1,5 +1,6 @@
 ---
-category: "Cloud & Tools"
+category: "Cloud & business tools"
+shortCategory: "Cloud & tools"
 icon: cloud
 color: cyber-purple
 skills:

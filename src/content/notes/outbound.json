@@ -1,0 +1,71 @@
+{
+  "folder": "soc-playbooks",
+  "slug": "suspicious-outbound",
+  "title": "Suspicious Outbound Connection",
+  "tags": [
+    "soc",
+    "l1",
+    "network"
+  ],
+  "src": "TryHackMe SOC Simulator",
+  "intro": "This playbook guides L1 SOC Analysts in investigating alerts triggered by network connections to suspicious or potentially malicious destinations, such as typosquatted domains and known bad IP addresses. The goal is to determine whether the connection attempt was legitimate, accidental, or malicious, and to assess the need for escalation such as blocking the destination or isolating affected hosts.",
+  "order": 1,
+  "blocks": [
+    {
+      "sub": "Step 1",
+      "h": "Assign Alert",
+      "items": [
+        "Assign the received alert to yourself to initiate the investigation."
+      ]
+    },
+    {
+      "sub": "Step 2",
+      "h": "Alert Triaging Process",
+      "items": [
+        "Review the alert type and context: is it related to a typosquatted domain, a known C2 server, a known bad IP?",
+        "Prioritize alerts involving sensitive internal assets or external destinations known for malware/phishing.",
+        "Look for clustering of similar alerts (multiple hits to the same domain or IP) or across multiple hosts."
+      ]
+    },
+    {
+      "sub": "Step 3",
+      "h": "Review Network Connection Details",
+      "items": [
+        "Open associated firewall or DNS logs.",
+        "Extract connection metadata: source IP (internal host), destination domain or IP, timestamp, and port/protocol.",
+        "Determine whether the connection was blocked or allowed.",
+        "Check if the DNS resolution was internal (e.g., proxy-resolved) or direct (if applicable)."
+      ]
+    },
+    {
+      "sub": "Step 4",
+      "h": "Assess Reputation of Domain or IP",
+      "items": [
+        "For typosquatted domains: Compare the domain with legitimate domains it resembles. Look for small variations (e.g., micros0ft.com, goggle.net).",
+        "Use threat intel feeds (e.g., the internal TryDetectThis app) to validate whether the domain/IP address is known for phishing or malware.",
+        "Note any malware hosting, C2 activity, or blacklisting."
+      ]
+    },
+    {
+      "sub": "Step 5",
+      "h": "Correlate with Internal Activity",
+      "items": [
+        "Identify the user or system that initiated the connection.",
+        "Determine if the connection was initiated via browser, application, or automated script.",
+        "Review recent activity from the same host: downloads, logins, process creation.",
+        "Check for signs of compromise (e.g., suspicious processes, credential abuse, or prior alerts).",
+        "Note if the host shows infection signs."
+      ]
+    },
+    {
+      "sub": "Step 6",
+      "h": "Case Reporting",
+      "items": [
+        "Classify the alert as True Positive or False Positive based on your investigation.",
+        "Document findings including domain/IP reputation, host behavior, and user context.",
+        "Escalate if response actions are needed, such as blocking the domain/IP or performing incident response on the host.",
+        "Submit and close the alert according to standard procedures defined in the documentation."
+      ]
+    }
+  ]
+}

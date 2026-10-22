@@ -1,0 +1,15 @@
+---
+import { os, person } from '../../../data/profile';
+---
+
+<div class="mx-auto flex max-w-[480px] flex-col gap-3 p-[clamp(20px,4%,36px)]">
+  <h2 class="text-[22px] font-extrabold text-white">Let's talk</h2>
+  <p class="text-sm leading-[1.6] text-cyber-muted">{os.contact}</p>
+  <a href={`mailto:${person.email}`} class="break-all rounded-xl bg-cyber-green p-4 text-center font-bold text-cyber-bg hover:text-cyber-bg">{person.email}</a>
+  <button type="button" data-copy-email={person.email} class="rounded-xl border border-cyber-border-strong p-3 text-center font-mono text-[13px] text-cyber-soft">copy email address</button>
+  <div class="grid grid-cols-2 gap-2.5">
+    <a href={person.linkedin} target="_blank" rel="noopener noreferrer" class="rounded-xl border border-cyber-border-strong p-3.5 text-center font-semibold text-cyber-text">LinkedIn ↗</a>
+    <a href={person.github} target="_blank" rel="noopener noreferrer" class="rounded-xl border border-cyber-border-strong p-3.5 text-center font-semibold text-cyber-text">GitHub ↗</a>
+  </div>
+  <p class="text-center text-[13px] text-cyber-muted">I usually reply within a day.</p>
+</div>

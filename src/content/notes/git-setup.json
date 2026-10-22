@@ -1,0 +1,66 @@
+{
+  "folder": "git",
+  "slug": "setup",
+  "title": "Git: first-time setup & auth",
+  "tags": [
+    "git",
+    "github"
+  ],
+  "intro": "One-time configuration on a new machine, plus connecting to GitHub with a token or SSH key.",
+  "order": 8,
+  "blocks": [
+    {
+      "h": "Initial Setup",
+      "p": "Install Git from git-scm.com"
+    },
+    {
+      "h": "Configure Git username and email",
+      "p": "git config sets configuration options.\n\n--global makes this apply to all repositories on your computer.\n\nuser.name is the name that shows on commits.\n\nuser.email is the email linked to your GitHub account.",
+      "code": "Git uses these to record who made each commit.\n\ngit config --global user.name \"Your Name\"\ngit config --global user.email \"youremail@example.com\""
+    },
+    {
+      "h": "Set your default code editor (optional but recommended)",
+      "p": "core.editor tells Git which editor to open when it needs you to type messages.\n\n\"code --wait\" tells Git to wait until you close VS Code before continuing.\n\nYou can replace code with nano, vim, etc., if you prefer.",
+      "code": "git config --global core.editor \"code --wait\""
+    },
+    {
+      "h": "Check your config",
+      "p": "user.name=Your Name\nuser.email=youremail@example.com",
+      "code": "git config --list"
+    },
+    {
+      "h": "Starting from scratch on your computer",
+      "p": "",
+      "code": "cd /path/to/your/project\ngit init"
+    },
+    {
+      "h": "Copying an existing project from GitHub",
+      "p": "",
+      "code": "git clone https://github.com/username/project-name.git\ncd project-name"
+    },
+    {
+      "h": "Use HTTPS with a personal access token (PAT) instead of your password.",
+      "p": "Go to GitHub → Settings → Developer Settings → Personal Access Tokens → Generate new token.\n\nGive it repo permissions.\n\nUse the token instead of your password when Git asks."
+    },
+    {
+      "h": "Use SSH (recommended)",
+      "p": "Copy the public key (~/.ssh/id_ed25519.pub) to GitHub → Settings → SSH and GPG keys.",
+      "code": "ssh-keygen -t ed25519 -C \"youremail@example.com\""
+    },
+    {
+      "h": "Test the SSH connection",
+      "p": "",
+      "code": "ssh -T git@github.com"
+    },
+    {
+      "h": "Change remote URL",
+      "p": "",
+      "code": "git remote set-url origin git@github.com:username/repo_name.git"
+    },
+    {
+      "h": "Rename local branch",
+      "p": "",
+      "code": "git branch -m <old_branch_name> <new_branch_name>"
+    }
+  ]
+}

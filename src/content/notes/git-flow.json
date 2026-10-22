@@ -1,0 +1,17 @@
+{
+  "folder": "git",
+  "slug": "github-flow",
+  "title": "The GitHub flow",
+  "tags": [
+    "git",
+    "workflow"
+  ],
+  "intro": "The everyday loop: branch, commit, push, open a PR, merge, clean up.",
+  "order": 11,
+  "blocks": [
+    {
+      "h": "Commands in order",
+      "code": "git clone\ngit checkout -b <new_branch>\ngit add .\ngit commit -m \"message\"\ngit push\n# open a PR on GitHub, then merge\ngit branch -d <new_branch>\ngit push --delete origin <new_branch>"
+    }
+  ]
+}

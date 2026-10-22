@@ -1,0 +1,46 @@
+---
+import { getProjectGroups, langColor, projectState } from '../../../lib/projects';
+
+const groups = await getProjectGroups();
+---
+
+<div class="flex flex-col gap-7 p-[clamp(20px,4%,36px)]">
+  {groups.map((g) => (
+    <section class="flex flex-col gap-3" aria-labelledby={`proj-${g.id}`}>
+      <div class="flex flex-wrap items-baseline justify-between gap-3 border-b border-cyber-border pb-2">
+        <h3 id={`proj-${g.id}`} class="text-base font-bold" style={`color:${g.color}`}>{g.osLabel}</h3>
+        <span class="text-[13px] text-cyber-muted">{g.osBlurb}</span>
+      </div>
+      <div class="grid gap-2.5 [grid-template-columns:repeat(auto-fill,minmax(240px,1fr))]">
+        {g.items.map((p) => {
+          const state = projectState(p);
+          return (
+            <article class="flex flex-col gap-2 rounded-[10px] border border-cyber-border bg-cyber-surface p-4">
+              <div class="flex items-center justify-between gap-2">
+                <h4 class="font-mono text-sm font-bold break-all text-white">{p.title}</h4>
+                <span class="whitespace-nowrap font-mono text-[10px]" style={`color:${state.color}`}>{state.label}</span>
+              </div>
+              {p.blur ? (
+                <p class="flex-1 text-[13px] leading-[1.55] text-cyber-soft">
+                  <span class="select-none blur-[3px]" aria-hidden="true">{p.detail}</span>
+                  <span class="sr-only">Details are private for now.</span>
+                </p>
+              ) : (
+                <p class="flex-1 text-[13px] leading-[1.55] text-cyber-soft">{p.detail}</p>
+              )}
+              <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-cyber-muted">
+                <span class="flex items-center gap-1.5">
+                  <span class="h-[9px] w-[9px] rounded-full" style={`background:${langColor(p.language)}`} aria-hidden="true"></span>{p.language}
+                </span>
+                <span class="flex gap-2.5">
+                  {p.url && <a href={p.url} target="_blank" rel="noopener noreferrer" class="text-cyber-blue hover:text-cyber-green">code ↗<span class="sr-only"> ({p.title})</span></a>}
+                  {p.homepage && <a href={p.homepage} target="_blank" rel="noopener noreferrer" class="text-cyber-green">demo ↗<span class="sr-only"> ({p.title})</span></a>}
+                </span>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  ))}
+</div>

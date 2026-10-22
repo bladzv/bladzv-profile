@@ -1,0 +1,24 @@
+---
+export interface Props {
+  short: string;
+  issuer: string;
+  date: string;
+  rotate: string;
+  verify?: string;
+}
+
+const { short, issuer, date, rotate, verify } = Astro.props;
+// "November 2025" → "NOV 2025"
+const stamp = date.replace(/^(\w{3})\w*/, '$1').toUpperCase();
+const Tag = verify ? 'a' : 'div';
+---
+
+<Tag
+  {...(verify ? { href: verify, target: '_blank', rel: 'noopener noreferrer' } : {})}
+  class="flex aspect-square min-w-0 flex-[0_1_190px] flex-col items-center justify-center gap-1.5 rounded-full border-2 border-dossier-accent p-7 text-center outline-1 -outline-offset-12 outline-dashed outline-dossier-accent/50"
+  style={`transform:rotate(${rotate})`}
+>
+  <span class="font-mono text-[10px] tracking-[.16em] text-dossier-accent">VERIFIED · {stamp}</span>
+  <span class="text-[17px] font-extrabold uppercase leading-tight text-dossier-text">{short}</span>
+  <span class="font-mono text-[10px] text-dossier-muted">{issuer}</span>
+</Tag>

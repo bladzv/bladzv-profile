@@ -1,0 +1,75 @@
+{
+  "folder": "soc-playbooks",
+  "slug": "phishing-email",
+  "title": "Phishing Email Analysis",
+  "tags": [
+    "soc",
+    "l1",
+    "phishing"
+  ],
+  "src": "TryHackMe SOC Simulator",
+  "intro": "This playbook provides step-by-step guidelines for SOC Level 1 analysts to investigate suspected phishing emails reported by end users or detected by security tools. Phishing emails aim to trick recipients into revealing sensitive information, downloading malware, or visiting malicious websites. Timely and accurate triage is essential to determine the threat level, contain any risk, and escalate as needed.",
+  "order": 2,
+  "blocks": [
+    {
+      "sub": "Step 1",
+      "h": "Assign Alert",
+      "items": [
+        "Assign received alert to yourself for investigation process."
+      ]
+    },
+    {
+      "sub": "Step 2",
+      "h": "Alert Triaging Process",
+      "items": [
+        "Familiarize yourself with the fields included in the alert. Review the phishing alert from your email security gateway (SEG), SIEM, or user report. Note available fields such as sender, subject, recipient, message ID, and delivery time.",
+        "Identify the time at which the email was received. Review the timestamp field or header to determine when the message was delivered to the recipient's inbox. This helps in scoping related activity.",
+        "Identify the specific asset associated with the alert. Determine which user or mailbox received the email. Note whether the user is a standard employee, VIP, or part of a sensitive business unit.",
+        "Identify the user associated with the activity. Look up the recipient in internal directory tools to determine their department, title, and whether they are active or privileged. Review the \"To\" or \"Recipient\" field.",
+        "Determine the malicious element in the email. Check whether the threat is a suspicious link, attachment, spoofed sender, or impersonation attempt."
+      ]
+    },
+    {
+      "sub": "Step 3",
+      "h": "Analyze Email Artifacts",
+      "items": [
+        "Follow steps 3.1–3.2 to detect potential anomalies and accurately classify the activity."
+      ]
+    },
+    {
+      "sub": "Step 3.1",
+      "h": "Check Sender Reputation",
+      "items": [
+        "Look up the sender’s domain/IP in the TryDetectThis app for threat intel.",
+        "Search historical mail logs to check if the sender has contacted other users."
+      ]
+    },
+    {
+      "sub": "Step 3.2",
+      "h": "Review Attachments",
+      "items": [
+        "Upload the attachment to TryDetectThis to assess for malicious indicators.",
+        "If no threats are found, manually review the file’s contents for suspicious behavior."
+      ]
+    },
+    {
+      "sub": "Step 4",
+      "h": "Investigate Related Alerts",
+      "items": [
+        "Identify other recipients who received the same email.",
+        "Check for process starts or detections related to the attachment or domain.",
+        "Search proxy and DNS logs for access to email-linked URLs.",
+        "Look for lateral movement via unusual logons or internal connections."
+      ]
+    },
+    {
+      "sub": "Step 5",
+      "h": "Case Reporting",
+      "items": [
+        "Classify the alert as True Positive or False Positive based on the results of your investigation.",
+        "Describe your analysis in the Case Report as specified in the \"Alert Reporting\" documentation section.",
+        "Submit and close alert."
+      ]
+    }
+  ]
+}

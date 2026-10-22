@@ -1,0 +1,24 @@
+{
+  "folder": "soc-playbooks",
+  "slug": "my-note",
+  "title": "Note title",
+  "tags": ["tag-one", "tag-two"],
+  "src": "Optional source, e.g. TryHackMe",
+  "intro": "Optional one-paragraph introduction shown under the title.",
+  "order": 99,
+  "blocks": [
+    {
+      "sub": "Optional label, e.g. Step 1",
+      "h": "Block heading (required)",
+      "p": "Optional paragraph. Line breaks are kept.",
+      "how": "Optional 'HOW ▸' text.",
+      "items": ["Optional numbered list item"],
+      "rows": [{ "k": "Key", "v": "Value", "w": "Optional mono detail" }],
+      "code": "optional command (gets a COPY button)",
+      "out": "Optional 'what you get' text.",
+      "tip": "Optional callout text.",
+      "tipLabel": "Callout heading (defaults to Note)",
+      "link": "https://example.com/"
+    }
+  ]
+}

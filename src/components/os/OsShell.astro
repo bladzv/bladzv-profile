@@ -61,9 +61,7 @@ const resizeDirs = ['n', 's', 'e', 'w', 'nw', 'ne', 'sw', 'se'];
     <div class="desk-only absolute inset-0" aria-hidden="true">
       <canvas data-particles="#00d4ff" class="absolute inset-0 h-full w-full opacity-35"></canvas>
       <div class="pointer-events-none absolute bottom-10 right-12 flex flex-col gap-1 text-right font-mono">
-        <span class="text-[72px] font-bold leading-none tracking-[-.04em] text-cyber-blue/8">{person.handle}</span>
-        <span class="text-[13px] text-cyber-soft/35">support → security</span>
-      </div>
+        <span class="text-[72px] font-bold leading-none tracking-[-.04em] text-cyber-blue/8">{person.handle}</span>      </div>
     </div>
 
     <nav class="desk-only absolute left-3 top-4 z-[1] grid max-h-[calc(100%-32px)] auto-cols-max grid-flow-col grid-rows-[repeat(auto-fill,96px)] gap-1" aria-label="Desktop icons">
@@ -212,6 +210,14 @@ const resizeDirs = ['n', 's', 'e', 'w', 'nw', 'ne', 'sw', 'se'];
       </div>
     </div>
   </dialog>
+  <script is:inline>
+    // Open before first paint so the dialog does not pop in after the desktop script loads.
+    (function () {
+      try {
+        if (!sessionStorage.getItem('bladzv-mode-seen')) document.querySelector('#os .mode-dialog').showModal();
+      } catch (e) {}
+    })();
+  </script>
 </div>
 
 <style is:global>

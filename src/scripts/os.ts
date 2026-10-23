@@ -385,13 +385,6 @@ export function initOs() {
   initParticles();
   typewriter(taglines);
 
-  let seen = false;
-  try {
-    seen = !!sessionStorage.getItem('bladzv-mode-seen');
-  } catch {
-    seen = true;
-  }
-  if (!seen) dialog.showModal();
-  render();
+  // The mode dialog is opened by an inline script in OsShell.astro.
   if (state.mode === 'desktop' && !dialog.open) focusTerm();
 }

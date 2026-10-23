@@ -1,11 +1,11 @@
 ---
 title: "BlockBoardz"
-description: "A Web3 bulletin board platform built on the Enjin Blockchain."
-summary: "A community bulletin board built on the Enjin blockchain."
-detail: "Closed-source Web3 bulletin board on the Enjin Blockchain."
+description: "A browser-based game integrated with the Enjin Blockchain."
+summary: "A browser game connected to the Enjin blockchain."
+detail: "Closed-source browser-based game integrated with the Enjin Blockchain."
 group: web3
 language: "TypeScript"
-stack: "Enjin Blockchain, Web3"
+stack: "Browser game, Enjin Blockchain, Web3"
 url: ""
 homepage: ""
 visibility: "private"

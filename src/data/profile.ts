@@ -32,7 +32,7 @@ export const intro =
 export const aboutParts = [
   "For seven years, in support and operations roles at fintech and blockchain companies, I've been the person teams ",
   'turn to when something breaks',
-  ". Now I'm working toward a career in cybersecurity. At home I run a lab where I practise ",
+  ". Now I'm working toward a career in cybersecurity. At home I practice ",
   'spotting cyber attacks',
   '. I hold the ',
   'CompTIA Security+',
@@ -46,21 +46,21 @@ export const os = {
   name: 'Bloodymer Velasco',
   subtitle: 'Cybersecurity analyst · Security+ certified · Philippines',
   about:
-    "For seven years, in support and operations roles at fintech and blockchain companies, I've been the person teams turn to when something breaks, twice as team lead. Now I'm moving into cybersecurity. I run a home lab where I practise spotting attacks, hold CompTIA Security+, and rank in the top 6% on TryHackMe.",
+    "For seven years, in support and operations roles at fintech and blockchain companies, I've been the person teams turn to when something breaks, twice as team lead. Now I'm moving into cybersecurity. I practice spotting attacks at home, hold CompTIA Security+, and rank in the top 6% on TryHackMe.",
   strengths: [
     { h: 'Stays calm in a crisis', p: 'Led a 24/7 alarm monitoring team for two years.' },
     { h: 'Makes teams faster', p: 'Cut call response time by ~90% as team lead.' },
     { h: 'Cuts through noise', p: 'Reduced false alarms by 40%.' },
   ],
   homeLab:
-    'I run Wazuh, Suricata and Grafana on Linux to practise detecting attacks, and train on TryHackMe, where I rank in the top 6% of learners.',
+    'I run Wazuh, Suricata and Grafana on Linux to practice detecting attacks, and train on TryHackMe, where I rank in the top 6% of learners.',
   contact: 'Open to entry-level SOC and security analyst roles, remote or Philippines-based.',
   whoami: 'bloodymer.velasco: support team lead turned cybersecurity analyst',
 };
 
 export const homeLab = {
   title: 'I built a small security operations center at home.',
-  body: 'A personal server that watches for attacks, flags suspicious network traffic and tracks system health, so I can practise the work an analyst does every day.',
+  body: 'A personal server that watches for attacks, flags suspicious network traffic and tracks system health, so I can practice the work an analyst does every day.',
   tools: ['Wazuh', 'Suricata', 'Grafana', 'Linux'],
 };
 
@@ -98,15 +98,15 @@ export const roles: Role[] = [
     company: 'Betur Inc. (Coins.ph)',
     period: 'Jul 2023 – Apr 2024',
     start: 2023.5,
-    end: 2024.3,
+    end: 2024.33,
     impact: 'Cut inbound call response time by ~90%. Reviewed partner API usage and SLA compliance, and coached the support team.',
   },
   {
     role: 'Operations Associate',
-    company: 'Coins.ph (Betur Inc.)',
+    company: 'Betur Inc. (Coins.ph)',
     period: 'Sep 2021 – Jun 2023',
     start: 2021.67,
-    end: 2023.45,
+    end: 2023.5,
     impact: 'Resolved customer tickets, worked with engineering on product issues, and managed the knowledge base and team scheduling.',
   },
   {

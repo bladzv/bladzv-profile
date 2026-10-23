@@ -1,0 +1,68 @@
+{
+  "folder": "git",
+  "slug": "branches-and-fixes",
+  "title": "Git: branches, cleanup & releases",
+  "tags": [
+    "git",
+    "ci"
+  ],
+  "intro": "Merging, undoing, cleaning up and tagging releases.",
+  "order": 10,
+  "blocks": [
+    {
+      "h": "Switch to the branch you want to merge into",
+      "p": "Branches let you work on new features separately from the main branch (main or master). When a feature is ready, you merge it.\n\ngit checkout branch_name switches to the branch.",
+      "code": "git checkout main"
+    },
+    {
+      "h": "Merge another branch",
+      "p": "Suppose your feature branch is called feature-login.\n\ngit merge combines the changes from the branch you specify into the current branch.\n\nIf there are conflicts, Git will tell you, and you’ll need to resolve them manually in the affected files.",
+      "code": "git merge <branch-name>"
+    },
+    {
+      "h": "Delete the branch after merging",
+      "p": "-d deletes a branch that has been merged.",
+      "code": "git branch -d <branch-name>"
+    },
+    {
+      "h": "Stop tracking cached file",
+      "p": "If the file is already listed in .gitignore but Git is still tracking changes locally, that means the file was tracked before it was added to .gitignore. This is expected Git behavior.",
+      "code": "git rm --cached <file>\ngit commit -m \"Stop tracking a file\""
+    },
+    {
+      "h": "Keep the remote file (discard local changes)",
+      "p": "Git is protecting your local changes from being overwritten.\n\nUse this if your local changes are not needed and you want your local to be the same with remote.",
+      "code": "git reset --hard HEAD\ngit pull"
+    },
+    {
+      "h": "Remove untracked files",
+      "p": "This deletes:\nUntracked files\nUntracked directories\nNow your working tree matches the remote checkout byte-for-byte.",
+      "code": "git clean -fd"
+    },
+    {
+      "h": "Keep your local .gitignore changes",
+      "p": "Use this if your .gitignore edits are intentional. If conflicts appear after stash pop, Git will prompt you to resolve them.",
+      "code": "git stash push -m \"Local .gitignore changes\"\ngit pull\ngit stash pop"
+    },
+    {
+      "h": "Github Actions CI (Upload to Release)",
+      "p": "GitHub Actions will automatically:\n- Build executables for macOS, Linux, Windows\n- Create a release at https://github.com/username/repo-name/releases/tag/v1.0.0\n- Attach all binaries to that release",
+      "code": "# Make sure you're on main and it's up to date\ngit checkout main\ngit pull origin main\n\n# Create and push a version tag\ngit tag v1.0.0\ngit push origin v1.0.0"
+    },
+    {
+      "h": "Github Actions CI (Delete Tags)",
+      "p": "git push origin :v1.0.1\nis shorthand for\ngit push origin :refs/tags/v1.0.1",
+      "code": "git tag -d v1.0.1          # delete local tag\ngit push origin :v1.0.1    # delete remote tag\ngit tag v1.0.1             # recreate the tag\ngit push origin v1.0.1     # trigger new build"
+    },
+    {
+      "h": "Revert the commit on main",
+      "p": "This undoes the change but keeps history clean.\n\nFind the commit hash if you don’t know it:\ngit log --oneline",
+      "code": "git checkout main\ngit revert <commit-hash>\ngit push"
+    },
+    {
+      "h": "Full flow: pull → work → commit → merge → push",
+      "p": "",
+      "code": "git checkout main\ngit pull origin main      # 1. Sync with GitHub\n\ngit checkout -b feature-x # 2. Create feature branch\n# work on code\n\ngit add .\ngit commit -m \"Add feature X\"\n\ngit checkout main\ngit pull origin main      # 3. Re-sync before merge\ngit merge feature-x       # 4. Merge locally\n\ngit push origin main      # 5. Push merged code"
+    }
+  ]
+}

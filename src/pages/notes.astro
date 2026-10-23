@@ -1,0 +1,173 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DossierNav from '../components/dossier/DossierNav.astro';
+import DossierFooter from '../components/dossier/DossierFooter.astro';
+import { blockText, getNotes, noteText } from '../lib/notes';
+import { person } from '../data/profile';
+
+const { notes, folders } = await getNotes();
+---
+
+<Layout path="notes/" title="Notes — Bloodymer S. Velasco" description="An open notebook of SOC playbooks, SIEM queries, recon commands and Git guides, free for anyone learning the same things." bodyClass="dossier bg-dossier-bg! text-dossier-text overflow-x-clip">
+  <div class="min-h-screen font-display">
+    <DossierNav active="notes" />
+    <main id="main">
+      <header class="dossier-section flex flex-col gap-7 pb-14!">
+        <div class="flex flex-wrap gap-x-7 gap-y-2 font-mono text-xs tracking-[.08em] text-dossier-muted">
+          <span>NOTES ▸ <span class="text-dossier-text">{notes.length} ENTRIES</span></span><span>STATUS ▸ <span class="text-cyber-green">UPDATED AS I LEARN</span></span>
+        </div>
+        <h1 class="font-extrabold uppercase leading-[.88] tracking-[-.035em] text-dossier-accent [font-stretch:125%] text-[clamp(52px,10vw,132px)]">NOTES</h1>
+        <p class="max-w-[640px] text-[17px] leading-relaxed text-dossier-body text-pretty">My open notebook: playbooks, queries and commands I use in labs and training, written so anyone learning the same things can copy them.</p>
+      </header>
+
+      <div class="flex flex-wrap items-start">
+        <aside class="notes-aside flex max-w-full flex-[1_1_260px] flex-col gap-6 border-dossier-line px-[clamp(20px,3vw,32px)] py-8 min-[900px]:sticky min-[900px]:top-[61px] min-[900px]:max-h-[calc(100vh-61px)] min-[900px]:max-w-[320px] min-[900px]:overflow-auto min-[900px]:border-r">
+          <div class="flex flex-col gap-2">
+            <label for="notes-q" class="font-mono text-[11px] tracking-[.1em] text-dossier-muted">SEARCH ALL NOTES</label>
+            <input id="notes-q" data-notes-q type="search" placeholder="e.g. whois, phishing, kql" autocomplete="off" class="border border-dossier-line-strong bg-dossier-card px-3 py-2.5 font-mono text-[13px] text-dossier-text placeholder:text-dossier-dim focus:border-dossier-accent focus:outline-none" />
+          </div>
+          {folders.map(({ name: folder, notes: inFolder }, i) => (
+            <nav class="flex flex-col gap-0.5" aria-label={folder} data-folder>
+              <div class="mb-1 flex justify-between gap-2 border-b border-dossier-line pb-2 font-mono text-[11px] uppercase tracking-[.1em]">
+                <span><span class="text-dossier-accent">§{String(i + 1).padStart(2, '0')}</span>  <span class="text-dossier-muted">{folder}</span></span>
+                <span class="folder-count text-dossier-dim">{inFolder.length}</span>
+              </div>
+              {inFolder.map((n) => (
+                <a href={`#${n.id}`} data-note-link={n.id} data-text={noteText(n)} class="note-link flex justify-between gap-2.5 border-l-2 border-transparent px-2.5 py-2 text-sm leading-snug text-dossier-muted hover:text-dossier-text">
+                  <span>{n.data.title}</span><span class="note-hits font-mono text-[11px] text-dossier-accent"></span>
+                </a>
+              ))}
+              <span class="folder-empty px-2.5 py-2 font-mono text-xs text-dossier-dim" hidden>no matches</span>
+            </nav>
+          ))}
+        </aside>
+
+        <div class="notes-main flex min-w-0 max-w-[960px] flex-[999_1_520px] flex-col gap-7 px-[clamp(20px,4vw,56px)] pb-24 pt-10" tabindex="-1">
+          <div class="hit-line flex flex-wrap justify-between gap-2 border border-dashed border-dossier-line-strong px-3.5 py-2.5 font-mono text-xs text-dossier-body" hidden>
+            <span class="hit-text" role="status"></span><button type="button" class="clear-search text-dossier-accent">clear search ✕</button>
+          </div>
+
+          {notes.map((n, idx) => {
+            const prev = notes[idx - 1];
+            const next = notes[idx + 1];
+            return (
+              <article data-note={n.id} class="flex flex-col gap-7" hidden={idx !== 0} aria-labelledby={`note-${n.id}`}>
+                <header class="flex flex-col gap-4 border-b-2 border-dossier-text pb-7">
+                  <span class="font-mono text-xs break-all text-dossier-muted">~/notes/<span class="text-dossier-accent">{n.data.folder}</span>/{n.data.slug}.md</span>
+                  <h2 id={`note-${n.id}`} class="dossier-display text-[clamp(30px,4.4vw,54px)] leading-none tracking-[-.02em] text-balance">{n.data.title}</h2>
+                  <ul class="flex flex-wrap gap-1.5">{n.data.tags.map((t) => <li class="border border-dossier-line-strong px-[9px] py-1 font-mono text-[11px] text-dossier-body">#{t}</li>)}</ul>
+                  <span class="font-mono text-xs text-dossier-muted">{n.data.src ? `source: ${n.data.src}` : 'personal reference'} · {n.data.blocks.length} sections</span>
+                  {n.data.intro && <p class="text-[19px] leading-relaxed text-dossier-body text-pretty">{n.data.intro}</p>}
+                </header>
+
+                {n.data.blocks.map((b, bi) => (
+                  <section data-block data-text={blockText(b)} class="flex flex-wrap gap-x-8 gap-y-3 border-t border-dossier-line pt-6">
+                    <div class="flex flex-[0_0_120px] flex-col gap-1 font-mono text-[11px] uppercase tracking-[.1em]">
+                      <span class="text-dossier-accent">§{String(bi + 1).padStart(2, '0')}</span>
+                      {b.sub && <span class="text-dossier-muted">{b.sub}</span>}
+                    </div>
+                    <div class="flex min-w-0 flex-[1_1_360px] flex-col gap-3.5">
+                      <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
+                        <h3 class="text-[22px] font-bold leading-tight text-pretty">{b.h}</h3>
+                        {b.link && <a href={b.link} target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-dossier-accent hover:text-dossier-text">visit ↗<span class="sr-only"> {b.h}</span></a>}
+                      </div>
+                      {b.p && <p class="whitespace-pre-line break-words text-base leading-[1.7] text-dossier-body">{b.p}</p>}
+                      {b.how && (
+                        <div class="flex flex-col gap-1">
+                          <span class="font-mono text-[11px] tracking-[.1em] text-dossier-muted">HOW ▸</span>
+                          <p class="whitespace-pre-line break-words text-[15px] leading-[1.65] text-dossier-body">{b.how}</p>
+                        </div>
+                      )}
+                      {b.items && b.items.length > 0 && (
+                        <ol class="flex list-decimal flex-col gap-2 pl-[22px] text-base leading-relaxed text-dossier-body">
+                          {b.items.map((it) => <li class="break-words pl-1">{it}</li>)}
+                        </ol>
+                      )}
+                      {b.rows && b.rows.length > 0 && (
+                        <dl class="flex flex-col border border-dossier-line">
+                          {b.rows.map((r) => (
+                            <div class="flex flex-wrap gap-x-5 gap-y-1.5 border-b border-dossier-line px-4 py-3.5 last:border-b-0">
+                              <dt class="flex-[0_0_120px] break-all font-mono text-[13px] font-bold text-dossier-accent">{r.k}</dt>
+                              <dd class="flex min-w-0 flex-[1_1_260px] flex-col gap-1">
+                                {r.v && <span class="text-[15px] leading-normal text-dossier-text">{r.v}</span>}
+                                {r.w && <span class="break-all font-mono text-xs text-dossier-muted">{r.w}</span>}
+                              </dd>
+                            </div>
+                          ))}
+                        </dl>
+                      )}
+                      {b.code && (
+                        <div data-code class="flex flex-col border border-dossier-line-strong bg-dossier-card">
+                          <div class="flex items-center justify-between border-b border-dashed border-dossier-line-strong px-3.5 py-2 font-mono text-[11px] tracking-[.1em] text-dossier-muted">
+                            <span>COMMAND</span>
+                            <button type="button" class="copy-btn text-dossier-accent">COPY</button>
+                          </div>
+                          <pre class="whitespace-pre-wrap break-all px-4 py-3.5 font-mono text-[13px] leading-[1.65] text-dossier-text"><code>{b.code}</code></pre>
+                        </div>
+                      )}
+                      {b.out && (
+                        <div class="flex flex-col gap-1.5 border-l-2 border-dossier-line-strong pl-3.5">
+                          <span class="font-mono text-[11px] tracking-[.1em] text-cyber-green">→ WHAT YOU GET</span>
+                          <p class="whitespace-pre-line break-words text-[15px] leading-[1.65] text-dossier-body">{b.out}</p>
+                        </div>
+                      )}
+                      {b.tip && (
+                        <aside class="flex flex-col gap-1.5 border border-dashed border-dossier-accent/50 bg-dossier-accent/5 px-[18px] py-4">
+                          <span class="font-mono text-[11px] uppercase tracking-[.1em] text-dossier-accent">{b.tipLabel || 'Note'}</span>
+                          <p class="whitespace-pre-line break-words text-[15px] leading-[1.65] text-dossier-text">{b.tip}</p>
+                        </aside>
+                      )}
+                    </div>
+                  </section>
+                ))}
+
+                <div class="no-hits border border-dashed border-dossier-line-strong px-6 py-10 text-center font-mono text-[13px] text-dossier-muted" hidden></div>
+
+                <nav class="mt-4 grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))]" aria-label="More notes">
+                  {prev && (
+                    <a href={`#${prev.id}`} class="flex flex-col gap-1.5 border border-dossier-line p-[18px] hover:border-dossier-accent">
+                      <span class="font-mono text-[11px] tracking-[.1em] text-dossier-muted">← PREVIOUS</span><span class="text-base font-bold">{prev.data.title}</span>
+                    </a>
+                  )}
+                  {next && (
+                    <a href={`#${next.id}`} class="col-start-[-2] flex flex-col gap-1.5 border border-dossier-line p-[18px] text-right hover:border-dossier-accent">
+                      <span class="font-mono text-[11px] tracking-[.1em] text-dossier-muted">NEXT →</span><span class="text-base font-bold">{next.data.title}</span>
+                    </a>
+                  )}
+                </nav>
+                <div class="flex flex-wrap justify-between gap-3 border-t border-dossier-line pt-5 font-mono text-xs text-dossier-muted">
+                  <span>Spot a mistake? <a href={`${person.github}/bladzv-profile/issues`} target="_blank" rel="noopener noreferrer" class="text-dossier-accent hover:text-dossier-text">open an issue ↗</a></span>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </main>
+    <DossierFooter />
+  </div>
+</Layout>
+
+<style>
+  .note-link[aria-current='page'] {
+    border-left-color: var(--color-dossier-accent);
+    background: var(--color-dossier-card);
+    color: var(--color-dossier-text);
+  }
+</style>
+
+<script>
+  import { initNotes } from '../scripts/notes';
+
+  const main = document.querySelector<HTMLElement>('.notes-main')!;
+  initNotes(document.querySelector<HTMLElement>('#main')!, {
+    hash: true,
+    copyLabel: 'COPY',
+    copiedLabel: 'COPIED ✓',
+    onOpen: () => {
+      const top = main.getBoundingClientRect().top + window.scrollY - 64;
+      if (window.scrollY > top) window.scrollTo({ top, behavior: 'smooth' });
+      main.focus({ preventScroll: true });
+    },
+  });
+</script>

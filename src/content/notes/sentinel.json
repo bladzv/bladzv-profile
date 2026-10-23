@@ -1,0 +1,20 @@
+{
+  "folder": "siem",
+  "slug": "sentinel-kql",
+  "title": "Microsoft Sentinel KQL",
+  "tags": [
+    "sentinel",
+    "kql"
+  ],
+  "intro": "KQL snippets for Microsoft Sentinel.",
+  "order": 4,
+  "blocks": [
+    {
+      "h": "Syslog Specific Host Debug",
+      "p": "This query first sets a variable query_now (though it's not strictly used in the subsequent steps), then filters the Syslog_CL table to only include logs where the host name (host_s) exactly matches 'app-02'. Finally, it projects (selects) only the timestamp, host name, and the log message.",
+      "tip": "This is the most common use case for log queries—isolating all log messages from a single, critical application server (app-02) to diagnose a recent issue, check for configuration changes, or review activity during a specific time period.",
+      "tipLabel": "Why it matters: Troubleshooting & Focused Investigation",
+      "code": "set query_now = datetime(2025-10-30T05:09:25.9886229Z);\nSyslog_CL\n| where host_s == 'app-02'\n| project _timestamp_t, host_s, Message"
+    }
+  ]
+}

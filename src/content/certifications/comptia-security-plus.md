@@ -1,5 +1,6 @@
 ---
 name: "CompTIA Security+ (SY0-701)"
+short: "Security+ SY0-701"
 issuer: "CompTIA"
 date: "November 2025"
 verify: ""

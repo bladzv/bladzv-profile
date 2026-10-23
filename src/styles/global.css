@@ -1,67 +1,63 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Archivo:wdth,wght@100..125,400..800&display=swap');
 
 @import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  /* bladzOS desktop (cyber palette) */
   --color-cyber-bg: #0d1117;
   --color-cyber-surface: #161b22;
   --color-cyber-card: #1c2128;
   --color-cyber-border: #21262d;
+  --color-cyber-border-strong: #30363d;
+  --color-cyber-desk: #05070b;
+  --color-cyber-screen: #070a10;
+  --color-cyber-bar: #0b0f17;
+  --color-cyber-side: #0b0f15;
+  --color-cyber-tool: #0f141b;
+  --color-cyber-hover: #161e2b;
+  --color-cyber-active: #1b2533;
+  --color-cyber-line: #1b2330;
+  --color-cyber-term: #0a0d12;
   --color-cyber-green: #00ff88;
   --color-cyber-blue: #00d4ff;
   --color-cyber-purple: #a855f7;
+  --color-cyber-red: #ff7b72;
+  --color-cyber-sky: #79c0ff;
+  --color-cyber-amber: #fbbf24;
+  --color-cyber-soft: #c9d1d9;
   --color-cyber-muted: #8b949e;
+  --color-cyber-dim: #6e7681;
+  --color-cyber-faint: #484f58;
   --color-cyber-text: #e6edf3;
-  /* Preserve the v3 accent colors used by badges and terminal indicators. */
-  --color-amber-400: #fbbf24;
-  --color-yellow-400: #facc15;
-  --color-yellow-500: #eab308;
-  --color-red-500: #ef4444;
-  --color-green-500: #22c55e;
+
+  /* Dossier pages: simple mode, write-ups, notes */
+  --color-dossier-bg: #0c0d0b;
+  --color-dossier-card: #13140f;
+  --color-dossier-bar: #1b1c17;
+  --color-dossier-line: #24251f;
+  --color-dossier-dash: #2e2f28;
+  --color-dossier-line-strong: #3a3b33;
+  --color-dossier-edge: #4a4b42;
+  --color-dossier-text: #e9e6dc;
+  --color-dossier-body: #bdb9ad;
+  --color-dossier-muted: #8f8c82;
+  --color-dossier-dim: #6d6a61;
+  --color-dossier-accent: #f0743a;
+
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-  --animate-glow-pulse: glow-pulse 2s ease-in-out infinite alternate;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-typing: typing 3s steps(40) 1s forwards, blink 0.75s step-end infinite;
-  --animate-fade-in-up: fade-in-up 0.6s ease-out forwards;
-  --animate-fade-in: fade-in 0.8s ease-out forwards;
-
-  @keyframes glow-pulse {
-    0% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.2); }
-    100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.4), 0 0 40px rgba(0, 255, 136, 0.1); }
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-  @keyframes typing {
-    from { width: 0; }
-    to { width: 100%; }
-  }
-  @keyframes blink {
-    50% { border-color: transparent; }
-  }
-  @keyframes fade-in-up {
-    0% { opacity: 0; transform: translateY(30px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fade-in {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-  }
+  --font-display: 'Archivo', 'Inter', system-ui, sans-serif;
 }
 
 @layer base {
   html {
-    scroll-behavior: smooth;
     color-scheme: dark;
   }
 
   body {
     @apply bg-cyber-bg text-cyber-text font-sans antialiased;
-    overflow-x: hidden;
   }
 
   ::selection {
@@ -70,81 +66,89 @@
 
   ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-cyber-bg;
+    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-cyber-border rounded-full;
+    @apply bg-cyber-border-strong rounded-full;
   }
 
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-cyber-muted;
+  :focus-visible {
+    outline: 2px solid var(--color-cyber-blue);
+    outline-offset: 2px;
+  }
+
+  .dossier :focus-visible {
+    outline-color: var(--color-dossier-accent);
   }
 }
 
 @layer components {
-  .section-heading {
-    @apply text-2xl md:text-3xl font-bold font-sans text-white;
+  /* §NN eyebrow on dossier pages */
+  .dossier-label {
+    @apply font-mono text-xs tracking-[.1em] text-dossier-accent;
   }
 
-  .section-container {
-    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20;
+  .dossier-section {
+    @apply border-b border-dossier-line;
+    padding: clamp(48px, 6vw, 72px) clamp(20px, 4vw, 48px);
   }
 
-  .glass-card {
-    @apply bg-cyber-card/60 backdrop-blur-xs border border-cyber-border rounded-xl;
+  .dossier-display {
+    @apply font-display font-extrabold uppercase;
+    font-stretch: 115%;
   }
 
-  .cyber-link {
-    @apply text-cyber-blue hover:text-cyber-green transition-colors duration-200;
+  /* Redacted text: a solid bar until hovered, focused, or declassified. */
+  .redact {
+    background: var(--color-dossier-text);
+    color: var(--color-dossier-text);
+    padding: 0 6px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    transition: background-color 0.25s, color 0.25s;
   }
 
-  .badge,
-  .badge-public,
-  .badge-private,
-  .badge-ongoing {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+  .redact:hover,
+  .redact:focus-visible,
+  .declassified .redact {
+    background: rgb(240 116 58 / 0.18);
+    color: var(--color-dossier-accent);
   }
 
-  .badge-public {
-    @apply border border-cyber-green/40 text-cyber-green bg-cyber-green/10;
+  .declassified .redact {
+    background: transparent;
   }
 
-  .badge-private {
-    @apply border border-cyber-muted/40 text-cyber-muted bg-cyber-muted/10;
+  /* Pill toggle used for the simple-mode and declassify switches */
+  .pill-toggle {
+    @apply inline-flex items-center gap-2 rounded-full border font-mono text-[11px];
+    padding: 3px 4px 3px 10px;
   }
 
-  .badge-ongoing {
-    @apply border border-yellow-500/40 text-yellow-400 bg-yellow-500/10;
+  .pill-toggle .knob-track {
+    @apply relative block rounded-full;
+    width: 26px;
+    height: 14px;
+  }
+
+  .pill-toggle .knob {
+    @apply absolute rounded-full;
+    top: 2px;
+    width: 10px;
+    height: 10px;
+  }
+
+  .os-winbtn {
+    @apply flex h-6 w-7 items-center justify-center rounded text-cyber-muted hover:bg-cyber-border;
   }
 }
 
-@layer utilities {
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-linear-to-r from-cyber-green to-cyber-blue;
-  }
-
-  button:focus-visible {
-    outline: 2px solid #00d4ff;
-    outline-offset: 2px;
-    border-radius: 2px;
-  }
-}
-
-/* Sticky nav scroll offset for anchor links */
-section[id] {
-  scroll-margin-top: 3.5rem;
-}
-
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
   *,
   *::before,
   *::after {
@@ -154,34 +158,7 @@ section[id] {
     scroll-behavior: auto !important;
   }
 
-  #particles-canvas {
+  canvas[data-particles] {
     display: none !important;
   }
-
-  .reveal {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-/* Scroll-reveal */
-.reveal {
-  opacity: 0;
-  transform: translateY(32px);
-  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
-}
-
-.reveal.revealed {
-  opacity: 1;
-  transform: none;
-}
-
-/* Section divider glow */
-section + section::before {
-  content: '';
-  display: block;
-  height: 1px;
-  max-width: 20rem;
-  margin: 0 auto;
-  background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.15), transparent);
 }

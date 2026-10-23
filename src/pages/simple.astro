@@ -1,0 +1,145 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import DossierNav from '../components/dossier/DossierNav.astro';
+import DossierFooter from '../components/dossier/DossierFooter.astro';
+import ExperienceTimeline from '../components/dossier/ExperienceTimeline.astro';
+import ProjectExhibits from '../components/dossier/ProjectExhibits.astro';
+import CertStamp from '../components/dossier/CertStamp.astro';
+import { aboutParts, intro, person } from '../data/profile';
+import { url } from '../lib/paths';
+
+const skills = (await getCollection('skills')).sort((a, b) => a.data.order - b.data.order);
+const certs = (await getCollection('certifications')).sort((a, b) => a.data.order - b.data.order);
+const rotations = ['-6deg', '5deg', '-3deg', '4deg'];
+---
+
+<Layout path="simple/" bodyClass="dossier bg-dossier-bg! text-dossier-text overflow-x-clip">
+  <div class="min-h-screen font-display">
+    <DossierNav active="simple" />
+
+    <main id="main">
+      <header class="relative border-b border-dossier-line px-[clamp(20px,4vw,48px)] pb-16 pt-[clamp(48px,7vw,80px)]">
+        <canvas data-particles="#f0743a" class="pointer-events-none absolute inset-0 h-full w-full opacity-30" aria-hidden="true"></canvas>
+        <div class="relative z-[2] flex flex-col gap-7">
+          <div class="flex flex-wrap gap-x-7 gap-y-2 font-mono text-xs tracking-[.08em] text-dossier-muted">
+            <span>STATUS ▸ <span class="text-cyber-green">OPEN TO WORK</span></span><span>CERTIFIED ▸ COMPTIA SECURITY+</span>
+          </div>
+          <h1 class="font-extrabold uppercase leading-[.88] tracking-[-.035em] [font-stretch:125%] text-[clamp(32px,10.5vw,150px)]">
+            <span class="sr-only">{person.name}</span>
+            <span aria-hidden="true">
+              <span data-scramble="BLOODYMER" class="block text-dossier-text">BLOODYMER</span>
+              <span data-scramble="S.VELASCO" class="block text-dossier-accent">S.VELASCO</span>
+            </span>
+          </h1>
+          <div class="grid items-end gap-x-12 gap-y-6 [grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))]">
+            <p class="font-mono text-[clamp(15px,1.8vw,20px)] text-dossier-muted">I am: <span data-typewriter class="border-r-2 border-dossier-accent pr-0.5 text-dossier-text"></span></p>
+            <p class="text-[17px] leading-relaxed text-dossier-body text-pretty">{intro}</p>
+          </div>
+        </div>
+      </header>
+
+      <section id="about" class="dossier-section flex scroll-mt-[60px] flex-wrap gap-x-12 gap-y-7" aria-labelledby="about-h">
+        <div class="flex w-[200px] shrink-0 flex-col gap-5">
+          <h2 id="about-h" class="dossier-label flex flex-col gap-1.5"><span>§01</span><span class="text-dossier-muted">ABOUT ME</span></h2>
+          <div class="flex flex-col gap-2.5 font-mono">
+            <span class="declass-note text-[11px] leading-normal text-dossier-muted">Some details are hidden. Hover to reveal, or:</span>
+            <button type="button" class="declass-toggle flex items-center gap-2.5 self-start rounded-full border-[1.5px] border-dossier-accent py-1.5 pl-3 pr-1.5 text-[11px] font-bold tracking-[.1em] text-dossier-accent" aria-pressed="false">
+              <span class="declass-label">SHOW EVERYTHING</span>
+              <span class="declass-track relative block h-3.5 w-7 rounded-full bg-dossier-accent" aria-hidden="true"><span class="declass-knob absolute left-0.5 top-0.5 h-2.5 w-2.5 rounded-full bg-dossier-bg transition-[left]"></span></span>
+            </button>
+          </div>
+        </div>
+        <p class="declass-scope max-w-[960px] flex-[1_1_420px] text-[clamp(22px,2.6vw,34px)] font-medium leading-[1.4] tracking-[-.01em] text-pretty">
+          {aboutParts.map((part, i) => (i % 2 ? <span class="redact" tabindex="0">{part}</span> : part))}
+        </p>
+      </section>
+
+      <section id="experience" class="dossier-section flex scroll-mt-[60px] flex-col gap-9" aria-labelledby="exp-h">
+        <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+          <h2 id="exp-h" class="dossier-label flex gap-4"><span>§02</span><span class="text-dossier-muted">EXPERIENCE</span></h2>
+          <span class="hidden font-mono text-xs text-dossier-muted sm:inline">bar length = time in the role</span>
+        </div>
+        <ExperienceTimeline />
+      </section>
+
+      <section id="projects" class="dossier-section flex scroll-mt-[60px] flex-col gap-9" aria-labelledby="proj-h">
+        <h2 id="proj-h" class="dossier-label flex gap-4"><span>§03</span><span class="text-dossier-muted">PROJECTS</span></h2>
+        <ProjectExhibits />
+      </section>
+
+      <section class="dossier-section grid gap-x-12 gap-y-9 [grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))]" aria-labelledby="skills-h">
+        <h2 id="skills-h" class="dossier-label flex flex-col gap-1.5"><span>§04</span><span class="text-dossier-muted">SKILLS &amp; CERTIFICATIONS</span></h2>
+        <div class="flex flex-col gap-[22px]">
+          {skills.map(({ data }) => (
+            <div class="flex flex-col gap-2">
+              <h3 class="font-mono text-[11px] uppercase tracking-[.1em] text-dossier-muted">{data.category}</h3>
+              <ul class="flex flex-wrap gap-1.5">
+                {data.skills.map((s) => <li class="border border-dossier-line-strong px-2.5 py-[5px] font-mono text-xs">{s}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div class="flex items-start gap-4">
+          {certs.map(({ data }, i) => (
+            <CertStamp short={data.short || data.name} issuer={data.issuer} date={data.date} verify={data.verify} rotate={rotations[i % rotations.length]} />
+          ))}
+        </div>
+      </section>
+
+      <section class="dossier-section grid gap-x-12 gap-y-6 [grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))]" aria-labelledby="writing-h">
+        <h2 id="writing-h" class="dossier-label flex flex-col gap-1.5"><span>§05</span><span class="text-dossier-muted">WRITING</span></h2>
+        <a href={url('writeups/')} class="flex flex-col gap-2.5 border border-dossier-line p-6 text-dossier-text hover:border-dossier-accent">
+          <span class="font-mono text-[11px] text-dossier-accent">first one coming soon</span>
+          <span class="dossier-display text-[28px]">Write-ups →</span>
+          <span class="text-sm leading-relaxed text-dossier-body">Step-by-step stories of security challenges I've worked through: what I tried, what I found, what I learned.</span>
+        </a>
+        <a href={url('notes/')} class="flex flex-col gap-2.5 border border-dossier-line p-6 text-dossier-text hover:border-dossier-accent">
+          <span class="font-mono text-[11px] text-dossier-accent">shared openly</span>
+          <span class="dossier-display text-[28px]">Notes →</span>
+          <span class="text-sm leading-relaxed text-dossier-body">My study notes and quick guides, free for anyone learning the same things.</span>
+        </a>
+      </section>
+
+      <section id="contact" class="grid scroll-mt-[60px] items-end gap-x-12 gap-y-9 px-[clamp(20px,4vw,48px)] pb-14 pt-[clamp(56px,7vw,88px)] [grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))]" aria-labelledby="contact-h">
+        <div class="flex min-w-0 flex-col gap-5">
+          <h2 id="contact-h" class="dossier-label">§06 · CONTACT</h2>
+          <a href={`mailto:${person.email}`} class="font-extrabold uppercase leading-[.95] tracking-[-.03em] text-dossier-text [font-stretch:125%] text-[clamp(44px,7vw,72px)] hover:text-dossier-accent">Let's talk →</a>
+          <a href={`mailto:${person.email}`} class="break-all font-mono text-[clamp(14px,1.6vw,18px)] text-dossier-body hover:text-dossier-accent">{person.email}</a>
+        </div>
+        <dl class="grid grid-cols-[auto_1fr] gap-x-4 border border-dashed border-dossier-line-strong p-5 font-mono text-xs leading-[1.9] text-dossier-muted">
+          <dt>LinkedIn</dt><dd><a href={person.linkedin} target="_blank" rel="noopener noreferrer" class="text-dossier-accent hover:text-dossier-text">/in/bloodyvelasco</a></dd>
+          <dt>GitHub</dt><dd><a href={person.github} target="_blank" rel="noopener noreferrer" class="text-dossier-accent hover:text-dossier-text">/bladzv</a></dd>
+          <dt>Reply time</dt><dd class="text-dossier-text">{person.replyTime}</dd>
+        </dl>
+      </section>
+    </main>
+
+    <DossierFooter />
+  </div>
+</Layout>
+
+<script>
+  import { initParticles, scramble, setMode, typewriter } from '../scripts/effects';
+  import { taglines } from '../data/profile';
+
+  initParticles(9000);
+  typewriter(taglines, 800);
+  scramble();
+
+  document.querySelectorAll('[data-mode-link="os"]').forEach((a) => a.addEventListener('click', () => setMode('os')));
+
+  const toggle = document.querySelector<HTMLButtonElement>('.declass-toggle');
+  const scope = document.querySelector('.declass-scope');
+  toggle?.addEventListener('click', () => {
+    const on = scope?.classList.toggle('declassified') ?? false;
+    toggle.setAttribute('aria-pressed', String(on));
+    const color = on ? 'var(--color-cyber-green)' : '';
+    toggle.style.borderColor = color;
+    toggle.style.color = color;
+    toggle.querySelector<HTMLElement>('.declass-track')!.style.background = color;
+    toggle.querySelector<HTMLElement>('.declass-knob')!.style.left = on ? '16px' : '';
+    toggle.querySelector('.declass-label')!.textContent = on ? 'HIDE AGAIN' : 'SHOW EVERYTHING';
+    document.querySelector('.declass-note')!.textContent = on ? 'All details shown.' : 'Some details are hidden. Hover to reveal, or:';
+  });
+</script>

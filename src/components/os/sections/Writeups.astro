@@ -1,0 +1,148 @@
+---
+import { getCollection } from 'astro:content';
+import { person } from '../../../data/profile';
+import { url } from '../../../lib/paths';
+
+const published = (await getCollection('writeups', (w) => w.data.status === 'published')).sort((a, b) => a.data.order - b.data.order);
+const categories = ['All', 'TryHackMe', 'Homelab', 'Investigations', 'Tooling'];
+const views = [
+  ['index', 'Index'],
+  ['template', 'Article layout'],
+];
+const body = [
+  { n: '01', h: 'Scope & setup', p: '[Target, rules of engagement, and your lab or VM setup.]' },
+  { n: '02', h: 'Recon', p: '[What you enumerated and why. Keep only the output that mattered.]', code: '$ nmap -sC -sV -oN scan.txt [target]' },
+  { n: '03', h: 'Findings', p: '[The path through: each step, the evidence, and any dead ends worth mentioning.]' },
+  { n: '04', h: 'Detection', p: '[Blue-team angle: the log, Wazuh rule or Suricata signature that would have caught this.]', code: 'alert http any any -> $HOME_NET any (msg:"[rule]"; sid:1000001;)' },
+  { n: '05', h: 'Lessons', p: '[What you would do differently, and what it taught you about the defender side.]' },
+];
+const pill = 'rounded-full border px-2 py-0.5 text-[11px]';
+---
+
+<div class="flex max-w-[900px] flex-col gap-[18px] p-[clamp(20px,4%,36px)]" data-wu>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <span class="font-mono text-[13px] text-cyber-muted">~/writeups $ ls → <span class="text-cyber-red">total {published.length}</span></span>
+    <div class="flex gap-1 rounded-lg border border-cyber-border bg-cyber-surface p-[3px] font-mono text-xs" role="group" aria-label="View">
+      {views.map(([id, label]) => (
+        <button type="button" data-wu-view={id} aria-pressed={id === 'index' ? 'true' : 'false'} class="wu-view rounded-md px-3 py-1.5 text-cyber-muted">{label}</button>
+      ))}
+    </div>
+  </div>
+  <div class="flex flex-wrap gap-1.5" role="group" aria-label="Filter by category">
+    {categories.map((c) => (
+      <button type="button" data-wu-cat={c} aria-pressed={c === 'All' ? 'true' : 'false'} class="wu-cat rounded-full border border-cyber-border px-[11px] py-[5px] text-xs text-cyber-muted">{c}</button>
+    ))}
+  </div>
+
+  <div data-wu-panel="index" class="flex flex-col gap-[18px]">
+    {published.length > 0 && (
+      <ul class="flex flex-col gap-2.5">
+        {published.map((w) => (
+          <li data-wu-entry={w.data.category}>
+            <a href={url(`writeups/${w.id}/`)} class="flex flex-col gap-2 rounded-[10px] border border-cyber-border bg-cyber-surface px-5 py-[18px] hover:border-cyber-border-strong">
+              <span class="flex flex-wrap items-center gap-2">
+                <span class={`${pill} border-cyber-green/40 text-cyber-green`}>{w.data.category}</span>
+                {w.data.difficulty && <span class={`${pill} border-yellow-500/40 text-yellow-400`}>{w.data.difficulty}</span>}
+                {w.data.date && <span class="font-mono text-xs text-cyber-muted">{w.data.date}</span>}
+              </span>
+              <span class="text-[17px] font-semibold text-cyber-text">{w.data.title}</span>
+              <span class="text-[13px] text-cyber-muted">{w.data.summary}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+    <div class="wu-empty flex flex-col items-center gap-3 rounded-xl border border-dashed border-cyber-border-strong px-6 py-9 text-center" hidden={published.length > 0}>
+      <span class="font-mono text-[13px] text-cyber-muted">total 0</span>
+      <span class="wu-empty-title text-xl font-bold text-white">Nothing published yet</span>
+      <span class="max-w-[440px] text-sm leading-[1.6] text-cyber-muted">The first write-up is in draft. Follow on GitHub or LinkedIn to catch it when it goes up.</span>
+      <div class="flex flex-wrap justify-center gap-2.5">
+        <button type="button" data-wu-view="template" class="rounded-lg border border-cyber-border-strong px-4 py-2.5 text-sm text-cyber-text">Preview the write-up layout</button>
+        <a href={person.github} target="_blank" rel="noopener noreferrer" class="rounded-lg bg-cyber-green px-4 py-2.5 text-sm font-bold text-cyber-bg hover:text-cyber-bg">Follow on GitHub</a>
+      </div>
+    </div>
+    <div class="flex flex-col gap-2">
+      <span class="font-mono text-[11px] uppercase tracking-[.08em] text-cyber-muted">How a published entry will look in this list</span>
+      <div class="flex flex-col gap-2 rounded-[10px] border border-cyber-border bg-cyber-surface px-5 py-[18px] opacity-75" aria-hidden="true">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class={`${pill} border-cyber-green/40 text-cyber-green`}>TryHackMe</span>
+          <span class={`${pill} border-yellow-500/40 text-yellow-400`}>Medium</span>
+          <span class="font-mono text-xs text-cyber-muted">[date] · [n] min read</span>
+          <span class="ml-auto font-mono text-[11px] text-cyber-dim">draft</span>
+        </div>
+        <span class="text-[17px] font-semibold text-cyber-text">[Write-up title]</span>
+        <span class="text-[13px] text-cyber-muted">[One-line summary: what was attacked, what was found, what you'd detect]</span>
+      </div>
+    </div>
+  </div>
+
+  <article data-wu-panel="template" class="flex min-w-0 flex-col gap-[22px]" hidden>
+    <header class="flex flex-col gap-3 border-b border-cyber-border pb-5">
+      <div class="flex flex-wrap gap-1.5">
+        <span class={`${pill} border-cyber-green/40 text-cyber-green`}>[Platform]</span>
+        <span class={`${pill} border-yellow-500/40 text-yellow-400`}>[Difficulty]</span>
+        <span class={`${pill} border-cyber-border-strong text-cyber-muted`}>[Tags]</span>
+      </div>
+      <h2 class="text-[28px] font-extrabold leading-[1.15] text-white">[Write-up title]</h2>
+      <span class="font-mono text-xs text-cyber-muted">[Date] · [n] min read · tools: [nmap, wireshark, …]</span>
+    </header>
+    <div class="flex flex-col gap-1.5 rounded-[10px] border border-cyber-blue/30 bg-cyber-blue/5 px-[18px] py-4">
+      <span class="font-mono text-[11px] tracking-[.08em] text-cyber-blue">TL;DR</span>
+      <p class="text-sm leading-[1.6] text-cyber-soft">[Two or three sentences for recruiters: the target, how you got in or what you found, and the defensive takeaway.]</p>
+    </div>
+    {body.map((b) => (
+      <section class="flex flex-col gap-2.5">
+        <h3 class="text-lg font-bold text-white"><span class="mr-2.5 font-mono text-sm text-cyber-green">{b.n}</span>{b.h}</h3>
+        <p class="text-sm leading-[1.7] text-cyber-soft">{b.p}</p>
+        {b.code && <pre class="whitespace-pre-wrap break-all rounded-lg border border-cyber-border bg-cyber-term px-3.5 py-3 font-mono text-xs leading-[1.6] text-cyber-text">{b.code}</pre>}
+      </section>
+    ))}
+    <a href={url('writeups/')} class="font-mono text-xs text-cyber-blue hover:text-cyber-green">open full write-ups page ↗</a>
+  </article>
+</div>
+
+<style>
+  .wu-view[aria-pressed='true'] {
+    background: var(--color-cyber-border);
+    color: var(--color-cyber-text);
+  }
+
+  .wu-cat[aria-pressed='true'] {
+    border-color: rgb(0 255 136 / 0.5);
+    background: rgb(0 255 136 / 0.08);
+    color: var(--color-cyber-green);
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-wu]');
+  if (root) {
+    const views = [...root.querySelectorAll<HTMLButtonElement>('.wu-view')];
+    const cats = [...root.querySelectorAll<HTMLButtonElement>('.wu-cat')];
+    const entries = [...root.querySelectorAll<HTMLElement>('[data-wu-entry]')];
+    const empty = root.querySelector<HTMLElement>('.wu-empty')!;
+    const emptyTitle = root.querySelector('.wu-empty-title')!;
+
+    const showView = (id: string) => {
+      views.forEach((v) => v.setAttribute('aria-pressed', String(v.dataset.wuView === id)));
+      root.querySelectorAll<HTMLElement>('[data-wu-panel]').forEach((p) => (p.hidden = p.dataset.wuPanel !== id));
+    };
+
+    root.addEventListener('click', (e) => {
+      const t = e.target as Element;
+      const view = t.closest<HTMLElement>('[data-wu-view]');
+      if (view) return showView(view.dataset.wuView!);
+      const cat = t.closest<HTMLElement>('[data-wu-cat]')?.dataset.wuCat;
+      if (!cat) return;
+      cats.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.wuCat === cat)));
+      let shown = 0;
+      entries.forEach((en) => {
+        en.hidden = cat !== 'All' && en.dataset.wuEntry !== cat;
+        if (!en.hidden) shown++;
+      });
+      empty.hidden = shown > 0;
+      emptyTitle.textContent = cat === 'All' ? 'Nothing published yet' : `No ${cat} write-ups yet`;
+      showView('index');
+    });
+  }
+</script>

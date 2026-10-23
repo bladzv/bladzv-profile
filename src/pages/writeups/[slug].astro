@@ -1,0 +1,65 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import DossierNav from '../../components/dossier/DossierNav.astro';
+import DossierFooter from '../../components/dossier/DossierFooter.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('writeups', (w) => w.data.status === 'published');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, category, platform, difficulty, tools, date, summary } = entry.data;
+---
+
+<Layout path={`writeups/${entry.id}/`} title={`${title} — Write-up`} description={summary} bodyClass="dossier bg-dossier-bg! text-dossier-text overflow-x-clip">
+  <div class="min-h-screen font-display">
+    <DossierNav active="writeups" />
+    <main id="main" class="dossier-section">
+      <article class="mx-auto flex max-w-[820px] flex-col gap-7">
+        <header class="flex flex-col gap-3.5 border-b-2 border-dossier-text pb-6">
+          <div class="flex flex-wrap gap-1.5 font-mono text-[11px]">
+            {[category, platform, difficulty, ...tools].filter(Boolean).map((t) => <span class="border border-dossier-line-strong px-2 py-[3px] text-dossier-body">{t}</span>)}
+          </div>
+          <h1 class="dossier-display text-[clamp(28px,3.6vw,44px)] leading-[1.05]">{title}</h1>
+          {date && <span class="font-mono text-xs text-dossier-muted">{date}</span>}
+          <p class="text-lg leading-relaxed text-dossier-body">{summary}</p>
+        </header>
+        <div class="writeup-body flex flex-col gap-5 text-base leading-[1.7] text-dossier-body">
+          <Content />
+        </div>
+      </article>
+    </main>
+    <DossierFooter />
+  </div>
+</Layout>
+
+<style>
+  .writeup-body :global(h2) {
+    margin-top: 1.5rem;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-dossier-text);
+  }
+  .writeup-body :global(a) {
+    color: var(--color-dossier-accent);
+  }
+  .writeup-body :global(pre) {
+    border: 1px solid var(--color-dossier-line-strong);
+    background: var(--color-dossier-card) !important;
+    padding: 14px 16px;
+    font-size: 13px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .writeup-body :global(code) {
+    font-family: var(--font-mono);
+  }
+  .writeup-body :global(ul),
+  .writeup-body :global(ol) {
+    padding-left: 1.5rem;
+    list-style: revert;
+  }
+</style>

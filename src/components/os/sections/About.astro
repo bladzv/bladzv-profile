@@ -1,0 +1,26 @@
+---
+import { os, person } from '../../../data/profile';
+---
+
+<div class="flex max-w-[860px] flex-col gap-6 p-[clamp(20px,4%,36px)]">
+  <div class="flex flex-wrap items-center gap-4">
+    <span class="flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-135 from-cyber-green to-cyber-blue text-[22px] font-extrabold text-cyber-bg" aria-hidden="true">{person.initials}</span>
+    <div class="flex flex-col gap-1">
+      <h2 class="text-2xl font-extrabold text-white">{os.name}</h2>
+      <span class="text-sm text-cyber-muted">{os.subtitle}</span>
+    </div>
+  </div>
+  <p class="text-[17px] leading-[1.65] text-cyber-soft text-pretty">{os.about}</p>
+  <ul class="grid gap-2.5 [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]">
+    {os.strengths.map((s) => (
+      <li class="flex flex-col gap-1.5 rounded-[10px] border border-cyber-border bg-cyber-surface p-4">
+        <span class="text-[15px] font-bold text-white">{s.h}</span>
+        <span class="text-[13px] leading-[1.55] text-cyber-muted">{s.p}</span>
+      </li>
+    ))}
+  </ul>
+  <div class="flex flex-wrap gap-2.5">
+    <button type="button" data-open="route" class="rounded-lg bg-cyber-green px-4 py-2.5 text-sm font-bold text-cyber-bg">See my experience →</button>
+    <button type="button" data-open="contact" class="rounded-lg border border-cyber-border-strong px-4 py-2.5 text-sm font-semibold text-cyber-text">Contact me</button>
+  </div>
+</div>

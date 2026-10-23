@@ -1,0 +1,123 @@
+---
+import { blockText, getNotes, noteText } from '../../../lib/notes';
+import { url } from '../../../lib/paths';
+
+const { notes, folders } = await getNotes();
+---
+
+<div class="os-notes-wrap h-full [container-type:inline-size]">
+<div class="os-notes flex min-h-full flex-wrap items-stretch" data-os-notes>
+  <nav class="os-notes-side box-border flex max-w-full flex-[1_1_220px] flex-col gap-3.5 border-r border-cyber-border bg-cyber-side px-3 py-4" aria-label="Notes">
+    <label class="sr-only" for="os-notes-q">Search notes</label>
+    <input id="os-notes-q" data-notes-q type="search" placeholder="grep notes…" autocomplete="off" class="rounded-md border border-cyber-border bg-cyber-surface px-2.5 py-2 font-mono text-xs text-cyber-text placeholder:text-cyber-dim focus:border-cyber-blue focus:outline-none" />
+    {folders.map((f) => (
+      <div class="flex flex-col gap-0.5" data-folder>
+        <div class="flex justify-between px-1.5 pb-1 pt-0.5 font-mono text-[11px] uppercase tracking-[.06em]">
+          <span style={`color:${f.color}`}>{f.name}/</span><span class="folder-count text-cyber-dim">{f.notes.length}</span>
+        </div>
+        {f.notes.map((n) => (
+          <button type="button" data-note-link={n.id} data-text={noteText(n)} class="os-note-link flex justify-between gap-2 rounded-[5px] px-2 py-1.5 text-left text-[13px] leading-[1.35] text-cyber-soft hover:bg-cyber-hover">
+            <span>{n.data.title}</span><span class="note-hits font-mono text-[11px] text-cyber-green"></span>
+          </button>
+        ))}
+      </div>
+    ))}
+    <a href={url('notes/')} class="mt-auto border-t border-cyber-border px-1.5 pt-2 font-mono text-[11px] text-cyber-blue hover:text-cyber-green">open full notes page ↗</a>
+  </nav>
+
+  <div class="os-notes-main flex min-w-0 flex-[999_1_340px] flex-col gap-[18px] p-[clamp(18px,4%,32px)]">
+    {notes.map((n, idx) => (
+      <article data-note={n.id} class="flex flex-col gap-[18px]" hidden={idx !== 0} aria-labelledby={`osnote-${n.id}`}>
+        <span class="font-mono text-xs break-all text-cyber-muted">~/notes/<span class="text-cyber-blue">{n.data.folder}</span>/{n.data.slug}.md</span>
+        <h2 id={`osnote-${n.id}`} class="text-2xl font-extrabold leading-[1.2] text-white text-pretty">{n.data.title}</h2>
+        <div class="flex flex-wrap items-center gap-1.5">
+          {n.data.tags.map((t) => <span class="rounded-full border border-cyber-border-strong px-2 py-0.5 text-[11px] text-cyber-muted">#{t}</span>)}
+          {n.data.src && <span class="text-xs text-cyber-dim">source: {n.data.src}</span>}
+        </div>
+        {n.data.intro && <p class="text-[15px] leading-[1.65] text-cyber-soft">{n.data.intro}</p>}
+        <span class="hit-line font-mono text-xs text-cyber-muted" role="status" hidden></span>
+        {n.data.blocks.map((b) => (
+          <section data-block data-text={blockText(b)} class="flex min-w-0 flex-col gap-2 border-t border-cyber-border pt-3.5">
+            {b.sub && <span class="font-mono text-[11px] uppercase tracking-[.06em] text-cyber-dim">{b.sub}</span>}
+            <div class="flex flex-wrap items-baseline gap-2.5">
+              <h3 class="text-[15px] font-bold text-white text-pretty">{b.h}</h3>
+              {b.link && <a href={b.link} target="_blank" rel="noopener noreferrer" class="text-xs text-cyber-blue hover:text-cyber-green">visit ↗<span class="sr-only"> {b.h}</span></a>}
+            </div>
+            {b.p && <p class="whitespace-pre-line break-words text-sm leading-[1.65] text-cyber-soft">{b.p}</p>}
+            {b.how && <p class="whitespace-pre-line break-words text-[13px] leading-[1.6] text-cyber-muted">{b.how}</p>}
+            {b.items && b.items.length > 0 && (
+              <ol class="flex list-decimal flex-col gap-1.5 pl-5 text-sm leading-[1.6] text-cyber-soft">
+                {b.items.map((it) => <li class="break-words">{it}</li>)}
+              </ol>
+            )}
+            {b.rows && b.rows.length > 0 && (
+              <dl class="flex flex-col overflow-hidden rounded-lg border border-cyber-border">
+                {b.rows.map((r) => (
+                  <div class="flex flex-wrap gap-x-3.5 gap-y-1 border-b border-cyber-border px-3 py-2.5 last:border-b-0">
+                    <dt class="flex-[0_0_100px] font-mono text-xs font-bold text-cyber-blue">{r.k}</dt>
+                    <dd class="flex min-w-0 flex-[1_1_200px] flex-col gap-0.5">
+                      {r.v && <span class="text-[13px] leading-normal text-cyber-text">{r.v}</span>}
+                      {r.w && <span class="break-all font-mono text-[11px] text-cyber-dim">{r.w}</span>}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            {b.code && (
+              <div data-code class="flex flex-col overflow-hidden rounded-lg border border-cyber-border bg-cyber-term">
+                <div class="flex justify-end border-b border-cyber-border px-2 py-1">
+                  <button type="button" class="copy-btn font-mono text-[11px] text-cyber-muted">copy</button>
+                </div>
+                <pre class="whitespace-pre-wrap break-all px-3.5 py-3 font-mono text-xs leading-[1.6] text-cyber-text">{b.code}</pre>
+              </div>
+            )}
+            {b.out && (
+              <div class="flex flex-col gap-1">
+                <span class="font-mono text-[11px] text-cyber-green">→ what you get</span>
+                <p class="whitespace-pre-line break-words text-[13px] leading-[1.6] text-cyber-soft">{b.out}</p>
+              </div>
+            )}
+            {b.tip && (
+              <aside class="flex flex-col gap-1 rounded-lg border border-cyber-amber/20 bg-cyber-amber/6 px-3 py-2.5">
+                <span class="font-mono text-[11px] text-cyber-amber">{b.tipLabel || 'Tip'}</span>
+                <p class="whitespace-pre-line break-words text-[13px] leading-[1.6] text-cyber-text">{b.tip}</p>
+              </aside>
+            )}
+          </section>
+        ))}
+      </article>
+    ))}
+  </div>
+</div>
+</div>
+
+<style>
+  .os-notes .os-note-link[aria-current='page'] {
+    background: var(--color-cyber-active);
+    color: #fff;
+  }
+
+  /* Two columns: the menu stays put and only the note scrolls. */
+  @container (min-width: 640px) {
+    .os-notes {
+      height: 100%;
+      flex-wrap: nowrap;
+    }
+
+    .os-notes-side {
+      max-width: 260px;
+      overflow-y: auto;
+    }
+
+    .os-notes-main {
+      min-height: 0;
+      overflow-y: auto;
+    }
+  }
+
+  @container (max-width: 639px) {
+    .os-notes-side {
+      border-right: 0;
+    }
+  }
+</style>

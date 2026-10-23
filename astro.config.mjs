@@ -8,6 +8,10 @@ export default defineConfig({
   base: '/bladzv-profile',
   output: 'static',
   compressHTML: true,
-  vite: { plugins: [tailwindcss()] },
+  vite: {
+    plugins: [tailwindcss()],
+    // src/lib/github.ts rewrites the repo cache on every dev render; watching it reloads the page.
+    server: { watch: { ignored: ['**/.cache/**'] } },
+  },
   devToolbar: { enabled: false },
 });

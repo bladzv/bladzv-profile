@@ -2,7 +2,7 @@
 
 # Static Profile — Bloodymer S. Velasco
 
-A dark‑navy, terminal‑themed one‑page portfolio that highlights who I am, what I've built, and my skills in IT & cybersecurity. Features a split‑hero with a live terminal card, canvas particle background, and a responsive hamburger nav — works on any device.
+A portfolio you can click around like a small desktop ("bladzOS"): draggable Files and Terminal windows, with tablet and phone layouts. A plain, scrollable simple mode is one toggle away, plus pages for write-ups and open study notes.
 
 ![Astro](https://img.shields.io/badge/Astro-0a0a0f?style=for-the-badge&logo=astro&logoColor=ff5d01) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-0a0a0f?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4) ![TypeScript](https://img.shields.io/badge/TypeScript-0a0a0f?style=for-the-badge&logo=typescript&logoColor=3178c6)
 
@@ -26,7 +26,7 @@ Why this repo:
 
 - Framework: Astro 7 (static output, `base: /bladzv-profile`)
 - Styling: Tailwind CSS v4 via the Vite plugin — dark navy `cyber-*` CSS theme tokens
-- Fonts: Inter (UI) + JetBrains Mono (terminal/code) via Google Fonts
+- Fonts: Inter (desktop UI), Archivo (simple mode, write-ups, notes) + JetBrains Mono via Google Fonts
 - Background: Canvas particle animation (vanilla JS, no dependencies)
 - Hosting: GitHub Pages (static)
 - Build-time data: GitHub REST API (sanitized), cached in `.cache/github_repos.json`
@@ -36,26 +36,27 @@ Why this repo:
 
 ```
 src/
-├── content.config.ts           ← Zod schemas for projects, skills, certifications
-├── pages/index.astro           ← Single entry point, composes all sections
+├── content.config.ts           ← Zod schemas: projects, skills, certifications, writeups, notes
+├── pages/
+│   ├── index.astro             ← bladzOS desktop (tablet and phone layouts included)
+│   ├── simple.astro            ← Simple mode: one plain, scrollable page
+│   ├── writeups/               ← Write-ups index + one page per published write-up
+│   └── notes.astro             ← Open notebook with folders, search and copy buttons
 ├── layouts/Layout.astro        ← HTML shell + CSP meta tag + OG/Twitter tags
 ├── components/
-│   ├── Nav.astro               ← Sticky top nav; hamburger menu on mobile (<768px)
-│   ├── ParticlesBG.astro       ← Canvas particle animation (vanilla JS, no deps)
-│   ├── Hero.astro              ← Full-height split hero: name/CTAs + terminal card
-│   ├── About.astro             ← Summary paragraph
-│   ├── Experience.astro        ← Vertical timeline (role + company + dates)
-│   ├── Skills.astro            ← Skill badge grid grouped by category
-│   ├── Certifications.astro    ← Cert credential cards
-│   ├── Projects.astro          ← Card grid (merges GitHub API + manual entries)
-│   ├── ProjectCard.astro       ← Single project card with visibility/status badges
-│   └── Footer.astro            ← LinkedIn + GitHub links
+│   ├── os/                     ← Desktop shell, top bar, phone home, file icons
+│   │   └── sections/           ← Window contents: about, experience, projects, …
+│   └── dossier/                ← Shared parts of the simple, write-ups and notes pages
 ├── content/
-│   ├── projects/               ← Manual project entries (.md) — public & private
-│   ├── skills/                 ← Skill badge groups by category (.md)
-│   └── certifications/         ← Cert credential cards (.md)
-├── lib/github.ts               ← Build-time GitHub API fetch + sanitization
-└── styles/global.css           ← Tailwind directives + custom utilities
+│   ├── projects/               ← Project entries (.md); public repos add a summary and group
+│   ├── skills/                 ← Skill groups (.md)
+│   ├── certifications/         ← Certifications (.md)
+│   ├── writeups/               ← Write-ups (.md); drafts show as "in draft"
+│   └── notes/                  ← One JSON file per note
+├── data/                       ← Profile facts, roles, note folder order
+├── lib/                        ← GitHub fetch + sanitization, project merge, base-path links
+├── scripts/                    ← Client scripts: windows, terminal, notes, effects
+└── styles/global.css           ← Tailwind theme tokens (cyber-*, dossier-*) + shared classes
 scripts/
 └── update-github-cache.js      ← Refreshes .cache/github_repos.json from GitHub API
 .github/
@@ -79,8 +80,10 @@ npm run audit    # Check all dependencies; high/critical findings fail
 ```
 
 - **Adding a project:** Create a `.md` file in `src/content/projects/` using `_template.md` as a guide.
-- **Public repos:** Auto-fetched from GitHub API (`bladzv`) at build time (including repo descriptions) — no manual entry needed.
+- **Public repos:** Auto-fetched from GitHub API (`bladzv`) at build time (including repo descriptions). Without an entry they appear under "More on GitHub"; add a short `.md` with `title`, `summary`, `group` and `order` to place one in a group.
 - **Private projects:** Set `visibility: private` (and optionally `blur: true`) in the frontmatter.
+- **Adding a write-up:** Copy `src/content/writeups/_template.md`; it gets its own page once `status: published`.
+- **Adding a note:** Copy `src/content/notes/_template.json`; folder order lives in `src/data/notes.ts`.
 - **Deploying:** Push to `main` — GitHub Actions builds and deploys automatically.
 - **Refreshing cached repos locally:** Run `node scripts/update-github-cache.js` (requires `GITHUB_TOKEN` env var).
 

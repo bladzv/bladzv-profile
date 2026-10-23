@@ -1,5 +1,6 @@
 ---
-category: "Cybersecurity & Monitoring"
+category: "Security monitoring tools"
+shortCategory: "Security monitoring"
 icon: shield
 color: cyber-green
 skills:

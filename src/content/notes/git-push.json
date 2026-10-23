@@ -1,0 +1,48 @@
+{
+  "folder": "git",
+  "slug": "first-push",
+  "title": "Git: first commit to GitHub",
+  "tags": [
+    "git",
+    "github"
+  ],
+  "intro": "From a local folder to a repo on GitHub, step by step.",
+  "order": 9,
+  "blocks": [
+    {
+      "h": "Initialize Git in your project",
+      "p": "This command turns your project folder into a Git repository. It creates a hidden .git folder where Git stores all version history. If you already did this, you can skip it.",
+      "code": "git init"
+    },
+    {
+      "h": "Add files to staging area",
+      "p": "git add moves files into Git’s “staging area” so they are ready to be committed.\n\n. means “all files in the current directory.”\n\nYou can also add files individually: git add filename.",
+      "code": "git add ."
+    },
+    {
+      "h": "Commit the staged files",
+      "p": "git commit saves a snapshot of your staged files into Git history.\n\n-m \"message\" lets you attach a message describing the commit. Here \"Initial commit\" is a conventional message for the first commit.",
+      "code": "git commit -m \"Initial commit\""
+    },
+    {
+      "h": "Link your local repo to GitHub (set remote origin)",
+      "p": "git remote add adds a new remote repository.\n\norigin is the standard name for the main remote (you can name it differently, but most people use origin).\n\nThe URL is your GitHub repo URL. Replace username and repo_name with your GitHub username and repository name.",
+      "code": "git remote add origin https://github.com/username/repo_name.git"
+    },
+    {
+      "h": "Check if it was added correctly",
+      "p": "This will show something like:\n\norigin  https://github.com/username/repo_name.git (fetch)\norigin  https://github.com/username/repo_name.git (push)",
+      "code": "git remote -v"
+    },
+    {
+      "h": "Push your commit to GitHub",
+      "p": "git push uploads your commits to the remote repo.\n\n-u sets origin/main as the default upstream branch, so in the future you can just run git push without specifying the branch.\n\norigin is the remote name we just added.\n\nmain is the branch you’re pushing to. (Older repos sometimes use master; check your GitHub default branch.)",
+      "code": "git push -u origin main"
+    },
+    {
+      "h": "Pushing a new branch for the first time",
+      "p": "-u sets upstream so next time you can just do git push",
+      "code": "git push -u origin <new-branch>"
+    }
+  ]
+}

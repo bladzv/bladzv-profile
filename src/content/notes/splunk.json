@@ -1,0 +1,140 @@
+{
+  "folder": "siem",
+  "slug": "splunk-hunting",
+  "title": "Splunk SPL: web & endpoint hunting",
+  "tags": [
+    "splunk",
+    "spl",
+    "threat-hunting"
+  ],
+  "intro": "Queries from a web-server compromise investigation, ordered from first look to confirmed breach.",
+  "order": 3,
+  "blocks": [
+    {
+      "h": "Raw Web Events",
+      "p": "Retrieves all raw events from the main index that have a source type of web_traffic. This is the foundational search for web log analysis.",
+      "tip": "Establishes the volume and type of web traffic data available for analysis. Used to start any web-related investigation.",
+      "tipLabel": "Why it matters: Initial Investigation & Baseline",
+      "code": "index=main sourcetype=web_traffic"
+    },
+    {
+      "h": "Daily Traffic Trend",
+      "p": "Retrieves web traffic events and uses the timechart command to count the total number of events, grouping them by 1-day intervals (span=1d).",
+      "tip": "Helps visualize the daily volume of web traffic over time. Spikes or dips can indicate service issues, marketing campaign effects, or potential DoS/DDoS activity.",
+      "tipLabel": "Why it matters: Trend Analysis & Anomaly Detection",
+      "code": "index=main sourcetype=web_traffic | timechart span=1d count"
+    },
+    {
+      "h": "Traffic Day Extremes",
+      "p": "Similar to the above, but after counting, it sorts the daily counts (sort by count) and then reverses the order (reverse) to show the day with the lowest count first. (If reverse is omitted, it shows the highest first). Note: The query as written shows lowest first.",
+      "tip": "Identifying the lowest traffic periods can help schedule maintenance. To find the busiest days, remove the reverse command.",
+      "tipLabel": "Why it matters: Capacity Planning & Resource Allocation",
+      "code": "index=main sourcetype=web_traffic | timechart span=1d count | sort by count | reverse"
+    },
+    {
+      "h": "Filter Non-Standard Agents",
+      "p": "Filter Non-Standard Browsers/Agents - Retrieves web traffic events but excludes logs where the user_agent field contains common, legitimate browser strings (Mozilla, Chrome, Safari, Firefox).",
+      "tip": "Isolates traffic that might originate from automated scripts, crawlers, command-line tools (like curl), or malicious scanners, which often use non-standard or missing User-Agent strings.",
+      "tipLabel": "Why it matters: Threat Hunting/Bot Detection",
+      "code": "index=main sourcetype=web_traffic user_agent!=*Mozilla* user_agent!=*Chrome* user_agent!=*Safari* user_agent!=*Firefox*"
+    },
+    {
+      "h": "Top 5 Suspicious IPs",
+      "p": "Narrows down to non-standard user agents (as above), counts the total number of events per client IP address, sorts to find the highest counts, and displays the Top 5 IP addresses.",
+      "tip": "Pinpoints the top IP addresses generating the most non-standard (and potentially malicious/bot-driven) traffic. Essential for blocking and further investigation.",
+      "tipLabel": "Why it matters: Identifying Attack Sources",
+      "code": "sourcetype=web_traffic user_agent!=*Mozilla* user_agent!=*Chrome* user_agent!=*Safari* user_agent!=*Firefox* | stats count by client_ip | sort -count | head 5"
+    },
+    {
+      "h": "Config/Source Code Scan",
+      "p": "Filters web traffic from a specific IP (<REDACTED>) where the requested path includes common targets for attackers seeking sensitive files (e.g., application configuration (.env), PHP debugging info (phpinfo), or source control data (.git)).",
+      "tip": "Alerts security teams to reconnaissance attempts where an attacker is trying to find misconfigured or accidentally exposed application files that could lead to a breach.",
+      "tipLabel": "Why it matters: Web Attack Monitoring (Information Gathering)",
+      "code": "sourcetype=web_traffic client_ip=\"<REDACTED>\" AND path IN (\"/.env\", \"/*phpinfo*\", \"/.git*\") | table _time, path, user_agent, status"
+    },
+    {
+      "h": "Path Traversal/Redirect Check (Initial)",
+      "p": "Filters traffic from a specific IP (<REDACTED>) looking for requests where the path contains path traversal indicators (*..*) or patterns related to open redirection attacks (*redirect*).",
+      "tip": "Detects attempts to access files or directories outside of the web root or attempts to leverage the site for phishing via open redirects.",
+      "tipLabel": "Why it matters: Web Attack Monitoring (Path Traversal/Redirection)",
+      "code": "sourcetype=web_traffic client_ip=\"<REDACTED>\" AND path=\"*..*\" OR path=\"*redirect*\""
+    },
+    {
+      "h": "Path Traversal Count (Specific)",
+      "p": "Focuses the Path Traversal search on highly suspicious, multiple-level traversal attempts (*..\\/..\\/*) and redirection attempts (*redirect*), then provides a count of how many times each unique path was requested.",
+      "tip": "Provides clear data on the specific malicious paths an attacker is attempting to exploit, which is critical for incident response and patching.",
+      "tipLabel": "Why it matters: Attack Pattern Analysis",
+      "code": "sourcetype=web_traffic client_ip=\"<REDACTED>\" AND path=\"*..\\/..\\/*\" OR path=\"*redirect*\" | stats count by path"
+    },
+    {
+      "h": "SQL/Injection Tool Use",
+      "p": "Filters traffic from a specific IP (<REDACTED>) where the user_agent field contains the signature of popular SQL injection tools (sqlmap, Havij).",
+      "tip": "Directly identifies automated attacks targeting the database layer, allowing for immediate blocking and vulnerability assessment.",
+      "tipLabel": "Why it matters: Web Attack Monitoring (SQL Injection)",
+      "code": "sourcetype=web_traffic client_ip=\"<REDACTED>\" AND user_agent IN (\"*sqlmap*\", \"*Havij*\") | table _time, path, status"
+    },
+    {
+      "h": "Backup/Log Theft Attempt",
+      "p": "Filters traffic from a specific IP (<REDACTED>) for requests targeting common names for compressed backup or log files (backup.zip, logs.tar.gz).",
+      "tip": "Identifies attackers attempting to download sensitive data dumps or logs that might contain proprietary or customer information.",
+      "tipLabel": "Why it matters: Web Attack Monitoring (Data Exfiltration)",
+      "code": "sourcetype=web_traffic client_ip=\"<REDACTED>\" AND path IN (\"*backup.zip*\", \"*logs.tar.gz*\") | table _time path, user_agent"
+    },
+    {
+      "h": "Webshell/RCE Attempt",
+      "p": "Filters traffic from a specific IP (<REDACTED>) for requests matching known indicators of malicious files or command execution via a webshell (e.g., bunnylock.bin, shell.php?cmd=).",
+      "tip": "Identifies attempts to execute malware or remote commands on the server, which is a major security incident requiring immediate containment.",
+      "tipLabel": "Why it matters: Critical Incident Detection",
+      "code": "sourcetype=web_traffic client_ip=\"<REDACTED>\" AND path IN (\"*bunnylock.bin*\", \"*shell.php?cmd=*\") | table _time, path, user_agent, status"
+    },
+    {
+      "h": "Firewall Activity Monitoring (Specific Flow)",
+      "p": "Retrieves allowed firewall logs (sourcetype=firewall_logs) for traffic originating from a specific internal IP (10.10.1.5) to a specific destination (<REDACTED>), showing detailed flow data.",
+      "tip": "Used to audit a specific device's network activity (e.g., a server or internal system), verifying that only expected traffic is being allowed to reach a sensitive destination.",
+      "tipLabel": "Why it matters: Security Audit & Internal Reconnaissance",
+      "code": "sourcetype=firewall_logs src_ip=\"10.10.1.5\" AND dest_ip=\"<REDACTED>\" AND action=\"ALLOWED\" | table _time, action, protocol, src_ip, dest_ip, dest_port, reason"
+    },
+    {
+      "h": "Firewall Data Transfer Volume (Specific Flow)",
+      "p": "Same as above, but uses the stats command to calculate the total sum of bytes transferred for the specific source IP in the allowed flows.",
+      "tip": "Helps quantify the amount of data transferred by a specific host. A large, unexpected sum could indicate data exfiltration or a high-bandwidth application running unexpectedly.",
+      "tipLabel": "Why it matters: Data Exfiltration/Usage Monitoring",
+      "code": "sourcetype=firewall_logs src_ip=\"10.10.1.5\" AND dest_ip=\"<REDACTED>\" AND action=\"ALLOWED\" | stats sum(bytes_transferred) by src_ip"
+    },
+    {
+      "h": "Web Access Cmd Execution",
+      "p": "Command Execution Attempt Detection - Searches Apache access logs (index=windows_apache_access) for common command-line tool names (cmd.exe, powershell, Invoke-Expression) used by attackers in the HTTP request (either in the path or query string). Displays key fields.",
+      "tip": "Immediately flags attempts by an attacker to execute OS commands via a compromised web server or webshell, which is a critical sign of a security breach.",
+      "tipLabel": "Why it matters: Detecting Webshells/RCE (Remote Code Execution)",
+      "code": "index=windows_apache_access (cmd.exe OR powershell OR \"powershell.exe\" OR \"Invoke-Expression\") | table _time host clientip uri_path uri_query status"
+    },
+    {
+      "h": "Web Error Cmd/PowerShell",
+      "p": "Command Execution/Error Detection - Searches Apache error logs (index=windows_apache_error) for command-line tools or the Internal Server Error message. Attackers often execute commands that fail, resulting in an error log entry.",
+      "tip": "Uncovers noisy or failed RCE attempts and confirms if command execution was attempted, even if the result was an HTTP 500 status that might not appear in the access log.",
+      "tipLabel": "Why it matters: Detecting Failed Exploit Attempts",
+      "code": "index=windows_apache_error (\"cmd.exe\" OR \"powershell\" OR \"Internal Server Error\")"
+    },
+    {
+      "h": "Sysmon Process from Web Server",
+      "p": "Processes Spawned by Web Server - Filters System Monitor (Sysmon) logs (index=windows_sysmon) for any new process whose parent process (ParentImage) is the Apache executable (httpd.exe).",
+      "tip": "This is a high-fidelity indicator of a security event. A legitimate web server process should never launch a new child process (like cmd.exe or powershell.exe). This confirms a successful web server exploit.",
+      "tipLabel": "Why it matters: Detecting Initial Compromise/Persistence",
+      "code": "index=windows_sysmon ParentImage=\"*httpd.exe\""
+    },
+    {
+      "h": "Sysmon Whoami Execution",
+      "p": "Discovery Command Execution - Filters Sysmon logs for the execution of cmd.exe that includes the attacker reconnaissance command whoami.",
+      "tip": "After gaining access, attackers run commands like whoami to understand their privileges on the system. This is a key step in the attack chain.",
+      "tipLabel": "Why it matters: Detecting Post-Exploitation Activity (Reconnaissance)",
+      "code": "index=windows_sysmon *cmd.exe* *whoami*"
+    },
+    {
+      "h": "Sysmon Encoded PowerShell",
+      "p": "Obfuscated PowerShell Detection - Filters Sysmon logs for powershell.exe execution where the command line contains keywords (enc, -EncodedCommand, Base64) indicating the use of obfuscated, base64-encoded commands.",
+      "tip": "Attackers use encoded commands to bypass simple security controls and log analysis. Identifying this pattern is crucial for detecting sophisticated malware or lateral movement. If your defences are correctly configured, this query should return no results, meaning the encoded payload never ran.",
+      "tipLabel": "Why it matters: Detecting Evasion Techniques",
+      "code": "index=windows_sysmon Image=\"*powershell.exe\" (CommandLine=\"*enc*\" OR CommandLine=\"*-EncodedCommand*\" OR CommandLine=\"*Base64*\")"
+    }
+  ]
+}

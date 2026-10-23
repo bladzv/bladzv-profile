@@ -1,0 +1,148 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import DossierNav from '../../components/dossier/DossierNav.astro';
+import DossierFooter from '../../components/dossier/DossierFooter.astro';
+import { person } from '../../data/profile';
+import { url } from '../../lib/paths';
+
+const entries = (await getCollection('writeups')).sort((a, b) => a.data.order - b.data.order);
+const published = entries.filter((w) => w.data.status === 'published');
+const drafts = entries.length - published.length;
+const categories = ['All', 'TryHackMe', 'Homelab', 'Investigations', 'Tooling'];
+
+// The structure every write-up follows, shown as a redacted sample.
+const body = [
+  { n: '00', h: 'Summary', p: 'Two or three sentences: what the target was, what I found, and the one thing a defender should take away.' },
+  { n: '01', h: 'Scope & setup', p: 'What I was allowed to test, and how my lab or virtual machine was set up.' },
+  { n: '02', h: 'Recon', p: 'What I looked at first and why, keeping only the output that mattered.', code: '$ nmap -sC -sV -oN scan.txt <target>', codeLabel: 'EXAMPLE COMMAND' },
+  { n: '03', h: 'Findings', p: 'Each step of the way in, the evidence for it, and the dead ends worth mentioning.' },
+  { n: '04', h: 'Detection', p: "The log, Wazuh rule or Suricata signature that would have caught this.", code: 'alert http any any -> $HOME_NET any (msg:"<rule>"; sid:1000001;)', codeLabel: 'EXAMPLE RULE' },
+  { n: '05', h: 'Lessons', p: 'What I would do differently, and what it taught me about the defender side.' },
+];
+---
+
+<Layout path="writeups/" title="Write-ups — Bloodymer S. Velasco" description="Step-by-step write-ups of security challenges: what I tried, what I found, and the detection that would catch it." bodyClass="dossier bg-dossier-bg! text-dossier-text overflow-x-clip">
+  <div class="min-h-screen font-display">
+    <DossierNav active="writeups" />
+    <main id="main">
+      <header class="dossier-section flex flex-col gap-7 pb-14!">
+        <div class="flex flex-wrap gap-x-7 gap-y-2 font-mono text-xs tracking-[.08em] text-dossier-muted">
+          <span>WRITE-UPS ▸ <span class="text-dossier-text">{published.length} PUBLISHED</span></span>
+          {drafts > 0 && <span>STATUS ▸ <span class="text-cyber-amber">{published.length ? `${drafts} IN DRAFT` : 'FIRST ONE IN DRAFT'}</span></span>}
+        </div>
+        <h1 class="font-extrabold uppercase leading-[.88] tracking-[-.035em] [font-stretch:125%] text-[clamp(52px,10vw,132px)]">
+          <span class="block">WRITE</span><span class="block text-dossier-accent">-UPS</span>
+        </h1>
+        <p class="max-w-[640px] text-[17px] leading-relaxed text-dossier-body text-pretty">Step-by-step write-ups of security challenges I've worked through: what I tried, what I found, and the detection I'd set up so it gets caught next time.</p>
+      </header>
+
+      <section class="dossier-section flex flex-col gap-8" aria-labelledby="index-h">
+        <div class="flex flex-wrap items-baseline justify-between gap-4">
+          <h2 id="index-h" class="dossier-label flex gap-4"><span>§01</span><span class="text-dossier-muted">INDEX</span></h2>
+          <div class="flex flex-wrap gap-1.5" role="group" aria-label="Filter by category">
+            {categories.map((c) => (
+              <button type="button" data-cat={c} aria-pressed={c === 'All' ? 'true' : 'false'} class="cat-chip border border-dossier-line-strong px-3 py-1.5 font-mono text-xs text-dossier-body">{c}</button>
+            ))}
+          </div>
+        </div>
+        <ul class="flex flex-col border-t-2 border-dossier-text">
+          {entries.map((w, i) => (
+            <li data-category={w.data.category} data-status={w.data.status} class="flex flex-wrap items-center gap-x-7 gap-y-3 border-b border-dossier-line py-6">
+              <span class="flex-[0_0_96px] font-mono text-xs tracking-[.1em] text-dossier-accent">CASE {String(i + 1).padStart(3, '0')}</span>
+              <div class="flex min-w-0 flex-[1_1_320px] flex-col gap-2.5">
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="row-cat border border-dossier-line-strong px-2 py-[3px] font-mono text-[11px] text-dossier-body">{w.data.category}</span>
+                  {w.data.difficulty && <span class="border border-dossier-line-strong px-2 py-[3px] font-mono text-[11px] text-dossier-body">{w.data.difficulty}</span>}
+                </div>
+                {w.data.status === 'published' ? (
+                  <a href={url(`writeups/${w.id}/`)} class="dossier-display text-[clamp(22px,2.6vw,30px)] leading-[1.1] hover:text-dossier-accent">{w.data.title}</a>
+                ) : (
+                  <span class="dossier-display text-[clamp(22px,2.6vw,30px)] leading-[1.1]"><span class="redact" tabindex="0">Title withheld until release</span></span>
+                )}
+                <span class="text-[15px] leading-normal text-dossier-muted">{w.data.summary}</span>
+              </div>
+              {w.data.status === 'published' ? (
+                <span class="font-mono text-[11px] tracking-[.1em] text-cyber-green">● {w.data.date || 'PUBLISHED'}</span>
+              ) : (
+                <span class="font-mono text-[11px] tracking-[.1em] text-cyber-amber">● IN DRAFT</span>
+              )}
+            </li>
+          ))}
+          <li class="cat-empty border-b border-dossier-line py-6 font-mono text-[13px] text-dossier-muted" hidden>Nothing in this category yet.</li>
+        </ul>
+        <div class="flex flex-wrap gap-2.5">
+          <a href={person.github} target="_blank" rel="noopener noreferrer" class="bg-dossier-accent px-[18px] py-3 font-mono text-[13px] font-bold text-dossier-bg hover:bg-dossier-text">Follow on GitHub ↗</a>
+          <a href={person.linkedin} target="_blank" rel="noopener noreferrer" class="border border-dossier-line-strong px-[18px] py-3 font-mono text-[13px] text-dossier-text hover:border-dossier-accent hover:text-dossier-accent">Follow on LinkedIn ↗</a>
+        </div>
+      </section>
+
+      <section class="dossier-section flex flex-col gap-9" aria-labelledby="structure-h">
+        <div class="flex flex-wrap items-baseline justify-between gap-3">
+          <h2 id="structure-h" class="dossier-label flex gap-4"><span>§02</span><span class="text-dossier-muted">HOW EACH WRITE-UP IS STRUCTURED</span></h2>
+          <span class="font-mono text-xs text-dossier-muted">hover the hidden lines to read them</span>
+        </div>
+        <div class="flex flex-wrap items-start gap-x-14 gap-y-9">
+          <ol class="flex flex-[0_1_220px] flex-col font-mono text-[13px]">
+            {body.map((b) => <li class="flex gap-3 border-b border-dossier-line py-2.5"><span class="text-dossier-accent">{b.n}</span><span class="text-dossier-body">{b.h}</span></li>)}
+          </ol>
+          <article class="flex min-w-0 max-w-[820px] flex-[1_1_480px] flex-col gap-7">
+            <header class="flex flex-col gap-3.5 border-b-2 border-dossier-text pb-6">
+              <div class="flex flex-wrap gap-1.5 font-mono text-[11px]">
+                {['PLATFORM', 'DIFFICULTY', 'TOOLS USED'].map((t) => <span class="border border-dossier-line-strong px-2 py-[3px] text-dossier-body">{t}</span>)}
+              </div>
+              <span class="dossier-display text-[clamp(28px,3.6vw,44px)] leading-[1.05]"><span class="redact" tabindex="0">The name of the challenge</span></span>
+              <span class="font-mono text-xs text-dossier-muted">date · reading time · tools</span>
+            </header>
+            {body.map((b) => (
+              <section class="flex flex-wrap gap-x-7 gap-y-2.5 pt-1">
+                <span class="flex-[0_0_40px] font-mono text-[13px] text-dossier-accent">{b.n}</span>
+                <div class="flex min-w-0 flex-[1_1_320px] flex-col gap-2.5">
+                  <h3 class="text-[22px] font-bold">{b.h}</h3>
+                  <p class="text-base leading-[1.7] text-dossier-body"><span class="redact" tabindex="0">{b.p}</span></p>
+                  {b.code && (
+                    <div class="flex flex-col border border-dossier-line-strong bg-dossier-card">
+                      <span class="border-b border-dashed border-dossier-line-strong px-3.5 py-2 font-mono text-[11px] tracking-[.1em] text-dossier-muted">{b.codeLabel}</span>
+                      <pre class="whitespace-pre-wrap break-all px-4 py-3.5 font-mono text-[13px] leading-[1.65] text-dossier-text">{b.code}</pre>
+                    </div>
+                  )}
+                </div>
+              </section>
+            ))}
+          </article>
+        </div>
+      </section>
+    </main>
+    <DossierFooter />
+  </div>
+</Layout>
+
+<style>
+  .cat-chip[aria-pressed='true'] {
+    background: var(--color-dossier-accent);
+    border-color: var(--color-dossier-accent);
+    color: var(--color-dossier-bg);
+  }
+</style>
+
+<script>
+  // As in the design: a draft row stays listed under every category and takes the
+  // selected category as its tag; published write-ups are filtered by category.
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('.cat-chip')];
+  const rows = [...document.querySelectorAll<HTMLElement>('[data-category]')];
+  const empty = document.querySelector<HTMLElement>('.cat-empty')!;
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      const cat = chip.dataset.cat!;
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+      let shown = 0;
+      rows.forEach((r) => {
+        const draft = r.dataset.status === 'draft';
+        r.hidden = !draft && cat !== 'All' && r.dataset.category !== cat;
+        if (draft) r.querySelector('.row-cat')!.textContent = cat === 'All' ? r.dataset.category! : cat;
+        if (!r.hidden) shown++;
+      });
+      empty.hidden = shown > 0;
+    })
+  );
+</script>

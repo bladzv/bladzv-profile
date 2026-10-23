@@ -1,0 +1,32 @@
+---
+import { url } from '../../lib/paths';
+import { person } from '../../data/profile';
+---
+
+<header class="desk-only relative z-[100] flex h-[30px] shrink-0 items-center justify-between gap-3 border-b border-cyber-line bg-cyber-bar px-2.5 text-xs">
+  <nav class="flex min-w-0 items-center gap-1" aria-label="Desktop">
+    <button type="button" data-action="home" class="flex items-center gap-2 rounded px-2.5 py-1 font-mono font-bold text-cyber-green hover:bg-cyber-hover">
+      <span class="h-[9px] w-[9px] rotate-45 rounded-[2px] border-2 border-cyber-green" aria-hidden="true"></span>bladzOS
+    </button>
+    <span class="mx-1 h-4 w-px bg-cyber-line" aria-hidden="true"></span>
+    <button type="button" data-action="files" class="rounded px-2 py-1 text-cyber-soft hover:bg-cyber-hover">Files</button>
+    <button type="button" data-action="term" aria-label="Terminal" class="rounded px-2 py-1 font-mono text-cyber-soft hover:bg-cyber-hover">&gt;_</button>
+    <button type="button" data-open="contact" class="rounded px-2 py-1 text-cyber-soft hover:bg-cyber-hover">Contact</button>
+    <span class="mx-1 h-4 w-px bg-cyber-line" aria-hidden="true"></span>
+    <span class="flex gap-[3px] font-mono text-[11px]" aria-hidden="true">
+      <span class="flex h-[18px] w-5 items-center justify-center rounded-[3px] bg-cyber-green font-bold text-cyber-bar">1</span>
+      <span class="flex h-[18px] w-5 items-center justify-center rounded-[3px] bg-cyber-hover text-cyber-dim">2</span>
+      <span class="flex h-[18px] w-5 items-center justify-center rounded-[3px] bg-cyber-hover text-cyber-dim">3</span>
+    </span>
+    <span class="mx-1 h-4 w-px bg-cyber-line" aria-hidden="true"></span>
+    <button type="button" data-task="files" class="task-btn max-w-[200px] truncate rounded border-b-2 border-transparent px-3 py-1" hidden><span data-files-title>Files: bladzv</span></button>
+    <button type="button" data-task="term" class="task-btn max-w-[200px] truncate rounded border-b-2 border-transparent px-3 py-1" hidden>Terminal</button>
+  </nav>
+  <div class="flex items-center gap-4 whitespace-nowrap font-mono text-[11px] text-cyber-soft">
+    <span class="flex items-center gap-1.5 text-cyber-green"><span class="h-1.5 w-1.5 rounded-full bg-cyber-green shadow-[0_0_6px_#00ff88]" aria-hidden="true"></span>{person.status}</span>
+    <a href={url('simple/')} data-mode-link="simple" title="Switch to a plain, scrollable page" class="pill-toggle border-cyber-border-strong text-cyber-soft hover:border-dossier-accent hover:text-dossier-accent">
+      Simple mode<span class="knob-track bg-cyber-border-strong" aria-hidden="true"><span class="knob left-[2px] bg-cyber-muted"></span></span>
+    </a>
+    <span class="text-cyber-muted" data-clock-date></span><span class="font-bold" data-clock-time></span>
+  </div>
+</header>

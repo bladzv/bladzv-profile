@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import { os } from '../../../data/profile';
+
+const certs = (await getCollection('certifications')).sort((a, b) => a.data.order - b.data.order);
+const skills = (await getCollection('skills')).sort((a, b) => a.data.order - b.data.order);
+// "November 2025" → "NOV 2025"
+const stamp = (date: string) => date.replace(/^(\w{3})\w*/, '$1').toUpperCase();
+---
+
+<div class="flex max-w-[900px] flex-col gap-[26px] p-[clamp(20px,4%,36px)]">
+  <ul class="grid gap-2.5 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+    {certs.map(({ data }) => (
+      <li class="flex flex-col gap-1.5 rounded-[10px] border border-cyber-amber/35 bg-cyber-amber/5 p-[18px]">
+        <span class="font-mono text-[11px] text-cyber-amber">✓ CERTIFIED · {stamp(data.date)}</span>
+        {data.verify ? (
+          <a href={data.verify} target="_blank" rel="noopener noreferrer" class="text-base font-bold text-white hover:text-cyber-green">{data.name}</a>
+        ) : (
+          <span class="text-base font-bold text-white">{data.name}</span>
+        )}
+        <span class="text-[13px] text-cyber-muted">{data.issuer}</span>
+      </li>
+    ))}
+  </ul>
+  <div class="flex flex-col gap-4">
+    {skills.map(({ data }) => (
+      <div class="flex flex-col gap-2">
+        <h3 class="text-xs font-bold uppercase tracking-[.08em] text-cyber-muted">{data.shortCategory || data.category}</h3>
+        <ul class="flex flex-wrap gap-1.5">
+          {data.skills.map((s) => <li class="rounded-full border border-cyber-border-strong px-2.5 py-[5px] text-[13px] text-cyber-text">{s}</li>)}
+        </ul>
+      </div>
+    ))}
+  </div>
+  <div class="flex flex-col gap-2 rounded-[10px] border border-cyber-border bg-cyber-surface p-[18px]">
+    <h3 class="text-[15px] font-bold text-white">Home lab &amp; practice</h3>
+    <p class="text-sm leading-[1.6] text-cyber-soft">{os.homeLab}</p>
+  </div>
+</div>

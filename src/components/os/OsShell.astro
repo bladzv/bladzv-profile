@@ -1,0 +1,473 @@
+---
+/**
+ * bladzOS: the profile as a small desktop.
+ * One DOM serves all three layouts; src/scripts/os.ts sets data-mode
+ * (desktop ≥1024px, tablet ≥640px, phone) and which panel is showing.
+ * Section panels render once, inside the Files window.
+ */
+import { url } from '../../lib/paths';
+import { getProjects } from '../../lib/projects';
+import { person, sections as baseSections } from '../../data/profile';
+import TopBar from './TopBar.astro';
+import PhoneHome from './PhoneHome.astro';
+import FileIcon from './FileIcon.astro';
+import About from './sections/About.astro';
+import Route from './sections/Route.astro';
+import Projects from './sections/Projects.astro';
+import Training from './sections/Training.astro';
+import Writeups from './sections/Writeups.astro';
+import Notes from './sections/Notes.astro';
+import Contact from './sections/Contact.astro';
+
+const projectCount = (await getProjects()).length;
+const sections = baseSections.map((s) => (s.id === 'projects' ? { ...s, desc: `${projectCount} ${s.desc}` } : s));
+const ext = (file: string) => file.split('.')[1] ?? '';
+const kindOf = (s: (typeof baseSections)[number]) => (s.kind === 'dir' ? 'dir' : 'file');
+const deskIcons = [
+  { id: 'home', label: 'Home', kind: 'dir' as const, glyph: '⌂', ext: '' },
+  ...sections.map((s) => ({ id: s.id, label: s.file, kind: kindOf(s), glyph: s.glyph, ext: ext(s.file) })),
+  { id: 'terminal', label: 'Terminal', kind: 'term' as const, glyph: '', ext: '' },
+];
+const tabItems = [...sections, { id: 'terminal', label: 'Terminal', glyph: '>_', color: '#00ff88', desc: 'Type "help"' }];
+const panels = { about: About, route: Route, projects: Projects, training: Training, writeups: Writeups, notes: Notes, contact: Contact };
+const meta = Object.fromEntries(sections.map((s) => [s.id, { label: s.label, file: s.file, desc: s.desc }]));
+const resizeDirs = ['n', 's', 'e', 'w', 'nw', 'ne', 'sw', 'se'];
+---
+
+<div id="os" data-mode="desktop" data-sections={JSON.stringify(meta)}>
+  <script is:inline>
+    (function () {
+      var w = window.innerWidth;
+      document.getElementById('os').dataset.mode = w >= 1024 ? 'desktop' : w >= 640 ? 'tablet' : 'phone';
+    })();
+  </script>
+
+  <TopBar />
+
+  <!-- Tablet / phone status bar -->
+  <div class="small-only flex h-[30px] shrink-0 items-center justify-between gap-3 px-[22px] text-[13px] font-semibold text-cyber-text">
+    <span class="whitespace-nowrap"><span data-clock-time></span> <span class="tab-only font-medium text-cyber-muted" data-clock-date></span></span>
+    <span class="flex shrink-0 items-center gap-3 whitespace-nowrap text-xs">
+      <span class="tab-only text-cyber-green">● {person.status}</span>
+      <a href={url('simple/')} data-mode-link="simple" class="tab-only pill-toggle border-cyber-border-strong font-medium text-cyber-soft hover:border-dossier-accent hover:text-dossier-accent">
+        Simple mode<span class="knob-track bg-cyber-border-strong" aria-hidden="true"><span class="knob left-[2px] bg-cyber-muted"></span></span>
+      </a>
+      <span class="text-cyber-muted" aria-hidden="true"><span class="tab-only">Wi-Fi · 100%</span><span class="phone-only">5G · 100%</span></span>
+    </span>
+  </div>
+
+  <main id="main" class="stage">
+    <!-- Desktop background -->
+    <div class="desk-only absolute inset-0" aria-hidden="true">
+      <canvas data-particles="#00d4ff" class="absolute inset-0 h-full w-full opacity-35"></canvas>
+      <div class="pointer-events-none absolute bottom-10 right-12 flex flex-col gap-1 text-right font-mono">
+        <span class="text-[72px] font-bold leading-none tracking-[-.04em] text-cyber-blue/8">{person.handle}</span>      </div>
+    </div>
+
+    <nav class="desk-only absolute left-3 top-4 z-[1] grid max-h-[calc(100%-32px)] auto-cols-max grid-flow-col grid-rows-[repeat(auto-fill,96px)] gap-1" aria-label="Desktop icons">
+      {deskIcons.map((d) => (
+        <button type="button" data-open={d.id} class="flex h-[92px] w-[88px] flex-col items-center justify-center gap-2 rounded-md border border-transparent hover:border-cyber-blue/30 hover:bg-cyber-blue/10">
+          <FileIcon kind={d.kind} glyph={d.glyph} ext={d.ext} />
+          <span class="max-w-[84px] text-center text-xs leading-tight break-all text-cyber-text [text-shadow:0_1px_3px_#000]">{d.label}</span>
+        </button>
+      ))}
+    </nav>
+
+    <!-- Tablet sidebar -->
+    <aside class="tab-only tab-side flex min-h-0 flex-col border-r border-cyber-border bg-cyber-side">
+      <div class="flex flex-col gap-3 border-b border-cyber-border px-[18px] pb-4 pt-5">
+        <div class="flex items-center gap-3">
+          <span class="flex h-12 w-12 items-center justify-center rounded-[14px] bg-linear-135 from-cyber-green to-cyber-blue text-[17px] font-extrabold text-cyber-bg">{person.initials}</span>
+          <div class="flex min-w-0 flex-col">
+            <span class="text-base font-bold text-white">{person.name}</span>
+            <span class="text-[13px] text-cyber-muted">{person.role}</span>
+          </div>
+        </div>
+        <p class="min-h-[1.6em] font-mono text-xs text-cyber-muted">&gt; <span data-typewriter class="border-r-2 border-cyber-green pr-0.5 text-cyber-text"></span></p>
+      </div>
+      <nav class="flex flex-1 flex-col gap-1 overflow-auto px-2.5 py-3" aria-label="Sections">
+        {tabItems.map((s) => (
+          <button type="button" data-open={s.id} data-nav={s.id} class="nav-item flex min-h-11 items-center gap-3 rounded-[10px] p-2.5 text-left">
+            <span class="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[9px] bg-linear-160 from-[#1c2430] to-[#10151d] font-mono text-[13px] font-bold" style={`color:${s.color}`} aria-hidden="true">{s.glyph}</span>
+            <span class="flex min-w-0 flex-col">
+              <span class="nav-label text-[15px] font-semibold text-cyber-soft">{s.label}</span>
+              <span class="truncate text-xs text-cyber-muted">{s.desc}</span>
+            </span>
+          </button>
+        ))}
+      </nav>
+    </aside>
+
+    <PhoneHome />
+
+    <!-- Tablet / phone pane header -->
+    <div class="small-only pane-head flex h-[52px] shrink-0 items-center justify-between gap-3 border-b border-cyber-border bg-cyber-bg px-3 sm:px-[22px]">
+      <button type="button" data-action="phone-back" class="phone-only flex h-11 min-w-11 items-center gap-1 px-1.5 text-[15px] text-cyber-green">‹ Home</button>
+      <h2 class="pane-title flex-1 text-[17px] font-bold text-white max-sm:mr-14 max-sm:text-center" tabindex="-1"></h2>
+      <span class="tab-only pane-path font-mono text-xs text-cyber-dim"></span>
+    </div>
+
+    <!-- Files window -->
+    <section id="win-files" class="win" data-win="files" aria-label="Files">
+      <div data-drag="files" class="desk-only titlebar flex h-[34px] shrink-0 cursor-grab select-none items-center justify-between border-b border-cyber-border pl-3.5 pr-2">
+        <span class="flex items-center gap-2 text-xs font-semibold text-cyber-soft"><span class="h-[9px] w-3 rounded-[2px] bg-cyber-blue" aria-hidden="true"></span><span data-files-title>Files: bladzv</span></span>
+        <div class="flex gap-0.5">
+          <button type="button" data-win-action="min" aria-label="Minimize Files" class="os-winbtn">–</button>
+          <button type="button" data-win-action="max" aria-label="Maximize Files" class="os-winbtn text-[11px]">□</button>
+          <button type="button" data-win-action="close" aria-label="Close Files" class="os-winbtn hover:bg-[#da3633]! hover:text-white">✕</button>
+        </div>
+      </div>
+      <div class="desk-only flex h-10 shrink-0 items-center gap-2 border-b border-cyber-border bg-cyber-tool px-2.5">
+        <button type="button" data-action="back" aria-label="Back" class="files-back flex h-7 w-7 items-center justify-center rounded text-cyber-soft hover:bg-cyber-border disabled:text-cyber-faint disabled:hover:bg-transparent">←</button>
+        <button type="button" data-action="home" aria-label="Home folder" class="flex h-7 w-7 items-center justify-center rounded text-cyber-soft hover:bg-cyber-border">⌂</button>
+        <div class="flex h-7 min-w-0 flex-1 items-center gap-1 overflow-hidden whitespace-nowrap rounded-md border border-cyber-border bg-cyber-bg px-2.5 font-mono text-xs text-cyber-muted">
+          <span>/home/</span><button type="button" data-action="home" class="text-cyber-soft">bladzv</button><span class="path-tail text-cyber-green"></span>
+        </div>
+      </div>
+      <div class="win-body">
+        <nav class="desk-only flex w-[190px] shrink-0 flex-col gap-0.5 overflow-auto border-r border-cyber-border bg-cyber-side px-2 py-3" aria-label="Places">
+          <span class="px-2 pb-1.5 pt-1 text-[10px] font-bold tracking-[.1em] text-cyber-dim">PLACES</span>
+          {[{ id: 'home', label: 'Home', glyph: '⌂', color: '#c9d1d9' }, ...sections].map((s) => (
+            <button type="button" data-open={s.id} data-nav={s.id} class="nav-item flex items-center gap-2.5 rounded-[5px] px-2 py-[7px] text-left text-[13px]">
+              <span class="w-[18px] text-center font-mono text-xs font-bold" style={`color:${s.color}`} aria-hidden="true">{s.glyph}</span><span class="nav-label text-cyber-soft">{s.label}</span>
+            </button>
+          ))}
+          <div class="mt-auto border-t border-cyber-border px-2 pb-0.5 pt-2.5 font-mono text-[10px] leading-relaxed text-cyber-dim">disk: {sections.length} items<br />owner: {person.handle}</div>
+        </nav>
+        <div class="files-scroll min-w-0 flex-1 overflow-auto bg-cyber-bg" tabindex="-1">
+          <div data-panel="home" class="flex flex-col gap-4 p-5">
+            <div class="flex flex-wrap items-baseline justify-between gap-3">
+              <h1 class="text-sm font-semibold text-cyber-soft">{person.name}'s profile</h1>
+              <span class="text-xs text-cyber-dim">Click any item to open it</span>
+            </div>
+            <div class="grid grid-cols-[repeat(auto-fill,minmax(112px,1fr))] gap-2">
+              {sections.map((s) => (
+                <button type="button" data-open={s.id} class="flex flex-col items-center gap-2.5 rounded-lg border border-transparent px-2 pb-3 pt-4 hover:border-cyber-border-strong hover:bg-cyber-hover">
+                  <FileIcon kind={kindOf(s)} glyph={s.glyph} ext={ext(s.file)} size="md" />
+                  <span class="font-mono text-xs text-cyber-text">{s.file}</span>
+                  <span class="text-center text-[11px] leading-snug text-cyber-muted">{s.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          {Object.entries(panels).map(([id, Panel]) => (
+            <div data-panel={id} class={id === 'notes' ? 'h-full' : undefined} hidden><Panel /></div>
+          ))}
+        </div>
+      </div>
+      <div class="desk-only flex h-6 shrink-0 items-center justify-between border-t border-cyber-border bg-cyber-side px-3 font-mono text-[11px] text-cyber-dim">
+        <span class="files-status">{sections.length} items</span><span>read-only · public</span>
+      </div>
+      {resizeDirs.map((d) => <div class={`desk-only rz rz-${d}`} data-resize={d} aria-hidden="true"></div>)}
+    </section>
+
+    <!-- Terminal window -->
+    <section id="win-term" class="win" data-win="term" aria-label="Terminal">
+      <div data-drag="term" class="desk-only titlebar flex h-[34px] shrink-0 cursor-grab select-none items-center justify-between border-b border-cyber-border pl-3.5 pr-2">
+        <span class="font-mono text-xs text-cyber-soft">guest@{person.handle}: ~</span>
+        <div class="flex gap-0.5">
+          <button type="button" data-win-action="min" aria-label="Minimize Terminal" class="os-winbtn">–</button>
+          <button type="button" data-win-action="max" aria-label="Maximize Terminal" class="os-winbtn text-[11px]">□</button>
+          <button type="button" data-win-action="close" aria-label="Close Terminal" class="os-winbtn hover:bg-[#da3633]! hover:text-white">✕</button>
+        </div>
+      </div>
+      <div class="term-scroll min-h-0 flex-1 overflow-auto bg-cyber-term p-3.5 font-mono text-[13px] leading-relaxed text-cyber-soft">
+        <div class="term-out" role="log" aria-live="polite" aria-label="Terminal output"></div>
+        <form class="term-form flex items-center gap-2" autocomplete="off">
+          <span class="shrink-0 whitespace-nowrap text-cyber-green" aria-hidden="true">guest@{person.handle}:~$</span>
+          <input id="term-in" name="cmd" type="text" aria-label="Terminal input" spellcheck="false" autocapitalize="off" enterkeyhint="send" class="min-w-0 flex-1 bg-transparent text-cyber-text caret-cyber-green outline-none" />
+        </form>
+      </div>
+      {resizeDirs.map((d) => <div class={`desk-only rz rz-${d}`} data-resize={d} aria-hidden="true"></div>)}
+    </section>
+
+    <div class="desk-only toast absolute right-3.5 top-3.5 z-[90] flex w-[300px] flex-col gap-1.5 rounded-[10px] border border-cyber-border-strong bg-cyber-bg/95 px-4 py-3.5 shadow-[0_12px_30px_rgba(0,0,0,.5)]" role="status" hidden>
+      <div class="flex items-center justify-between">
+        <span class="text-[13px] font-semibold text-white">Welcome to my desktop</span>
+        <button type="button" data-action="dismiss-toast" aria-label="Dismiss" class="px-1.5 py-0.5 text-cyber-muted hover:text-white">✕</button>
+      </div>
+      <span class="text-xs leading-normal text-cyber-soft">Click any file to learn about me. Windows can be dragged, and you can type <span class="font-mono text-cyber-green">help</span> in the terminal.</span>
+    </div>
+
+    <button type="button" data-action="phone-back" aria-label="Go to home screen" class="phone-only home-bar flex h-[26px] shrink-0 items-center justify-center">
+      <span class="h-[5px] w-[130px] rounded-full bg-cyber-soft"></span>
+    </button>
+  </main>
+
+  <dialog class="mode-dialog m-auto w-[520px] max-w-[calc(100%-32px)] overflow-hidden rounded-[10px] border border-cyber-border-strong bg-cyber-bg p-0 text-cyber-text shadow-[0_30px_80px_rgba(0,0,0,.6)]" aria-labelledby="mode-title">
+    <div class="titlebar flex h-[34px] items-center justify-between border-b border-cyber-border pl-3.5 pr-2">
+      <span class="flex items-center gap-2 font-mono text-xs text-cyber-soft"><span class="h-[9px] w-[9px] rotate-45 rounded-[2px] border-2 border-cyber-green" aria-hidden="true"></span>welcome.app</span>
+      <button type="button" data-action="dismiss-dialog" aria-label="Close" class="os-winbtn hover:bg-[#da3633]! hover:text-white">✕</button>
+    </div>
+    <div class="flex flex-col gap-5 p-6">
+      <div class="flex flex-col gap-2">
+        <h2 id="mode-title" class="text-[22px] font-bold leading-tight text-white text-pretty">Welcome to bladzOS</h2>
+        <p class="text-[15px] leading-relaxed text-cyber-soft text-pretty">My profile, built as a little desktop you can click around. Prefer one plain page? Simple mode has everything.</p>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <button type="button" data-action="dismiss-dialog" class="mode-card" autofocus>
+          <span class="mode-sketch relative" aria-hidden="true">
+            <span class="absolute inset-x-0 top-0 h-1.5 bg-cyber-line"></span>
+            <span class="absolute left-[14%] top-[26%] h-[52%] w-[52%] rounded-[3px] border border-cyber-blue/70 bg-cyber-surface"></span>
+            <span class="absolute left-[44%] top-[44%] h-[40%] w-[44%] rounded-[3px] border border-cyber-green/70 bg-cyber-term"></span>
+          </span>
+          <span class="text-sm font-semibold text-white">Explore the desktop</span>
+          <span class="text-xs leading-snug text-cyber-muted">Open files, drag windows, try the terminal.</span>
+          <kbd class="mode-kbd">↵ Enter</kbd>
+        </button>
+        <a href={url('simple/')} data-mode-link="simple" class="mode-card">
+          <span class="mode-sketch flex flex-col items-center gap-1 pt-2.5" aria-hidden="true">
+            <span class="h-1.5 w-[40%] rounded-full bg-dossier-accent/70"></span>
+            {[56, 56, 48, 56, 36].map((w) => <span class="h-1 rounded-full bg-cyber-border-strong" style={`width:${w}%`}></span>)}
+          </span>
+          <span class="text-sm font-semibold text-white">Read simple mode</span>
+          <span class="text-xs leading-snug text-cyber-muted">Everything on one plain, scrollable page.</span>
+          <kbd class="mode-kbd">S</kbd>
+        </a>
+      </div>
+      <p class="text-xs text-cyber-dim">You can switch anytime with the <span class="text-cyber-soft">Simple mode</span> toggle.</p>
+    </div>
+  </dialog>
+  <script is:inline>
+    // Open before first paint so the dialog does not pop in after the desktop script loads.
+    (function () {
+      try {
+        if (!localStorage.getItem('bladzv-profile:mode')) document.querySelector('#os .mode-dialog').showModal();
+      } catch (e) {}
+    })();
+  </script>
+</div>
+
+<style is:global>
+  #os {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--color-cyber-desk);
+    overscroll-behavior: none;
+  }
+
+  #os:not([data-mode='desktop']) .desk-only,
+  #os:not([data-mode='tablet']) .tab-only,
+  #os:not([data-mode='phone']) .phone-only,
+  #os[data-mode='desktop'] .small-only {
+    display: none !important;
+  }
+
+  #os .stage {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  #os .win {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+    background: var(--color-cyber-bg);
+  }
+
+  #os .win-body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  #os .nav-item:hover {
+    background: var(--color-cyber-hover);
+  }
+
+  #os .nav-item[aria-current='page'] {
+    background: var(--color-cyber-active);
+  }
+
+  #os .nav-item[aria-current='page'] .nav-label {
+    color: #fff;
+  }
+
+  /* Desktop: floating windows */
+  #os[data-mode='desktop'] .stage {
+    background: radial-gradient(ellipse at 70% 30%, #13233a 0%, #0a1220 45%, #05070b 100%);
+  }
+
+  #os[data-mode='desktop'] .win {
+    position: absolute;
+    left: var(--x, 130px);
+    top: var(--y, 24px);
+    width: var(--w, 900px);
+    height: var(--h, 600px);
+    z-index: var(--z, 10);
+    border: 1px solid var(--color-cyber-border);
+    border-radius: 10px;
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.6);
+  }
+
+  #os[data-mode='desktop'] .win .titlebar {
+    background: #11161d;
+  }
+
+  #os[data-mode='desktop'] .win[data-top] {
+    border-color: #3d4b5c;
+  }
+
+  #os[data-mode='desktop'] .win[data-top] .titlebar {
+    background: var(--color-cyber-surface);
+  }
+
+  #os[data-mode='desktop'] .win[data-max] {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  #os[data-mode='desktop'] .win[data-max] .titlebar {
+    cursor: default;
+  }
+
+  #os[data-mode='desktop'] .win[data-max] .rz {
+    display: none;
+  }
+
+  #os .task-btn {
+    color: var(--color-cyber-text);
+  }
+
+  #os .task-btn[data-active] {
+    background: var(--color-cyber-active);
+    border-bottom-color: var(--color-cyber-green);
+  }
+
+  #os .task-btn[data-min] {
+    color: var(--color-cyber-dim);
+  }
+
+  /* Resize handles */
+  #os .rz {
+    position: absolute;
+    z-index: 6;
+    touch-action: none;
+  }
+  #os .rz-n, #os .rz-s { left: 14px; right: 14px; height: 6px; cursor: ns-resize; }
+  #os .rz-n { top: -3px; }
+  #os .rz-s { bottom: -3px; }
+  #os .rz-e, #os .rz-w { top: 14px; bottom: 14px; width: 6px; cursor: ew-resize; }
+  #os .rz-e { right: -3px; }
+  #os .rz-w { left: -3px; }
+  #os .rz-nw, #os .rz-ne, #os .rz-sw, #os .rz-se { width: 14px; height: 14px; }
+  #os .rz-nw { left: -3px; top: -3px; cursor: nwse-resize; }
+  #os .rz-ne { right: -3px; top: -3px; cursor: nesw-resize; }
+  #os .rz-sw { left: -3px; bottom: -3px; cursor: nesw-resize; }
+  #os .rz-se { right: -3px; bottom: -3px; cursor: nwse-resize; }
+
+  /* Tablet: sidebar + content pane */
+  #os[data-mode='tablet'] .stage {
+    display: grid;
+    grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+    grid-template-rows: 52px minmax(0, 1fr);
+    background: var(--color-cyber-bg);
+  }
+
+  #os[data-mode='tablet'] .tab-side {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  #os[data-mode='tablet'] .pane-head {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  #os[data-mode='tablet'] .win {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  /* Phone: home screen or one app at a time */
+  #os[data-mode='phone'] .stage {
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(ellipse at 30% 0%, #13233a 0%, #0a1220 50%, #05070b 100%);
+  }
+
+  #os[data-mode='phone'] .win {
+    flex: 1;
+  }
+
+  #os .win[hidden],
+  #os [data-panel][hidden] {
+    display: none !important;
+  }
+
+  #os .mode-dialog::backdrop {
+    background: rgb(3 5 8 / 0.72);
+    backdrop-filter: blur(4px);
+  }
+
+  #os .mode-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 12px;
+    border: 1px solid var(--color-cyber-border-strong);
+    border-radius: 8px;
+    text-align: left;
+  }
+
+  #os .mode-card:hover {
+    border-color: var(--color-cyber-green);
+    background: var(--color-cyber-surface);
+  }
+
+  #os .mode-sketch {
+    display: flex;
+    width: 100%;
+    height: 72px;
+    margin-bottom: 4px;
+    overflow: hidden;
+    border: 1px solid var(--color-cyber-border);
+    border-radius: 5px;
+    background: var(--color-cyber-desk);
+  }
+
+  #os .mode-kbd {
+    margin-top: 2px;
+    padding: 1px 6px;
+    border: 1px solid var(--color-cyber-border-strong);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-cyber-muted);
+  }
+
+  @media (hover: none) {
+    #os .mode-kbd {
+      display: none;
+    }
+  }
+
+  /* Points out the simple-mode toggle once the welcome dialog closes. */
+  #os .hint-pulse {
+    animation: hint-pulse 1s ease-out 2;
+  }
+
+  @keyframes hint-pulse {
+    from {
+      box-shadow: 0 0 0 0 rgb(0 255 136 / 0.7);
+    }
+    to {
+      box-shadow: 0 0 0 10px rgb(0 255 136 / 0);
+    }
+  }
+</style>
+
+<script>
+  import { initOs } from '../../scripts/os';
+  initOs();
+</script>

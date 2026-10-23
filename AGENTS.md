@@ -20,6 +20,7 @@ This repository is a static portfolio built with Astro 7 and Tailwind CSS 4. It 
 - `npm run dev` starts the local server; `npm run build` creates the static site; `npm run preview` serves the build.
 - `npm run lint` checks source formatting and rules; `npm run audit` checks dependencies. `npm test` is currently a placeholder.
 - Run `node scripts/update-github-cache.js` only when refreshing the public repository cache is part of the task; it requires `GITHUB_TOKEN`.
+- After editing `public/favicon.svg`, run `node scripts/build-favicons.js` to regenerate `favicon.ico` and the PNG icons, then bump the `?v=` in `src/layouts/Layout.astro`.
 - Pushing to `main` triggers the GitHub Pages deployment workflow. The cache refresh has its own GitHub Actions workflow.
 
 ## Editing conventions

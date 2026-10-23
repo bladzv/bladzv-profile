@@ -9,7 +9,7 @@ const simpleUrl = url('simple/');
 <Layout bodyClass="overflow-hidden">
   <script slot="head" is:inline define:vars={{ simpleUrl }}>
     try {
-      if (localStorage.getItem('bladzv-mode') === 'simple') location.replace(simpleUrl);
+      if (localStorage.getItem('bladzv-profile:mode') === 'simple') location.replace(simpleUrl);
     } catch (e) {}
   </script>
   <noscript>

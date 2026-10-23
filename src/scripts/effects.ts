@@ -125,11 +125,13 @@ export function initParticles(density?: number) {
   });
 }
 
-/** Remembers the preferred view; storage can be unavailable, so failures are ignored. */
+/**
+ * Remembers the preferred view; storage can be unavailable, so failures are ignored.
+ * The key is namespaced because every bladzv.github.io project page shares this origin's storage.
+ */
 export function setMode(mode: 'os' | 'simple') {
   try {
-    localStorage.setItem('bladzv-mode', mode);
-    sessionStorage.setItem('bladzv-mode-seen', '1');
+    localStorage.setItem('bladzv-profile:mode', mode);
   } catch {
     // ignore
   }

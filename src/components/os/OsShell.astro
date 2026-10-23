@@ -194,27 +194,45 @@ const resizeDirs = ['n', 's', 'e', 'w', 'nw', 'ne', 'sw', 'se'];
     </button>
   </main>
 
-  <dialog class="mode-dialog m-auto w-[440px] max-w-[calc(100%-32px)] rounded-[14px] border border-cyber-border-strong bg-cyber-bg p-7 text-cyber-text shadow-[0_30px_80px_rgba(0,0,0,.6)]" aria-labelledby="mode-title">
-    <div class="flex flex-col gap-[18px]">
-      <div class="flex items-start justify-between gap-3">
-        <span class="font-mono text-[11px] tracking-[.12em] text-cyber-green">HEADS UP</span>
-        <button type="button" data-action="dismiss-dialog" aria-label="Close" class="-mr-2 -mt-2 flex h-8 w-8 items-center justify-center rounded-md text-cyber-muted hover:bg-cyber-border hover:text-white">✕</button>
+  <dialog class="mode-dialog m-auto w-[520px] max-w-[calc(100%-32px)] overflow-hidden rounded-[10px] border border-cyber-border-strong bg-cyber-bg p-0 text-cyber-text shadow-[0_30px_80px_rgba(0,0,0,.6)]" aria-labelledby="mode-title">
+    <div class="titlebar flex h-[34px] items-center justify-between border-b border-cyber-border pl-3.5 pr-2">
+      <span class="flex items-center gap-2 font-mono text-xs text-cyber-soft"><span class="h-[9px] w-[9px] rotate-45 rounded-[2px] border-2 border-cyber-green" aria-hidden="true"></span>welcome.app</span>
+      <button type="button" data-action="dismiss-dialog" aria-label="Close" class="os-winbtn hover:bg-[#da3633]! hover:text-white">✕</button>
+    </div>
+    <div class="flex flex-col gap-5 p-6">
+      <div class="flex flex-col gap-2">
+        <h2 id="mode-title" class="text-[22px] font-bold leading-tight text-white text-pretty">Welcome to bladzOS</h2>
+        <p class="text-[15px] leading-relaxed text-cyber-soft text-pretty">My profile, built as a little desktop you can click around. Prefer one plain page? Simple mode has everything.</p>
       </div>
-      <div class="flex flex-col gap-2.5">
-        <h2 id="mode-title" class="text-[22px] font-bold leading-tight text-white text-pretty">This is just my creativity kicking in.</h2>
-        <p class="text-[15px] leading-relaxed text-cyber-soft text-pretty">I built my profile as a little desktop you can click around. If you'd rather read everything on one plain page, switch to simple mode. You can change this anytime from the top bar.</p>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <button type="button" data-action="dismiss-dialog" class="mode-card" autofocus>
+          <span class="mode-sketch relative" aria-hidden="true">
+            <span class="absolute inset-x-0 top-0 h-1.5 bg-cyber-line"></span>
+            <span class="absolute left-[14%] top-[26%] h-[52%] w-[52%] rounded-[3px] border border-cyber-blue/70 bg-cyber-surface"></span>
+            <span class="absolute left-[44%] top-[44%] h-[40%] w-[44%] rounded-[3px] border border-cyber-green/70 bg-cyber-term"></span>
+          </span>
+          <span class="text-sm font-semibold text-white">Explore the desktop</span>
+          <span class="text-xs leading-snug text-cyber-muted">Open files, drag windows, try the terminal.</span>
+          <kbd class="mode-kbd">↵ Enter</kbd>
+        </button>
+        <a href={url('simple/')} data-mode-link="simple" class="mode-card">
+          <span class="mode-sketch flex flex-col items-center gap-1 pt-2.5" aria-hidden="true">
+            <span class="h-1.5 w-[40%] rounded-full bg-dossier-accent/70"></span>
+            {[56, 56, 48, 56, 36].map((w) => <span class="h-1 rounded-full bg-cyber-border-strong" style={`width:${w}%`}></span>)}
+          </span>
+          <span class="text-sm font-semibold text-white">Read simple mode</span>
+          <span class="text-xs leading-snug text-cyber-muted">Everything on one plain, scrollable page.</span>
+          <kbd class="mode-kbd">S</kbd>
+        </a>
       </div>
-      <div class="flex flex-wrap gap-2.5">
-        <a href={url('simple/')} data-mode-link="simple" class="flex-[1_1_180px] rounded-lg bg-cyber-green px-4 py-3 text-center text-sm font-bold text-cyber-bar hover:bg-[#4dffaa]">Switch to simple mode</a>
-        <button type="button" data-action="dismiss-dialog" class="flex-[1_1_140px] rounded-lg border border-cyber-border-strong px-4 py-3 text-center text-sm font-semibold text-cyber-text hover:bg-cyber-surface" autofocus>Explore the desktop</button>
-      </div>
+      <p class="text-xs text-cyber-dim">You can switch anytime with the <span class="text-cyber-soft">Simple mode</span> toggle.</p>
     </div>
   </dialog>
   <script is:inline>
     // Open before first paint so the dialog does not pop in after the desktop script loads.
     (function () {
       try {
-        if (!sessionStorage.getItem('bladzv-mode-seen')) document.querySelector('#os .mode-dialog').showModal();
+        if (!localStorage.getItem('bladzv-profile:mode')) document.querySelector('#os .mode-dialog').showModal();
       } catch (e) {}
     })();
   </script>
@@ -389,6 +407,63 @@ const resizeDirs = ['n', 's', 'e', 'w', 'nw', 'ne', 'sw', 'se'];
   #os .mode-dialog::backdrop {
     background: rgb(3 5 8 / 0.72);
     backdrop-filter: blur(4px);
+  }
+
+  #os .mode-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 12px;
+    border: 1px solid var(--color-cyber-border-strong);
+    border-radius: 8px;
+    text-align: left;
+  }
+
+  #os .mode-card:hover {
+    border-color: var(--color-cyber-green);
+    background: var(--color-cyber-surface);
+  }
+
+  #os .mode-sketch {
+    display: flex;
+    width: 100%;
+    height: 72px;
+    margin-bottom: 4px;
+    overflow: hidden;
+    border: 1px solid var(--color-cyber-border);
+    border-radius: 5px;
+    background: var(--color-cyber-desk);
+  }
+
+  #os .mode-kbd {
+    margin-top: 2px;
+    padding: 1px 6px;
+    border: 1px solid var(--color-cyber-border-strong);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-cyber-muted);
+  }
+
+  @media (hover: none) {
+    #os .mode-kbd {
+      display: none;
+    }
+  }
+
+  /* Points out the simple-mode toggle once the welcome dialog closes. */
+  #os .hint-pulse {
+    animation: hint-pulse 1s ease-out 2;
+  }
+
+  @keyframes hint-pulse {
+    from {
+      box-shadow: 0 0 0 0 rgb(0 255 136 / 0.7);
+    }
+    to {
+      box-shadow: 0 0 0 10px rgb(0 255 136 / 0);
+    }
   }
 </style>
 

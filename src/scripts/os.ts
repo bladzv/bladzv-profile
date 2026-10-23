@@ -330,13 +330,21 @@ export function initOs() {
     if (!sel || sel.isCollapsed) focusTerm();
   });
 
+  // Any way of dismissing the welcome dialog keeps the desktop and stops it from showing again.
   dialog.addEventListener('close', () => {
-    try {
-      sessionStorage.setItem('bladzv-mode-seen', '1');
-    } catch {
-      // ignore
-    }
+    setMode('os');
     render();
+    $$('[data-mode-link]').forEach((el) => {
+      if (dialog.contains(el)) return;
+      el.classList.add('hint-pulse');
+      el.addEventListener('animationend', () => el.classList.remove('hint-pulse'), { once: true });
+    });
+  });
+
+  dialog.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() !== 's' || e.ctrlKey || e.metaKey || e.altKey) return;
+    setMode('simple');
+    location.href = dialog.querySelector<HTMLAnchorElement>('[data-mode-link]')!.href;
   });
 
   let resizeRaf = 0;

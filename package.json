@@ -13,8 +13,8 @@
     "audit": "npm audit --audit-level=high"
   },
   "dependencies": {
-    "@lucide/astro": "1.50.0",
-    "astro": "7.3.5",
+    "@lucide/astro": "1.61.0",
+    "astro": "7.4.2",
     "http-cache-semantics": "file:./vendor/http-cache-semantics",
     "tailwindcss": "4.3.3"
   },
@@ -25,10 +25,10 @@
     "http-cache-semantics": "$http-cache-semantics"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "8.71.0",
-    "@typescript-eslint/parser": "8.71.0",
+    "@typescript-eslint/eslint-plugin": "8.72.0",
+    "@typescript-eslint/parser": "8.72.0",
     "astro-eslint-parser": "3.2.0",
-    "eslint": "^10.0.3",
+    "eslint": "^10.13.0",
     "eslint-plugin-astro": "3.2.1",
     "@tailwindcss/vite": "4.3.3"
   },

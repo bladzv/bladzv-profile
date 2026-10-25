@@ -66,8 +66,8 @@ scripts/
 
 ## Developer Workflows
 
-Use Node.js 22.22.3+ on the 22.x line, 24.16.0+ on the 24.x line, or 26.3.0+.
-CI uses Node.js 22.22.3 and installs the committed npm lockfile with `npm ci`.
+Use Node.js 22.23.4+ on the 22.x line, 24.16.0+ on the 24.x line, or 26.3.0+.
+CI uses Node.js 22.23.4 and installs the committed npm lockfile with `npm ci`.
 Tailwind 4 targets Safari 16.4+, Chrome 111+, and Firefox 128+.
 Theme colors, fonts, animations, and shared component styles live in `src/styles/global.css`.
 

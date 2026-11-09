@@ -1,6 +1,6 @@
 # Repository guidance
 
-This repository is a static portfolio built with Astro 7 and Tailwind CSS 4. It deploys to GitHub Pages at the `/bladzv-profile` base path.
+This repository is a static portfolio built with Astro 7 and Tailwind CSS 4. It deploys to Cloudflare Pages at `https://bladzv-profile.pages.dev`, served from the site root.
 
 ## Where things live
 
@@ -21,11 +21,11 @@ This repository is a static portfolio built with Astro 7 and Tailwind CSS 4. It 
 - `npm run lint` checks source formatting and rules; `npm run audit` checks dependencies. `npm test` is currently a placeholder.
 - Run `node scripts/update-github-cache.js` only when refreshing the public repository cache is part of the task; it requires `GITHUB_TOKEN`.
 - After editing `public/favicon.svg`, run `node scripts/build-favicons.js` to regenerate `favicon.ico` and the PNG icons, then bump the `?v=` in `src/layouts/Layout.astro`.
-- Pushing to `main` triggers the GitHub Pages deployment workflow. The cache refresh has its own GitHub Actions workflow.
+- Pushing to `main` triggers a Cloudflare Pages build and deploy (Cloudflare's Git integration; Node version from `.node-version`; build command `npm run audit && npm run lint && npm run build`, so a failed check keeps the last good deploy live). `.github/workflows/ci.yml` runs audit, lint, test and build; the cache refresh has its own workflow. Do not put `[skip ci]` in commits that should go live, because Cloudflare skips them. HTTP security headers live in `public/_headers`.
 
 ## Editing conventions
 
 - Follow neighboring Astro components when changing the page. Use `@lucide/astro` for icons and the `cyber-*` / `dossier-*` theme tokens and shared classes in `src/styles/global.css` for styling.
 - Keep project, skill, and certification frontmatter consistent with `src/content.config.ts`. For a private project, set `visibility: private`; `blur: true` is optional. A public repo only needs `title`, `summary`, `group` and `order`, because the GitHub cache supplies the rest. A write-up stays hidden behind a draft row until `status: published`.
 - Preserve the static build, responsive layout, keyboard accessibility, and reduced-motion behavior when changing UI. Keep GitHub API data sanitized before rendering it.
-- Keep the configured GitHub Pages site and base path in `astro.config.mjs` in mind when changing links or assets; build internal links with `url()` from `src/lib/paths.ts`.
+- Keep the configured site and base path in `astro.config.mjs` in mind when changing links or assets; build internal links with `url()` from `src/lib/paths.ts`.

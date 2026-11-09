@@ -10,7 +10,7 @@ const simpleUrl = url('simple/');
   <script slot="head" is:inline define:vars={{ simpleUrl }}>
     try {
       if (localStorage.getItem('bladzv-profile:mode') === 'simple') location.replace(simpleUrl);
-    } catch (e) {}
+    } catch {}
   </script>
   <noscript>
     <p class="relative z-[2000] bg-cyber-bar p-4 text-center text-sm text-cyber-soft">

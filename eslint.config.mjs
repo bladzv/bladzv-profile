@@ -1,31 +1,23 @@
-import tsParser from '@typescript-eslint/parser';
-import * as astroParser from 'astro-eslint-parser';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
 import astroPlugin from 'eslint-plugin-astro';
 
 export default [
   {
-    ignores: ['node_modules/**', 'dist/**', '.cache/**', '.astro/**'],
+    // vendor/ is a patched third-party fork; keep it close to upstream.
+    ignores: ['node_modules/**', 'dist/**', '.astro/**', 'vendor/**'],
   },
+  ...tsPlugin.configs['flat/recommended'].map((config) => ({
+    ...config,
+    files: ['**/*.js', '**/*.mjs', '**/*.ts', '**/*.astro'],
+  })),
+  ...astroPlugin.configs['flat/recommended'],
   {
-    files: ['**/*.js', '**/*.ts', '**/*.astro'],
+    files: ['**/*.js', '**/*.mjs', '**/*.ts', '**/*.astro'],
     languageOptions: {
-      parser: tsParser,
       parserOptions: { ecmaVersion: 2021, sourceType: 'module' },
     },
-    plugins: { astro: astroPlugin },
     rules: {
-      'no-unused-vars': 'warn',
       'no-console': 'off',
-    },
-  },
-  {
-    files: ['**/*.astro'],
-    languageOptions: {
-      parser: astroParser,
-      parserOptions: {
-        parser: tsParser,
-        extraFileExtensions: ['.astro'],
-      },
     },
   },
 ];

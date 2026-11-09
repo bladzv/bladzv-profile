@@ -157,7 +157,7 @@ const { notes, folders } = await getNotes();
 </style>
 
 <script>
-  import { initNotes } from '../scripts/notes';
+  import { initNotes } from '../client/notes';
 
   const main = document.querySelector<HTMLElement>('.notes-main')!;
   initNotes(document.querySelector<HTMLElement>('#main')!, {

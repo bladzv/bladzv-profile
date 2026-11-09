@@ -31,14 +31,13 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-# jetbrains setting folder
+# editor setting folders
 .idea/
+.vscode/
 
 # Claude AI agent configuration (internal dev tooling)
 .claude/
 
 # Internal AI development workflow files
-.github/ai-instructions-web.md
-.github/custom-prompts.md
 .github/actions.md
 .github/pr_description.md

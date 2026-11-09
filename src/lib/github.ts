@@ -44,7 +44,7 @@ export async function fetchGitHubRepos(username: string): Promise<GitHubRepo[]> 
   const apiUrl = `https://api.github.com/users/${encodeURIComponent(username)}/repos?type=public&sort=updated&per_page=100`;
   const fs = await import('fs');
   const path = await import('path');
-  const cachePath = path.resolve(process.cwd(), '.cache', 'github_repos.json');
+  const cachePath = path.resolve(process.cwd(), 'src', 'data', 'github-repos.json');
 
   async function readCache(): Promise<GitHubRepo[]> {
     try {
@@ -73,7 +73,7 @@ export async function fetchGitHubRepos(username: string): Promise<GitHubRepo[]> 
     const response = await fetch(apiUrl, {
       headers: {
         Accept: 'application/vnd.github.v3+json',
-        'User-Agent': 'static-profile-builder',
+        'User-Agent': 'bladzv-profile-builder',
       },
     });
 
@@ -96,8 +96,8 @@ export async function fetchGitHubRepos(username: string): Promise<GitHubRepo[]> 
     }
 
     const repos = data
-      .filter((repo: any) => !repo.fork && !repo.archived)
-      .map((repo: any) => ({
+      .filter((repo: Record<string, unknown>) => !repo.fork && !repo.archived)
+      .map((repo: Record<string, unknown>) => ({
         title: sanitize(repo.name, 100),
         description: sanitize(repo.description, 320) || 'No description provided.',
         language: sanitize(repo.language, 50) || 'Unknown',

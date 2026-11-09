@@ -1,5 +1,5 @@
 {
-  "name": "static-profile",
+  "name": "bladzv-profile",
   "type": "module",
   "version": "1.0.0",
   "private": true,
@@ -9,7 +9,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint .",
-    "test": "node --test tests/*.test.cjs",
+    "test": "node --test vendor/http-cache-semantics/*.test.cjs",
     "audit": "npm audit --audit-level=high"
   },
   "dependencies": {

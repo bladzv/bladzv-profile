@@ -127,7 +127,7 @@ export function initParticles(density?: number) {
 
 /**
  * Remembers the preferred view; storage can be unavailable, so failures are ignored.
- * The key is namespaced because every bladzv.github.io project page shares this origin's storage.
+ * The key is namespaced so it cannot clash with other scripts sharing this origin's storage.
  */
 export function setMode(mode: 'os' | 'simple') {
   try {

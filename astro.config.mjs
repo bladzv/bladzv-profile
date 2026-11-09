@@ -4,8 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://bladzv.github.io',
-  base: '/bladzv-profile',
+  site: 'https://bladzv-profile.pages.dev',
   output: 'static',
   compressHTML: true,
   vite: {

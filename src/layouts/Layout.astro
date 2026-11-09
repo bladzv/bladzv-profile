@@ -17,7 +17,7 @@ const {
 } = Astro.props;
 
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
-const site = Astro.site ?? 'https://bladzv.github.io';
+const site = Astro.site ?? 'https://bladzv-profile.pages.dev';
 const siteUrl = new URL(base, site).href;
 const pageUrl = new URL(path, siteUrl).href;
 ---
@@ -31,7 +31,7 @@ const pageUrl = new URL(path, siteUrl).href;
     <meta name="author" content="Bloodymer S. Velasco" />
     <meta name="robots" content="index, follow" />
 
-    <!-- Security headers via meta tags -->
+    <!-- Security headers via meta tags. Keep this CSP in sync with public/_headers; the browser enforces both. -->
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none';"

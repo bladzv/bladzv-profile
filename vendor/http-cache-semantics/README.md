@@ -8,7 +8,7 @@ not an upstream release. `LICENSE` is copied from the upstream package.
 The patch requires revalidation for shared non-public `Set-Cookie` responses,
 shared `proxy-revalidate` responses, and `no-cache` responses. Those entries
 cannot gain a positive cache lifetime through stale directives or be reused on
-an origin error. Regression cases live in `tests/http-cache-semantics.test.cjs`.
+an origin error. Regression cases live in `index.test.cjs`.
 
 When upstream publishes a fix, remove this fork and override, update the lockfile,
 and run `npm ci`, `npm run audit`, `npm test`, `npm run lint`, and `npm run build`.

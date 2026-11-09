@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 
-// Built from the base path so "Add to Home Screen" opens /bladzv-profile/, not the empty github.io root.
+// Built from the base path so "Add to Home Screen" opens the site root even if a base path is set again.
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 
 export const GET: APIRoute = () =>

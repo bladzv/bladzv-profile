@@ -3,7 +3,7 @@ import { existsSync } from 'fs';
 import path from 'path';
 
 const username = process.env.GITHUB_REPOS_USER || 'bladzv';
-const cachePath = path.resolve(process.cwd(), '.cache', 'github_repos.json');
+const cachePath = path.resolve(process.cwd(), 'src', 'data', 'github-repos.json');
 
 function sanitize(input, maxLength = 320) {
   if (typeof input !== 'string') return '';
@@ -26,7 +26,7 @@ async function readExisting() {
     if (existsSync(cachePath)) {
       return await fs.readFile(cachePath, 'utf8');
     }
-  } catch (err) {
+  } catch {
     // ignore
   }
   return null;
@@ -46,7 +46,7 @@ async function fetchRepos() {
   const apiUrl = `https://api.github.com/users/${encodeURIComponent(username)}/repos?type=public&sort=updated&per_page=100`;
   const headers = {
     Accept: 'application/vnd.github.v3+json',
-    'User-Agent': 'static-profile-cache-updater',
+    'User-Agent': 'bladzv-profile-cache-updater',
   };
   const token = process.env.GITHUB_TOKEN;
   if (token) headers.Authorization = `token ${token}`;

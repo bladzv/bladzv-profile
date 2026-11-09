@@ -6,7 +6,7 @@ A portfolio you can click around like a small desktop ("bladzOS"): draggable Fil
 
 ![Astro](https://img.shields.io/badge/Astro-0a0a0f?style=for-the-badge&logo=astro&logoColor=ff5d01) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-0a0a0f?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4) ![TypeScript](https://img.shields.io/badge/TypeScript-0a0a0f?style=for-the-badge&logo=typescript&logoColor=3178c6)
 
-[Live site](https://bladzv.github.io/bladzv-profile/)
+[Live site](https://bladzv-profile.pages.dev/)
 
 </div>
 
@@ -24,13 +24,13 @@ Why this repo:
 
 ## Tech Stack
 
-- Framework: Astro 7 (static output, `base: /bladzv-profile`)
+- Framework: Astro 7 (static output, served from the site root)
 - Styling: Tailwind CSS v4 via the Vite plugin — dark navy `cyber-*` CSS theme tokens
 - Fonts: Inter (desktop UI), Archivo (simple mode, write-ups, notes) + JetBrains Mono via Google Fonts
 - Background: Canvas particle animation (vanilla JS, no dependencies)
-- Hosting: GitHub Pages (static)
-- Build-time data: GitHub REST API (sanitized), cached in `.cache/github_repos.json`
-- CI/CD: GitHub Actions — deploy on push to `main`, weekly cache refresh
+- Hosting: Cloudflare Pages (static, free plan); security headers in `public/_headers`
+- Build-time data: GitHub REST API (sanitized), cached in `src/data/github-repos.json`
+- CI/CD: Cloudflare Pages builds and deploys on push to `main`; GitHub Actions runs checks and the weekly cache refresh
 
 ## Project Structure
 
@@ -53,14 +53,16 @@ src/
 │   ├── certifications/         ← Certifications (.md)
 │   ├── writeups/               ← Write-ups (.md); drafts show as "in draft"
 │   └── notes/                  ← One JSON file per note
-├── data/                       ← Profile facts, roles, note folder order
+├── data/                       ← Profile facts, roles, note folder order, cached GitHub repos
 ├── lib/                        ← GitHub fetch + sanitization, project merge, base-path links
-├── scripts/                    ← Client scripts: windows, terminal, notes, effects
+├── client/                     ← Client scripts: windows, terminal, notes, effects
 └── styles/global.css           ← Tailwind theme tokens (cyber-*, dossier-*) + shared classes
 scripts/
-└── update-github-cache.js      ← Refreshes .cache/github_repos.json from GitHub API
+└── update-github-cache.js      ← Refreshes src/data/github-repos.json from GitHub API
+vendor/
+└── http-cache-semantics/       ← Patched fork of an Astro dependency + its regression test
 .github/
-├── workflows/deploy.yml        ← Build & deploy to GitHub Pages on push to main
+├── workflows/ci.yml            ← Audit, lint, test and build on push and pull requests
 └── workflows/update-cache.yml  ← Weekly cron to refresh cached public repos
 ```
 
@@ -77,6 +79,7 @@ npm run build    # Production build → dist/
 npm run preview  # Preview production build locally
 npm run lint     # ESLint (failures are not suppressed)
 npm run audit    # Check all dependencies; high/critical findings fail
+npm test         # Regression test for the vendored http-cache-semantics fork
 ```
 
 - **Adding a project:** Create a `.md` file in `src/content/projects/` using `_template.md` as a guide.
@@ -84,16 +87,18 @@ npm run audit    # Check all dependencies; high/critical findings fail
 - **Private projects:** Set `visibility: private` (and optionally `blur: true`) in the frontmatter.
 - **Adding a write-up:** Copy `src/content/writeups/_template.md`; it gets its own page once `status: published`.
 - **Adding a note:** Copy `src/content/notes/_template.json`; folder order lives in `src/data/notes.ts`.
-- **Deploying:** Push to `main` — GitHub Actions builds and deploys automatically.
+- **Deploying:** Push to `main` — Cloudflare Pages builds and deploys automatically (Node version from `.node-version`). Pull requests get preview links. The Cloudflare build command is `npm run audit && npm run lint && npm run build`.
 - **Refreshing cached repos locally:** Run `node scripts/update-github-cache.js` (requires `GITHUB_TOKEN` env var).
 
 ### Dependency security and deployment
 
-The deployment job runs `npm run audit` before linting and building. High or critical
-findings, and audit service failures, stop the new deployment; the existing GitHub
-Pages site stays available. Do not add an audit bypass to publish an affected build.
-`npm test` is currently a placeholder, so verification requires lint, build,
-dependency audit, and browser checks.
+The Cloudflare Pages build command runs `npm run audit` and `npm run lint` before
+`npm run build`. High or critical findings, lint errors, and audit service failures
+fail the build, and the last good deployment stays live. The CI workflow runs the
+same checks plus `npm test` on pushes and pull requests. Do not add an audit bypass
+to publish an affected build.
+`npm test` covers only the vendored fork, so verification also requires lint,
+build, dependency audit, and browser checks.
 
 As of October 3, 2026, upstream has no release fixing
 [GHSA-ch52-4w7c-c8xp](https://github.com/advisories/GHSA-ch52-4w7c-c8xp).

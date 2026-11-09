@@ -1,7 +1,7 @@
 ---
 /**
  * bladzOS: the profile as a small desktop.
- * One DOM serves all three layouts; src/scripts/os.ts sets data-mode
+ * One DOM serves all three layouts; src/client/os.ts sets data-mode
  * (desktop ≥1024px, tablet ≥640px, phone) and which panel is showing.
  * Section panels render once, inside the Files window.
  */
@@ -37,7 +37,7 @@ const resizeDirs = ['n', 's', 'e', 'w', 'nw', 'ne', 'sw', 'se'];
 <div id="os" data-mode="desktop" data-sections={JSON.stringify(meta)}>
   <script is:inline>
     (function () {
-      var w = window.innerWidth;
+      const w = window.innerWidth;
       document.getElementById('os').dataset.mode = w >= 1024 ? 'desktop' : w >= 640 ? 'tablet' : 'phone';
     })();
   </script>
@@ -233,7 +233,7 @@ const resizeDirs = ['n', 's', 'e', 'w', 'nw', 'ne', 'sw', 'se'];
     (function () {
       try {
         if (!localStorage.getItem('bladzv-profile:mode')) document.querySelector('#os .mode-dialog').showModal();
-      } catch (e) {}
+      } catch {}
     })();
   </script>
 </div>
@@ -468,6 +468,6 @@ const resizeDirs = ['n', 's', 'e', 'w', 'nw', 'ne', 'sw', 'se'];
 </style>
 
 <script>
-  import { initOs } from '../../scripts/os';
+  import { initOs } from '../../client/os';
   initOs();
 </script>

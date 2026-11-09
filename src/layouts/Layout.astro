@@ -17,7 +17,7 @@ const {
 } = Astro.props;
 
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
-const site = Astro.site ?? 'https://bladzv-profile.pages.dev';
+const site = Astro.site ?? 'https://bladzv.mylesdev.com';
 const siteUrl = new URL(base, site).href;
 const pageUrl = new URL(path, siteUrl).href;
 ---

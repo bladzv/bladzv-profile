@@ -6,7 +6,7 @@ A portfolio you can click around like a small desktop ("bladzOS"): draggable Fil
 
 ![Astro](https://img.shields.io/badge/Astro-0a0a0f?style=for-the-badge&logo=astro&logoColor=ff5d01) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-0a0a0f?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4) ![TypeScript](https://img.shields.io/badge/TypeScript-0a0a0f?style=for-the-badge&logo=typescript&logoColor=3178c6)
 
-[Live site](https://bladzv-profile.pages.dev/)
+[Live site](https://bladzv.mylesdev.com/)
 
 </div>
 
@@ -28,9 +28,9 @@ Why this repo:
 - Styling: Tailwind CSS v4 via the Vite plugin — dark navy `cyber-*` CSS theme tokens
 - Fonts: Inter (desktop UI), Archivo (simple mode, write-ups, notes) + JetBrains Mono via Google Fonts
 - Background: Canvas particle animation (vanilla JS, no dependencies)
-- Hosting: Cloudflare Pages (static, free plan); security headers in `public/_headers`
+- Hosting: Cloudflare Workers static assets (free plan) at `bladzv.mylesdev.com`, configured in `wrangler.jsonc`; security headers in `public/_headers`
 - Build-time data: GitHub REST API (sanitized), cached in `src/data/github-repos.json`
-- CI/CD: Cloudflare Pages builds and deploys on push to `main`; GitHub Actions runs checks and the weekly cache refresh
+- CI/CD: Cloudflare Workers Builds deploys on push to `main`; GitHub Actions runs checks and the weekly cache refresh
 
 ## Project Structure
 
@@ -87,12 +87,12 @@ npm test         # Regression test for the vendored http-cache-semantics fork
 - **Private projects:** Set `visibility: private` (and optionally `blur: true`) in the frontmatter.
 - **Adding a write-up:** Copy `src/content/writeups/_template.md`; it gets its own page once `status: published`.
 - **Adding a note:** Copy `src/content/notes/_template.json`; folder order lives in `src/data/notes.ts`.
-- **Deploying:** Push to `main` — Cloudflare Pages builds and deploys automatically (Node version from `.node-version`). Pull requests get preview links. The Cloudflare build command is `npm run audit && npm run lint && npm run build`.
+- **Deploying:** Push to `main` — Cloudflare Workers Builds deploys automatically (Node version from `.node-version`). The build command is `npm run audit && npm run lint && npm run build` and the deploy command is `npx wrangler deploy`, which serves `dist/` and attaches `bladzv.mylesdev.com` as set in `wrangler.jsonc`. The `workers.dev` address is turned off, so pull requests get no preview links.
 - **Refreshing cached repos locally:** Run `node scripts/update-github-cache.js` (requires `GITHUB_TOKEN` env var).
 
 ### Dependency security and deployment
 
-The Cloudflare Pages build command runs `npm run audit` and `npm run lint` before
+The Cloudflare Workers build command runs `npm run audit` and `npm run lint` before
 `npm run build`. High or critical findings, lint errors, and audit service failures
 fail the build, and the last good deployment stays live. The CI workflow runs the
 same checks plus `npm test` on pushes and pull requests. Do not add an audit bypass

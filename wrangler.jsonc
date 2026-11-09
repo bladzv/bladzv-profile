@@ -1,0 +1,10 @@
+{
+  // Cloudflare Workers serves the static Astro build from dist/.
+  "name": "bladzv-profile",
+  "compatibility_date": "2026-11-01",
+  "assets": { "directory": "./dist" },
+  // Attaches the domain on every deploy; Cloudflare creates the DNS record and certificate.
+  "routes": [{ "pattern": "bladzv.mylesdev.com", "custom_domain": true }],
+  // Only the custom domain serves the site.
+  "workers_dev": false
+}

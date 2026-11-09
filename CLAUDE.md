@@ -1,6 +1,6 @@
 # Repository guidance
 
-This repository is a static portfolio built with Astro 7 and Tailwind CSS 4. It deploys to Cloudflare Pages at `https://bladzv-profile.pages.dev`, served from the site root.
+This repository is a static portfolio built with Astro 7 and Tailwind CSS 4. It deploys to Cloudflare Workers (static assets) at `https://bladzv.mylesdev.com`, served from the site root.
 
 ## Where things live
 
@@ -21,7 +21,7 @@ This repository is a static portfolio built with Astro 7 and Tailwind CSS 4. It 
 - `npm run lint` checks source with the typescript-eslint and Astro recommended rules; `npm run audit` checks dependencies; `npm test` runs the regression test in `vendor/http-cache-semantics/`.
 - Run `node scripts/update-github-cache.js` only when refreshing the public repository cache is part of the task; it requires `GITHUB_TOKEN`.
 - After editing `public/favicon.svg`, run `node scripts/build-favicons.js` to regenerate `favicon.ico` and the PNG icons, then bump the `?v=` in `src/layouts/Layout.astro`.
-- Pushing to `main` triggers a Cloudflare Pages build and deploy (Cloudflare's Git integration; Node version from `.node-version`; build command `npm run audit && npm run lint && npm run build`, so a failed check keeps the last good deploy live). `.github/workflows/ci.yml` runs audit, lint, test and build; the cache refresh has its own workflow. Do not put `[skip ci]` in commits that should go live, because Cloudflare skips them. HTTP security headers live in `public/_headers`.
+- Pushing to `main` triggers a Cloudflare Workers Builds build and deploy (Node version from `.node-version`; build command `npm run audit && npm run lint && npm run build`, so a failed check keeps the last good deploy live; deploy command `npx wrangler deploy`, configured in `wrangler.jsonc`, which also attaches the custom domain). `.github/workflows/ci.yml` runs audit, lint, test and build; the cache refresh has its own workflow. Do not put `[skip ci]` in commits that should go live, because Cloudflare skips them. HTTP security headers live in `public/_headers`.
 
 ## Editing conventions
 

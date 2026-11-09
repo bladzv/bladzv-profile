@@ -1,6 +1,6 @@
 name: CI
 
-# Checks every push and pull request. Cloudflare Pages builds and deploys the site on its own.
+# Checks every push and pull request. Cloudflare Workers builds and deploys the site on its own.
 on:
   push:
     branches: [main]

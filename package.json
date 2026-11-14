@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@lucide/astro": "1.61.0",
-    "astro": "7.4.2",
+    "astro": "7.4.12",
     "http-cache-semantics": "file:./vendor/http-cache-semantics",
     "tailwindcss": "4.3.3"
   },
